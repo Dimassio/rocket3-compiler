@@ -16,7 +16,7 @@ OP											[+-/*"/"|<"&&"]
 
 %%
 
-{INTEGER_LITERAL} 							{ std::cout << "NUMBER\n"; }  
+{INTEGER_LITERAL}							{ std::cout << "NUMBER\n"; }  
 {ID}										{ std::cout << "ID\n"; }
 {OP}										{ std::cout << "OPERATOR\n"; }
 "class"										{ std::cout << "CLASS\n"; }
@@ -25,7 +25,7 @@ OP											[+-/*"/"|<"&&"]
 "public"									{ std::cout << "PUBLIC\n"; }
 "return"									{ std::cout << "RETURN\n"; }
 "/*"({LETTER}|{DIGIT}|{OP}|" ")*"*/"		{std::cout <<"BLOCK COMMENT\n";}
-"//"({LETTER}|{DIGIT}|{OP}|" ")*"\n"	    {std::cout <<"LINE COMMENT\n";}
+"//"({LETTER}|{DIGIT}|{OP}|" ")*"\n"		{std::cout <<"LINE COMMENT\n";}
 
 %%
 extern int YYText();
