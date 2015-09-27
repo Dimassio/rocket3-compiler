@@ -16,16 +16,16 @@ OP											[+-/*"/"|<"&&"]
 
 %%
 
-{INTEGER_LITERAL}							{ std::cout << "NUMBER\n"; }  
-{ID}										{ std::cout << "ID\n"; }
-{OP}										{ std::cout << "OPERATOR\n"; }
-"class"										{ std::cout << "CLASS\n"; }
-"extends"									{ std::cout << "EXTENDS\n"; }
-"private"									{ std::cout << "PRIVATE\n"; }
-"public"									{ std::cout << "PUBLIC\n"; }
-"return"									{ std::cout << "RETURN\n"; }
-"/*"({LETTER}|{DIGIT}|{OP}|" ")*"*/"		{std::cout <<"BLOCK COMMENT\n";}
-"//"({LETTER}|{DIGIT}|{OP}|" ")*"\n"		{std::cout <<"LINE COMMENT\n";}
+{INTEGER_LITERAL}							{ printf("%s - ", yytext); std::cout << "NUMBER, line=" << yylineno << std::endl; }  
+{ID}										{ std::cout << "ID, line=" << yylineno << std::endl; }
+{OP}										{ std::cout << "OPERATOR, line=" << yylineno << std::endl; }
+"class"										{ std::cout << "CLASS, line=" << yylineno << std::endl; }
+"extends"									{ std::cout << "EXTENDS, line=" << yylineno << std::endl; }
+"private"									{ std::cout << "PRIVATE, line=" << yylineno << std::endl; }
+"public"									{ std::cout << "PUBLIC, line=" << yylineno << std::endl; }
+"return"									{ std::cout << "RETURN, line=" << yylineno << std::endl; }
+"/*"({LETTER}|{DIGIT}|{OP}|" ")*"*/"		{ std::cout <<"BLOCK COMMENT, line=" << yylineno << std::endl;}
+"//"({LETTER}|{DIGIT}|{OP}|" ")*"\n"		{ std::cout <<"LINE COMMENT, line=" << yylineno << std::endl;}
 
 %%
 extern int YYText();
