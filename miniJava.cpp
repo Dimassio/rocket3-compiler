@@ -508,8 +508,9 @@ char *yytext;
 #include <iostream>
 #include <cmath>
 #include <cstring>
+#include "miniJava.tab.hpp"
 #define YY_DECL extern "C" int yylex()
-#line 513 "C:\\7semester\\Compilers\\MiniJavaCompiler\\MiniJavaCompiler\\miniJava.cpp"
+#line 514 "C:\\7semester\\Compilers\\MiniJavaCompiler\\MiniJavaCompiler\\miniJava.cpp"
 
 #define INITIAL 0
 
@@ -688,9 +689,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 17 "miniJava.l"
+#line 18 "miniJava.l"
 
-#line 694 "C:\\7semester\\Compilers\\MiniJavaCompiler\\MiniJavaCompiler\\miniJava.cpp"
+#line 695 "C:\\7semester\\Compilers\\MiniJavaCompiler\\MiniJavaCompiler\\miniJava.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -786,66 +787,66 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 18 "miniJava.l"
+#line 19 "miniJava.l"
 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 19 "miniJava.l"
-{ std::cout << "CLASS, line=" << yylineno << std::endl; }
+#line 20 "miniJava.l"
+{ return CLASS; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 20 "miniJava.l"
-{ std::cout << "EXTENDS, line=" << yylineno << std::endl; }
+#line 21 "miniJava.l"
+{ return EXTENDS; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 21 "miniJava.l"
-{ std::cout << "PRIVATE, line=" << yylineno << std::endl; }
+#line 22 "miniJava.l"
+{ return PRIVATE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 22 "miniJava.l"
-{ std::cout << "PUBLIC, line=" << yylineno << std::endl; }
+#line 23 "miniJava.l"
+{ return PUBLIC; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 23 "miniJava.l"
-{ std::cout << "RETURN, line=" << yylineno << std::endl; }
+#line 24 "miniJava.l"
+{ return RETURN; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 24 "miniJava.l"
-{ std::cout <<"BLOCK COMMENT, line=" << yylineno << std::endl;}
+#line 25 "miniJava.l"
+{ return BLOCK_COMMENT; }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 25 "miniJava.l"
-{ std::cout <<"LINE COMMENT, line=" << yylineno << std::endl;}
+#line 26 "miniJava.l"
+{ return LINE_COMMENT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 26 "miniJava.l"
-{ printf("%s - ", yytext); std::cout << "NUMBER, line=" << yylineno << std::endl; }  
+#line 27 "miniJava.l"
+{ return NUMBER; }  
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 27 "miniJava.l"
-{ std::cout << "ID, line=" << yylineno << std::endl; }
+#line 28 "miniJava.l"
+{ return ID; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 28 "miniJava.l"
-{ std::cout << "OPERATOR, line=" << yylineno << std::endl; }
+#line 29 "miniJava.l"
+{ return yytext[0]; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 30 "miniJava.l"
+#line 31 "miniJava.l"
 ECHO;
 	YY_BREAK
-#line 849 "C:\\7semester\\Compilers\\MiniJavaCompiler\\MiniJavaCompiler\\miniJava.cpp"
+#line 850 "C:\\7semester\\Compilers\\MiniJavaCompiler\\MiniJavaCompiler\\miniJava.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1851,7 +1852,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 29 "miniJava.l"
+#line 30 "miniJava.l"
 
 
 extern int YYText();

@@ -1,0 +1,82 @@
+Terminals unused in grammar
+
+   '&'
+   '|'
+   '-'
+   '+'
+   '*'
+   '/'
+   NUMBER
+   EXTENDS
+   PRIVATE
+   PUBLIC
+   RETURN
+   BLOCK_COMMENT
+   LINE_COMMENT
+   ID
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: CLASS
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'&' (38)
+'*' (42)
+'+' (43)
+'-' (45)
+'/' (47)
+'|' (124)
+error (256)
+NUMBER (258)
+CLASS (259) 1
+EXTENDS (260)
+PRIVATE (261)
+PUBLIC (262)
+RETURN (263)
+BLOCK_COMMENT (264)
+LINE_COMMENT (265)
+ID (266)
+
+
+Nonterminals, with rules where they appear
+
+$accept (18)
+    on left: 0
+Program (19)
+    on left: 1, on right: 0
+
+
+State 0
+
+    0 $accept: . Program $end
+
+    CLASS  shift, and go to state 1
+
+    Program  go to state 2
+
+
+State 1
+
+    1 Program: CLASS .
+
+    $default  reduce using rule 1 (Program)
+
+
+State 2
+
+    0 $accept: Program . $end
+
+    $end  shift, and go to state 3
+
+
+State 3
+
+    0 $accept: Program $end .
+
+    $default  accept
