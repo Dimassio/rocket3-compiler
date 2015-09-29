@@ -25,6 +25,7 @@ void yyerror( int*, const char* );
 
 /* Определение токенов. Можно задать ассоциируемый с токеном тип из Union. */
 %token <ival> NUMBER
+%token <sval> ID
 %token CLASS
 %token EXTENDS
 %token PRIVATE
@@ -32,7 +33,18 @@ void yyerror( int*, const char* );
 %token RETURN
 %token BLOCK_COMMENT
 %token LINE_COMMENT
-%token <sval> ID
+%token IF
+%token ELSE
+%token BOOLEAN
+%token INT
+%token WHILE
+%token FOR
+%token SYSTEMOUTPRINTLN
+%token LENGTH
+%token TRUE
+%token FALSE
+%token THIS
+%token NEW
 
 /* Связываем тип из union и символ парсера. */
 %type<program> Program
@@ -70,17 +82,17 @@ MethodDecls:
 	| MethodDecls MethodDecl
 
 VarDecl:
-	TYPE ID ';'
+	Type ID ';'
 
 MethodDecl:
-	PUBLIC TYPE ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' '}'
-	| PUBLIC TYPE ID '(' FormalList ')' '{' Statements RETURN Exp ';' '}'
-	| PUBLIC TYPE ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' '}'
-	| PUBLIC TYPE ID '(' FormalList ')' '{' RETURN Exp ';' '}'
+	PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' '}'
+	| PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp ';' '}'
+	| PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' '}'
+	| PUBLIC Type ID '(' FormalList ')' '{' RETURN Exp ';' '}'
 
 FormalList:
-	TYPE ID FormalRests
-	| TYPE ID
+	Type ID FormalRests
+	| Type ID
 	| 
 
 FormalRests:
@@ -88,11 +100,52 @@ FormalRests:
 	| FormalRests FormalRest
 
 FormalRest:
-	', ' TYPE ID 
+	',' Type ID 
 
 Statements:
 	Statement
 	| Statements Statement
+
+Type:
+	INT '['']'
+	| INT
+	| BOOLEAN
+	| ID { /* coding */}
+
+Statement:
+	'{' Statements '}'
+	| IF '(' Exp ')' Statement ELSE Statement
+	| WHILE '(' Exp ')' Statement
+	| SYSTEMOUTPRINTLN '(' Exp ')' ';'
+	| ID = Exp ';'
+	| ID '['Exp']' '=' Exp;
+
+Exp:
+	Exp OP Exp
+	| Exp '['Exp']'
+	| Exp '.'LENGTH
+	| Exp '.'ID '('ExpList')'
+	| NUMBER
+	| TRUE
+	| FALSE
+	| ID
+	| THIS
+	| NEW INT '['Exp']'
+	| NEW ID '('')'
+	| '!' Exp
+	| '(' Exp ')'
+
+ExpList:
+	Exp ExpRests
+	| Exp
+	|
+
+ExpRests:
+	ExpRest
+	| ExpRests Exprest
+
+ExpRest:
+	',' Exp 
 
 %%
 
