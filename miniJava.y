@@ -45,6 +45,10 @@ void yyerror( int*, const char* );
 %token FALSE
 %token THIS
 %token NEW
+%token VOID
+%token STATIC 
+%token MAIN 
+%token STRING
 
 /* Связываем тип из union и символ парсера. */
 %type<program> Program
@@ -122,6 +126,8 @@ Type:
 	INT '['']' {}
 	| INT {}
 	| BOOLEAN {}
+	| STRING {}
+	| VOID {}
 	| ID { /* coding */}
 	;
 
@@ -130,12 +136,19 @@ Statement:
 	| IF '(' Exp ')' Statement ELSE Statement {}
 	| WHILE '(' Exp ')' Statement {}
 	| SYSTEMOUTPRINTLN '(' Exp ')' ';' {}
-	| ID = Exp ';' {}
+	| ID '=' Exp ';' {}
 	| ID '['Exp']' '=' Exp ';' {}
 	;
 
 Exp:
-	Exp OP Exp {}
+	Exp '=' Exp {}
+	| Exp '<' Exp {}
+	| Exp '|' Exp {}
+	| Exp '&' Exp {}
+	| Exp '-' Exp {}
+	| Exp '+' Exp {}
+	| Exp '/' Exp {}
+	| Exp '*' Exp {}
 	| Exp '['Exp']' {}
 	| Exp '.'LENGTH {}
 	| Exp '.'ID '('ExpList')' {}
@@ -158,7 +171,7 @@ ExpList:
 
 ExpRests:
 	ExpRest {}
-	| ExpRests Exprest {}
+	| ExpRests ExpRest {}
 	;
 
 ExpRest:
