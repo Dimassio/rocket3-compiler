@@ -53,15 +53,18 @@ void yyerror( int*, const char* );
 /* Секция с описанием правил парсера. */
 %%
 Program:
-	MainClass
+	MainClass {}
 	| MainClass ClassDecls { /* Здесь выполняемый в случае совпадения код */ }
+	;
 
 ClassDecls:
-	ClassDecl
-	| ClassDecls ClassDecl
+	ClassDecl {}
+	| ClassDecls ClassDecl {}
+	;
 
 MainClass:
 	CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ')' '{' Statement '}' '}' {}
+	;
 
 ClassDecl:
 	CLASS ID '{' VarDecls MethodDecls '}' {}
@@ -72,80 +75,95 @@ ClassDecl:
 	| CLASS ID EXTENDS ID '{' MethodDecls '}' {}
 	| CLASS ID EXTENDS ID '{' VarDecls '}' {}
 	| CLASS ID EXTENDS ID '{' '}' {}
+	;
 
 VarDecls:
-	VarDecl
-	| VarDecls VarDecl
+	VarDecl {}
+	| VarDecls VarDecl {}
+	;
 
 MethodDecls:
-	MethodDecl
-	| MethodDecls MethodDecl
+	MethodDecl {}
+	| MethodDecls MethodDecl {}
+	;
 
 VarDecl:
-	Type ID ';'
+	Type ID ';' {}
+	;
 
 MethodDecl:
-	PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' '}'
-	| PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp ';' '}'
-	| PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' '}'
-	| PUBLIC Type ID '(' FormalList ')' '{' RETURN Exp ';' '}'
+	PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' '}' {}
+	| PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp ';' '}' {}
+	| PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' '}' {}
+	| PUBLIC Type ID '(' FormalList ')' '{' RETURN Exp ';' '}' {}
+	;
 
 FormalList:
-	Type ID FormalRests
-	| Type ID
-	| 
+	Type ID FormalRests {}
+	| Type ID {}
+	|  {}
+	;
 
 FormalRests:
-	FormalRest
-	| FormalRests FormalRest
+	FormalRest {}
+	| FormalRests FormalRest {}
+	;
 
 FormalRest:
-	',' Type ID 
+	',' Type ID {}
+	;
 
 Statements:
-	Statement
-	| Statements Statement
+	Statement {}
+	| Statements Statement {}
+	;
 
 Type:
-	INT '['']'
-	| INT
-	| BOOLEAN
+	INT '['']' {}
+	| INT {}
+	| BOOLEAN {}
 	| ID { /* coding */}
+	;
 
 Statement:
-	'{' Statements '}'
-	| IF '(' Exp ')' Statement ELSE Statement
-	| WHILE '(' Exp ')' Statement
-	| SYSTEMOUTPRINTLN '(' Exp ')' ';'
-	| ID = Exp ';'
-	| ID '['Exp']' '=' Exp;
+	'{' Statements '}' {}
+	| IF '(' Exp ')' Statement ELSE Statement {}
+	| WHILE '(' Exp ')' Statement {}
+	| SYSTEMOUTPRINTLN '(' Exp ')' ';' {}
+	| ID = Exp ';' {}
+	| ID '['Exp']' '=' Exp ';' {}
+	;
 
 Exp:
-	Exp OP Exp
-	| Exp '['Exp']'
-	| Exp '.'LENGTH
-	| Exp '.'ID '('ExpList')'
-	| NUMBER
-	| TRUE
-	| FALSE
-	| ID
-	| THIS
-	| NEW INT '['Exp']'
-	| NEW ID '('')'
-	| '!' Exp
-	| '(' Exp ')'
+	Exp OP Exp {}
+	| Exp '['Exp']' {}
+	| Exp '.'LENGTH {}
+	| Exp '.'ID '('ExpList')' {}
+	| NUMBER {}
+	| TRUE {}
+	| FALSE {}
+	| ID {}
+	| THIS {}
+	| NEW INT '['Exp']' {}
+	| NEW ID '('')' {}
+	| '!' Exp {}
+	| '(' Exp ')' {}
+	;
 
 ExpList:
-	Exp ExpRests
-	| Exp
-	|
+	Exp ExpRests {}
+	| Exp {}
+	| {}
+	;
 
 ExpRests:
-	ExpRest
-	| ExpRests Exprest
+	ExpRest {}
+	| ExpRests Exprest {}
+	;
 
 ExpRest:
-	',' Exp 
+	',' Exp {}
+	;
 
 %%
 
