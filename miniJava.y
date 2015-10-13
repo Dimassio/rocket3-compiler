@@ -3,14 +3,15 @@
 extern "C" int yylex();
 extern int yylineno;
 
-void yyerror( int*, const char* );
+void yyerror( const char* );
 %}
 
 /* Этот код будет помещен до определения Union
 Обычно используется для описания классов, реализующих синтаксическое дерево.
 %code requires { #include <common.h> }*/
 /* Параметры функции парсера. */
-%parse-param { int* hasError }
+
+/*%parse-param { int* hasError} */
 
 /* Определение возможных типов выражения. */
 %union{
@@ -185,7 +186,7 @@ ExpRest:
 %%
 
 /* Функция обработки ошибки. */
-void yyerror( int* a, const char* str )
+void yyerror( const char* str )
 {
 	std::cout << str << " in " << yylineno << " line" << std::endl;
 }

@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <iostream>
-#include "miniJava.tab.hpp"
+
+int yyparse();
 
 int main( int argc, char *argv[] )
 {
@@ -10,8 +11,7 @@ int main( int argc, char *argv[] )
 
 	extern FILE *yyin;
 	yyin = fopen( argv[1], "r" );
-	int* error = new int;
-	if( !yyparse( error ) ) {
+	if( !yyparse() ) {
 		std::cout << "SUCCESS" << std::endl;
 	}
 
