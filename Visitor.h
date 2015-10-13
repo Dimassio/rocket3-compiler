@@ -1,5 +1,20 @@
 ﻿#pragma once
+
 #include "Grammar.h"
+#include "Program.h"
+#include "MainClass.h"
+#include "ClassDecl.h"
+#include "ClassDeclList.h"
+#include "Exp.h"
+#include "ExpList.h"
+#include "FormalList.h"
+#include "MethodDecl.h"
+#include "MethodDeclList.h"
+#include "Statement.h"
+#include "StatementList.h"
+#include "Type.h"
+#include "VarDecl.h"
+#include "VarDeclList.h"
 
 class IVisitor {
 public:
@@ -7,7 +22,7 @@ public:
 	{
 	}
 
-	void visit( const IProgram* );
+	void visit( const IProgram* ); // todo: заменить интерфейсы на классы-реализации
 	void visit( const IMainClass* );
 	void visit( const IClassDecl* );
 	void visit( const IClassDeclList* );

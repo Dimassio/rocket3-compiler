@@ -1,6 +1,15 @@
 ﻿#include "Visitor.h"
 
-class Visitor : public IVisitor {
+// Он выполняет вывод того, что находится в узле дерева.
+/*
+void CPrettyPrinterVisiter::Visit( const CClassType* classType )
+{
+assert( classType->Name() != 0 );
+printf( "%s", classType->Name() );
+}
+*/
+
+class CPrettyPrinterVisitor : public IVisitor {
 public:
 
 	void visit( const IMainClass* )
