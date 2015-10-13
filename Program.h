@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include "Grammar.h"
 #include "Visitor.h"
@@ -14,8 +14,8 @@ MainClass {}
 */
 
 class CProgram : public IProgram { 
-	// todo: нужен класс, содержащий координаты ошибки, и отнаследоваться еще от него, чтобы уметь
-	// показывать пользователю адекватные ошибки
+	// todo: РЅСѓР¶РµРЅ РєР»Р°СЃСЃ, СЃРѕРґРµСЂР¶Р°С‰РёР№ РєРѕРѕСЂРґРёРЅР°С‚С‹ РѕС€РёР±РєРё, Рё РѕС‚РЅР°СЃР»РµРґРѕРІР°С‚СЊСЃСЏ РµС‰Рµ РѕС‚ РЅРµРіРѕ, С‡С‚РѕР±С‹ СѓРјРµС‚СЊ
+	// РїРѕРєР°Р·С‹РІР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ Р°РґРµРєРІР°С‚РЅС‹Рµ РѕС€РёР±РєРё
 public:
 	CProgram( IMainClass* _mainClass, IClassDeclList* _classDeclList ) :
 		mainClass( _mainClass ), classDeclList( _classDeclList )

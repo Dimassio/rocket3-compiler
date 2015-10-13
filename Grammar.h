@@ -1,8 +1,8 @@
-#pragma once
+п»ї#pragma once
 
 class IVisitor;
 
-// Корневой интерфейс программы
+// РљРѕСЂРЅРµРІРѕР№ РёРЅС‚РµСЂС„РµР№СЃ РїСЂРѕРіСЂР°РјРјС‹
 class IProgram {
 public:
 	virtual ~IProgram()
@@ -11,7 +11,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Главный класс
+// Р“Р»Р°РІРЅС‹Р№ РєР»Р°СЃСЃ
 class IMainClass {
 public:
 	virtual ~IMainClass()
@@ -20,7 +20,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Список классов
+// РЎРїРёСЃРѕРє РєР»Р°СЃСЃРѕРІ
 class IClassDeclList {
 public:
 	virtual ~IClassDeclList()
@@ -29,7 +29,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Описание класса
+// РћРїРёСЃР°РЅРёРµ РєР»Р°СЃСЃР°
 class IClassDecl {
 public:
 	virtual ~IClassDecl()
@@ -38,7 +38,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Список объявлений переменных
+// РЎРїРёСЃРѕРє РѕР±СЉСЏРІР»РµРЅРёР№ РїРµСЂРµРјРµРЅРЅС‹С…
 class IVarDeclList {
 public:
 	virtual ~IVarDeclList()
@@ -47,7 +47,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Объявление переменной
+// РћР±СЉСЏРІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№
 class IVarDecl {
 public:
 	virtual ~IVarDecl()
@@ -56,7 +56,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Список методов класса
+// РЎРїРёСЃРѕРє РјРµС‚РѕРґРѕРІ РєР»Р°СЃСЃР°
 class IMethodDeclList {
 public:
 	virtual ~IMethodDeclList()
@@ -65,7 +65,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Метод класса
+// РњРµС‚РѕРґ РєР»Р°СЃСЃР°
 class IMethodDecl {
 public:
 	virtual ~IMethodDecl()
@@ -74,7 +74,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Список параметров
+// РЎРїРёСЃРѕРє РїР°СЂР°РјРµС‚СЂРѕРІ
 class IFormalList {
 public:
 	virtual ~IFormalList()
@@ -83,7 +83,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Тип
+// РўРёРї
 class IType {
 public:
 	virtual ~IType()
@@ -92,7 +92,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Последовательность команд
+// РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РєРѕРјР°РЅРґ
 class IStatementList {
 public:
 	virtual ~IStatementList()
@@ -101,7 +101,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Одна команда (или блок)
+// РћРґРЅР° РєРѕРјР°РЅРґР° (РёР»Рё Р±Р»РѕРє)
 class IStatement {
 public:
 	virtual ~IStatement()
@@ -110,7 +110,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Последовательность выражений (аргументы функции)
+// РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕСЃС‚СЊ РІС‹СЂР°Р¶РµРЅРёР№ (Р°СЂРіСѓРјРµРЅС‚С‹ С„СѓРЅРєС†РёРё)
 class IExpList {
 public:
 	virtual ~IExpList()
@@ -119,7 +119,7 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
-// Арифметическое выражение
+// РђСЂРёС„РјРµС‚РёС‡РµСЃРєРѕРµ РІС‹СЂР°Р¶РµРЅРёРµ
 class IExp {
 public:
 	virtual ~IExp()

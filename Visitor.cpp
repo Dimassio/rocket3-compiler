@@ -1,4 +1,4 @@
-#include "Visitor.h"
+﻿#include "Visitor.h"
 
 class Visitor : public IVisitor {
 public:
