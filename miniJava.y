@@ -1,5 +1,19 @@
 %{
 #include <iostream>
+#include "Program.h"
+#include "MainClass.h"
+#include "ClassDecl.h"
+#include "ClassDeclList.h"
+#include "Exp.h"
+#include "ExpList.h"
+#include "FormalList.h"
+#include "MethodDecl.h"
+#include "MethodDeclList.h"
+#include "Statement.h"
+#include "StatementList.h"
+#include "Type.h"
+#include "VarDecl.h"
+#include "VarDeclList.h"
 extern "C" int yylex();
 extern int yylineno;
 
@@ -11,12 +25,19 @@ void yyerror( const char* );
 %code requires { #include <common.h> }*/
 /* Параметры функции парсера. */
 
-/*%parse-param { int* hasError} */
+%parse-param { CProgram*& root }
 
 /* Определение возможных типов выражения. */
 %union{
 	int ival;
 	char sval[255];
+	CProgram* program;
+	CMainClass* mainClass;
+	CClassDeclList* classDeclList;
+	CClassDecl* classDecl;
+	CVarDeclList* varDeclList;
+	CMethodDeclList* methodDeclList;
+	/*опишите свои классы здесь*/
 }
 
 /* Определение лево-ассоцитивности. Аналогично есть %right.
@@ -56,45 +77,51 @@ void yyerror( const char* );
 
 /* Связываем тип из union и символ парсера. */
 %type<program> Program
+%type<mainClass> MainClass
+%type<classDeclList> ClassDecls
+%type<classDecl> ClassDecl
+%type<varDeclList> VarDecls;
+%type<methodDeclList> MethodDeclList
+/*допишите определениея своих типао символов*/
 
 /* Секция с описанием правил парсера. */
 %%
 Program:
-	MainClass {}
-	| MainClass ClassDecls { /* Здесь выполняемый в случае совпадения код */ }
+	MainClass { root = new CProgram( $1, 0 ); }
+	| MainClass ClassDecls { root = new CProgram( $1, $2 ); }
 	;
 
 ClassDecls:
-	ClassDecl {}
-	| ClassDecls ClassDecl {}
+	ClassDecl { $$ = new CClassDeclList( $1, 0 ); }
+	| ClassDecls ClassDecl { $$ = new CCLassDeclList($2, $1); }
 	;
 
 MainClass:
-	CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' Statement '}' '}' {}
-	| CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{'  '}' '}' {}
+	CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' Statement '}' '}' { $$ = new CMainClass( $2, $12, $15 ); }
 	;
 
 ClassDecl:
-	CLASS ID '{' VarDecls MethodDecls '}' {}
-	| CLASS ID '{' MethodDecls '}' {}
-	| CLASS ID '{' VarDecls '}' {}
-	| CLASS ID '{'  '}' {}
-	| CLASS ID EXTENDS ID '{' VarDecls MethodDecls '}' {}
-	| CLASS ID EXTENDS ID '{' MethodDecls '}' {}
-	| CLASS ID EXTENDS ID '{' VarDecls '}' {}
-	| CLASS ID EXTENDS ID '{' '}' {}
+	CLASS ID '{' VarDecls MethodDecls '}' { $$ = new CClassDecl( $2, "", $4, $5 ); }
+	| CLASS ID '{' MethodDecls '}' { $$ = new CClassDecl( $2, "", 0, $4); }
+	| CLASS ID '{' VarDecls '}' { $$ = new CClassDecl( $2, "", $4, 0 ); }
+	| CLASS ID '{'  '}' { $$ = new CClassDecl( $2, "", 0, 0 ); }
+	| CLASS ID EXTENDS ID '{' VarDecls MethodDecls '}' { $$ = new CClassDecl( $2, $4, $6, $7 ); }
+	| CLASS ID EXTENDS ID '{' MethodDecls '}' { $$ = new CClassDecl( $2, $4, 0, $6 ); }
+	| CLASS ID EXTENDS ID '{' VarDecls '}' { $$ = new CClassDecl( $2, $4, $6, 0 ); }
+	| CLASS ID EXTENDS ID '{' '}' { $$ = new CClassDecl( $2, $4, 0, 0 ); }
 	;
 
 VarDecls:
-	VarDecl {}
-	| VarDecls VarDecl {}
+	VarDecl { $$ = new CVarDeclList( $1, 0 ); }
+	| VarDecls VarDecl { $$ = new CVarDeclList( $2, $1 ); }
 	;
 
 MethodDecls:
-	MethodDecl {}
-	| MethodDecls MethodDecl {}
+	MethodDecl { $$ = new CMethodDeclList( $1, 0 ); }
+	| MethodDecls MethodDecl { $$ = new CMethodDeclList( $2, $1 ); }
 	;
 
+/* Далее берет Саня */
 VarDecl:
 	Type ID ';' {}
 	;
@@ -126,6 +153,7 @@ Statements:
 	| Statements Statement {}
 	;
 
+/* Далее берет Женя */
 Type:
 	INT '['']' {}
 	| INT {}
@@ -145,8 +173,7 @@ Statement:
 	;
 
 Exp:
-	Exp '=' Exp {}
-	| Exp '<' Exp {}
+	Exp '<' Exp {}
 	| Exp AND Exp {}
 	| Exp '|' Exp {}
 	| Exp '&' Exp {}

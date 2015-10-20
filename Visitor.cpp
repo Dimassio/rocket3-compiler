@@ -12,6 +12,10 @@ printf( "%s", classType->Name() );
 class CPrettyPrinterVisitor : public IVisitor {
 public:
 
+	CPrettyPrinterVisitor()
+	{
+	}
+
 	void visit( const IMainClass* )
 	{
 
