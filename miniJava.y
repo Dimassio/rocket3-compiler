@@ -80,8 +80,8 @@ void yyerror( const char* );
 %type<mainClass> MainClass
 %type<classDeclList> ClassDecls
 %type<classDecl> ClassDecl
-%type<varDeclList> VarDecls;
-%type<methodDeclList> MethodDeclList
+%type<varDeclList> VarDecls
+%type<methodDeclList> MethodDecls
 /*допишите определениея своих типао символов*/
 
 /* Секция с описанием правил парсера. */

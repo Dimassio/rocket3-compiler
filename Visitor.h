@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <iostream>
 #include "Grammar.h"
 #include "Program.h"
 #include "MainClass.h"
