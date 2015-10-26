@@ -123,7 +123,7 @@ MethodDecls:
 
 /* Далее берет Саня */
 VarDecl:
-	Type ID ';' {}
+	Type ID ';' {}  
 	;
 
 MethodDecl:

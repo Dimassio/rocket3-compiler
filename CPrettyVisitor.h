@@ -24,7 +24,7 @@ public:
 
 	void visit( const CMainClass* mainClass )
 	{
-		std::cout << "class " << mainClass->GetClassName << " public static void main(string[] "
+		std::cout << "class " << mainClass->GetClassName << " public static void main(String[] "
 			<< mainClass->GetArgName << " ) { " << std::endl;
 		CStatement* statement = mainClass->Statement;
 		statement->Accept( this );

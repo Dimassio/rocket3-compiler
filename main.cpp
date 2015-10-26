@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <iostream>
-#include "Visitor.cpp"
+#include "CPrettyVisitor.h"
 
 int yyparse();
 
