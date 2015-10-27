@@ -4,7 +4,7 @@
 #include "Visitor.h"
 #include <string>
 
-class CMainClass : IMainClass {
+class CMainClass : public IMainClass {
 public:
 	CMainClass( std::string _className, std::string _argName, IStatement* _statement ) :
 		className( _className ), argName( _argName ), statement( _statement )

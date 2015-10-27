@@ -1,8 +1,23 @@
 ﻿#pragma once
 
-#include <iostream>
-#include "Grammar.h"
-#include "Common.h"
+class CProgram;
+class CMainClass;
+class CClassDecl;
+class CClassDeclList;
+class CExp;
+class CExpList;
+class CFormalList;
+class CFormalRest;
+class CFormalRestList;
+class CMethodDecl;
+class CMethodDeclList;
+class CStatement;
+class CStatementList;
+class CType;
+class CVarDecl;
+class CVarDeclList;
+class CExpRest;
+class CExpRestList;
 
 class IVisitor {
 public:
@@ -10,22 +25,22 @@ public:
 	{
 	}
 
-	void visit( const IProgram* ); // todo: заменить интерфейсы на классы-реализации
-	void visit( const IMainClass* );
-	void visit( const IClassDecl* );
-	void visit( const IClassDeclList* );
-	void visit( const IExp* );
-	void visit( const IExpList* );
-	void visit( const IFormalList* );
-	void visit( const IFormalRest*);
-	void visit( const IFormalRestList*);
-	void visit( const IMethodDecl* );
-	void visit( const IMethodDeclList* );
-	void visit( const IStatement* );
-	void visit( const IStatementList* );
-	void visit( const IType* );
-	void visit( const IVarDecl* );
-	void visit( const IVarDeclList* );
-	void visit( const IExpRest* );
-	void visit( const IExpRestList* );
+	void visit( const CProgram* ); // todo: заменить интерфейсы на классы-реализации
+	void visit( const CMainClass* );
+	void visit( const CClassDecl* );
+	void visit( const CClassDeclList* );
+	void visit( const CExp* );
+	void visit( const CExpList* );
+	void visit( const CFormalList* );
+	void visit( const CFormalRest* );
+	void visit( const CFormalRestList* );
+	void visit( const CMethodDecl* );
+	void visit( const CMethodDeclList* );
+	void visit( const CStatement* );
+	void visit( const CStatementList* );
+	void visit( const CType* );
+	void visit( const CVarDecl* );
+	void visit( const CVarDeclList* );
+	void visit( const CExpRest* );
+	void visit( const CExpRestList* );
 };

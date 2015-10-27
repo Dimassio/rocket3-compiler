@@ -4,7 +4,7 @@
 #include "Visitor.h"
 #include <string>
 
-class CType : IType {
+class CType : public IType {
 public:
 	CType( std::string _typeName ) :
 		typeName( _typeName )

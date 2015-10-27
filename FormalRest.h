@@ -3,7 +3,7 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-class CFormalRest : IFormalRest {
+class CFormalRest : public IFormalRest {
 public:
 	CFormalRest(IType* _type, std::string _id) :
 		type(_type), id(_id)

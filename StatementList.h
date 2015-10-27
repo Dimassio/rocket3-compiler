@@ -3,7 +3,7 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-class CStatementList : IStatementList {
+class CStatementList : public  IStatementList {
 public:
 	CStatementList(IStatement* _statement, CStatementList* _statementList) :
 		statement(_statement), statementList(_statementList)

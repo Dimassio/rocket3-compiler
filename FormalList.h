@@ -3,7 +3,7 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-class CFormalList : IFormalList {
+class CFormalList : public  IFormalList {
 public:
 	CFormalList(IType* _type, std::string _id, IFormalRestList* _formalRestList) :
 		type(_type), id(_id), formalRestList(_formalRestList)

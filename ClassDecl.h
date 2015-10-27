@@ -4,7 +4,7 @@
 #include "Visitor.h"
 #include <string>
 
-class CClassDecl : IClassDecl {
+class CClassDecl : public IClassDecl {
 public:
 	CClassDecl( std::string _className, std::string _extendedClassName, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList ) :
 		className( _className ), extendedClassName(_extendedClassName), varDeclList( _varDeclList ), methodDeclList( _methodDeclList )

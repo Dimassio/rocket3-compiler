@@ -10,7 +10,7 @@ ClassDecls:
 	;
 */
 
-class CClassDeclList : IClassDeclList {
+class CClassDeclList : public IClassDeclList {
 public:
 	CClassDeclList( IClassDecl* _classDecl, IClassDeclList* _classDeclList) :
 		classDecl( _classDecl ), classDeclList(_classDeclList)

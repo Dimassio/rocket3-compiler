@@ -5,7 +5,7 @@
 #include "Visitor.h"
 #include <string>
 
-class CStatement : IStatement {
+class CStatement : public IStatement {
 public:
 	CStatement (
 		std::string _statementType,

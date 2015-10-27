@@ -2,7 +2,7 @@
 #include <iostream>
 #include "CPrettyVisitor.h"
 
-int yyparse();
+int yyparse(CProgram*& root);
 
 int main( int argc, char *argv[] )
 {

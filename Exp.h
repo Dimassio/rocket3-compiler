@@ -4,7 +4,7 @@
 #include "Visitor.h"
 #include <string>
 
-class CExp : IExp {
+class CExp : public IExp {
 public:
 	CExp(
 		std::string _expressionType,

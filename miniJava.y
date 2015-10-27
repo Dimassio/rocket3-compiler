@@ -5,12 +5,10 @@
 extern "C" int yylex();
 extern int yylineno;
 
-void yyerror( const char* );
+void yyerror( CProgram*& root, const char* );
 %}
 
-/* Этот код будет помещен до определения Union
-Обычно используется для описания классов, реализующих синтаксическое дерево.
-%code requires { #include <common.h> }*/
+%code requires { #include "Common.h"}
 /* Параметры функции парсера. */
 
 %parse-param { CProgram*& root }
@@ -31,8 +29,10 @@ void yyerror( const char* );
 	CFormalRest* formalRest;
 	CFormalRestList* formalRestList;
 	CStatementList* statementList;
+	CStatement* statement;
 	CExpList* expList;
 	CExp* exp;
+	CType* type;
 	CExpRestList* expRestList;
 	CExpRest* expRest;
 }
@@ -80,15 +80,16 @@ void yyerror( const char* );
 %type<methodDecl> MethodDecl
 %type<methodDeclList> MethodDecls
 %type<varDecl> VarDecl
-%type<varDeclList> VarDecls
 %type<formalList> FormalList
 %type<formalRest> FormalRest
 %type<formalRestList> FormalRests
+%type<statement> Statement
 %type<statementList> Statements
 %type<expList> ExpList
 %type<expRestList> ExpRests
 %type<expRest> ExpRest
 %type<exp> Exp
+%type<type> Type
 
 /* Секция с описанием правил парсера. */
 %%
@@ -99,7 +100,7 @@ Program:
 
 ClassDecls:
 	ClassDecl { $$ = new CClassDeclList( $1, 0 ); }
-	| ClassDecls ClassDecl { $$ = new CCLassDeclList($2, $1); }
+	| ClassDecls ClassDecl { $$ = new CClassDeclList($2, $1); }
 	;
 
 MainClass:
@@ -161,12 +162,12 @@ Statements:
 
 /* Далее берет Женя */
 Type:
-	INT '['']' { $$ = new Type("int []"); }
-	| INT { $$ = new Type("int"); }
-	| BOOLEAN { $$ = new Type("boolean"); }
-	| STRING { $$ = new Type("string"); }
-	| VOID { $$ = new Type("void"); }
-	| ID { $$ = new Type($1); }
+	INT '['']' { $$ = new CType("int []"); }
+	| INT { $$ = new CType("int"); }
+	| BOOLEAN { $$ = new CType("boolean"); }
+	| STRING { $$ = new CType("string"); }
+	| VOID { $$ = new CType("void"); }
+	| ID { $$ = new CType($1); }
 	;
 
 Statement:
@@ -179,26 +180,24 @@ Statement:
 	;
 
 Exp:
-	Exp '<' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
-	| Exp AND Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
-	| Exp '|' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
-	| Exp '&' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
-	| Exp '-' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
-	| Exp '+' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
-	| Exp '/' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
-	| Exp '*' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
-	| Exp '[' Exp ']' { $$ = new CExp( "SquareBrackets", "", 0, $1, $3, "" ) }
-	| Exp '.' LENGTH { $$ = new CExp( "Length", "", 0, $1, 0, "" ) }
-	| Exp '.' ID '(' ExpList ')' { $$ = new CExp( "MethodCall", "", $5, $1, 0, "" ) }
-	| NUMBER { $$ = new CExp( "SingleExp", "Number", 0, 0, 0, $1 ) }
-	| TRUE { $$ = new CExp( "SingleExp", "True", 0, 0, 0, "" ) }
-	| FALSE { $$ = new CExp( "SingleExp", "False", 0, 0, 0, "" ) }
-	| ID { $$ = new CExp( "SingleExp", "Id", 0, 0, 0, $1 ) }
-	| THIS { $$ = new CExp( "SingleExp", "This", 0, 0, 0, "" ) }
-	| NEW INT '[' Exp ']' { $$ = new CExp( "NewIntArray", "", 0, $4, 0, "" ) }
-	| NEW ID '(' ')' { $$ = new CExp( "NewCustomType", "", 0, 0, 0, $2 ) }
-	| '!' Exp { $$ = new CExp( "NotExp", "", 0, $2, 0, "" ) }
-	| '(' Exp ')' { $$ = new CExp( "RoundBrackets", "", 0, $2, 0, "" ) }
+	Exp '<' Exp { $$ = new CExp( "BinOp", "<", 0, $1, $3, "" ); }
+	| Exp '&' Exp { $$ = new CExp( "BinOp", "&", 0, $1, $3, "" ); }
+	| Exp '-' Exp { $$ = new CExp( "BinOp", "-", 0, $1, $3, "" ); }
+	| Exp '+' Exp { $$ = new CExp( "BinOp", "+", 0, $1, $3, "" ); }
+	| Exp '/' Exp { $$ = new CExp( "BinOp", "/", 0, $1, $3, "" ); }
+	| Exp '*' Exp { $$ = new CExp( "BinOp", "*", 0, $1, $3, "" ); }
+	| Exp '[' Exp ']' { $$ = new CExp( "SquareBrackets", "", 0, $1, $3, "" ); }
+	| Exp '.' LENGTH { $$ = new CExp( "Length", "", 0, $1, 0, "" ); }
+	| Exp '.' ID '(' ExpList ')' { $$ = new CExp( "MethodCall", "", $5, $1, 0, "" ); }
+	| NUMBER { $$ = new CExp( "SingleExp", "Number", 0, 0, 0, "" ); } /* послений - int*/
+	| TRUE { $$ = new CExp( "SingleExp", "True", 0, 0, 0, "" ); }
+	| FALSE { $$ = new CExp( "SingleExp", "False", 0, 0, 0, "" ); }
+	| ID { $$ = new CExp( "SingleExp", "Id", 0, 0, 0, $1 ); }
+	| THIS { $$ = new CExp( "SingleExp", "This", 0, 0, 0, "" ); }
+	| NEW INT '[' Exp ']' { $$ = new CExp( "NewIntArray", "", 0, $4, 0, "" ); }
+	| NEW ID '(' ')' { $$ = new CExp( "NewCustomType", "", 0, 0, 0, $2 ); }
+	| '!' Exp { $$ = new CExp( "NotExp", "", 0, $2, 0, "" ); }
+	| '(' Exp ')' { $$ = new CExp( "RoundBrackets", "", 0, $2, 0, "" ); }
 	;
 
 ExpList:
@@ -213,13 +212,13 @@ ExpRests:
 	;
 
 ExpRest:
-	',' Exp { $$ = new CExpRest($1); }
+	',' Exp { $$ = new CExpRest($2); }
 	;
 
 %%
 
 /* Функция обработки ошибки. */
-void yyerror( const char* str )
+void yyerror( CProgram*& root, const char* str )
 {
 	std::cout << str << " in " << yylineno << " line" << std::endl;
 }

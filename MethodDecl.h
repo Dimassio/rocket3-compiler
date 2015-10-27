@@ -3,7 +3,7 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-class CMethodDecl : IMethodDecl
+class CMethodDecl : public IMethodDecl
 {
 public:
 	CMethodDecl(IType* _type, std::string _id, IFormalList* _formalList, IVarDeclList* _varDeclList, IStatementList* _statementList, IExp* _exp) :

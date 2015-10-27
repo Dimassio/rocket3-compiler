@@ -3,7 +3,7 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-class CVarDeclList : IVarDeclList {
+class CVarDeclList : public IVarDeclList {
 public:
 	CVarDeclList( IVarDecl* _varDecl, IVarDeclList* _varDeclList ) :
 		varDecl(_varDecl), varDeclList(_varDeclList)

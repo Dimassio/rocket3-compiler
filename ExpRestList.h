@@ -3,7 +3,7 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-class CExpRestList : IExpRestList {
+class CExpRestList : public  IExpRestList {
 public:
 	CExpRestList( IExpRest* _expRest, IExpRestList* _expRestList ) :
 		expRest( _expRest ), expRestList( _expRestList )

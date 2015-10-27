@@ -3,7 +3,7 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-class CVarDecl : IVarDecl {
+class CVarDecl : public  IVarDecl {
 public:
 	CVarDecl( IType* _type, std::string _varName ) :
 		type( _type ), varName( _varName )
