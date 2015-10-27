@@ -47,6 +47,7 @@ void yyerror( const char* );
 	CFormalRestList* formalRestList;
 	CStatement* statement;
 	CStatementList* statementList;
+	CExp* exp;
 	/*опишите свои классы здесь*/
 }
 
@@ -99,6 +100,7 @@ void yyerror( const char* );
 %type<formalRestList> FormalRests
 %type<statement> Statement
 %type<statementList> Statements
+%type<exp> Exp
 
 /* Секция с описанием правил парсера. */
 %%
