@@ -126,7 +126,7 @@ public:
 		std::string id = formalList->Id;
 		CType* type = formalList->Type;
 		CFormalRestList* formalRestList = formalList->FormalRestList;
-		if( !type && id = "" && !formalRestList ) {
+		if( !type && id == "" && !formalRestList ) {
 			return;
 		}
 		type->Accept( this );
