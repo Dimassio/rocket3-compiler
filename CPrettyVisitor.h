@@ -5,7 +5,6 @@
 
 class CPrettyPrinterVisitor : public IVisitor {
 public:
-
 	CPrettyPrinterVisitor()
 	{
 	}
@@ -66,50 +65,41 @@ public:
 	{
 		std::cout << "Expression: " << expression->GetExpressionType() << " " << expression->GetExpressionName() << std::endl;
 
-		if (expression->GetExpressionType() == "BinOp") {
-			expression->FirstExpression()->Accept(this);
+		if( expression->GetExpressionType() == "BinOp" ) {
+			expression->FirstExpression()->Accept( this );
 			std::cout << " " << expression->GetExpressionName() << " ";
-			expression->SecondExpression()->Accept(this);
-		}
-		else if (expression->GetExpressionType() == "SquareBrackets") {
-			expression->FirstExpression()->Accept(this);
+			expression->SecondExpression()->Accept( this );
+		} else if( expression->GetExpressionType() == "SquareBrackets" ) {
+			expression->FirstExpression()->Accept( this );
 			std::cout << "[";
-			expression->SecondExpression()->Accept(this);
+			expression->SecondExpression()->Accept( this );
 			std::cout << "]";
-		}
-		else if (expression->GetExpressionType() == "Length") {
-			expression->FirstExpression()->Accept(this);
+		} else if( expression->GetExpressionType() == "Length" ) {
+			expression->FirstExpression()->Accept( this );
 			std::cout << ".Length";
-		}
-		else if (expression->GetExpressionType() == "MethodCall") {
-			expression->FirstExpression()->Accept(this);
+		} else if( expression->GetExpressionType() == "MethodCall" ) {
+			expression->FirstExpression()->Accept( this );
 			std::cout << "." << expression->GetId() << "(";
-			expression->ExpressionList()->Accept(this);
+			expression->ExpressionList()->Accept( this );
 			std::cout << ")";
-		}
-		else if (expression->GetExpressionType() == "SingleExp") {
-			if (expression->GetExpressionName() == "Number" || expression->GetExpressionName() == "Id") {
+		} else if( expression->GetExpressionType() == "SingleExp" ) {
+			if( expression->GetExpressionName() == "Number" || expression->GetExpressionName() == "Id" ) {
 				std::cout << expression->GetId();
-			}
-			else {
+			} else {
 				std::cout << expression->GetExpressionName();
 			}
-		}
-		else if (expression->GetExpressionType() == "NewIntArray") {
+		} else if( expression->GetExpressionType() == "NewIntArray" ) {
 			std::cout << "new int[";
-			expression->FirstExpression()->Accept(this);
+			expression->FirstExpression()->Accept( this );
 			std::cout << "]";
-		}
-		else if (expression->GetExpressionType() == "NewCustomType") {
+		} else if( expression->GetExpressionType() == "NewCustomType" ) {
 			std::cout << "new " << expression->GetId() << "()";
-		}
-		else if (expression->GetExpressionType() == "NotExp") {
+		} else if( expression->GetExpressionType() == "NotExp" ) {
 			std::cout << "!";
-			expression->FirstExpression()->Accept(this);
-		}
-		else if (expression->GetExpressionType() == "RoundBrackets") {
+			expression->FirstExpression()->Accept( this );
+		} else if( expression->GetExpressionType() == "RoundBrackets" ) {
 			std::cout << "(";
-			expression->FirstExpression()->Accept(this);
+			expression->FirstExpression()->Accept( this );
 			std::cout << ")";
 		}
 
@@ -133,7 +123,7 @@ public:
 		std::string id = formalList->Id;
 		CType* type = formalList->Type;
 		CFormalRestList* formalRestList = formalList->FormalRestList;
-		if( !type && id = "" && !formalRestList ) {
+		if( !type && id == "" && !formalRestList ) {
 			return;
 		}
 		type->Accept( this );
@@ -172,48 +162,43 @@ public:
 		newMethodDeclList->Accept( this );
 	}
 
-	void visit( const IStatement* )
+	void visit( const CStatement* statement )
 	{
 		std::cout << "Statement: " << statement->GetStatementType() << std::endl;
 
-		if (statement->GetStatementType() == "BlockStatement") {
+		if( statement->GetStatementType() == "BlockStatement" ) {
 			std::cout << "{";
-			statement->Statements()->Accept(this);
+			statement->Statements()->Accept( this );
 			std::cout << "}";
-		}
-		else if (statement->GetStatementType() == "IfStatement") {
+		} else if( statement->GetStatementType() == "IfStatement" ) {
 			std::cout << "if (";
-			statement->FirstExpression()->Accept(this);
+			statement->FirstExpression()->Accept( this );
 			std::cout << ")" << std::endl;
-			statement->FirstStatement()->Accept(this);
+			statement->FirstStatement()->Accept( this );
 			std::cout << std::endl << "else" << std::endl;
-			statement->SecondStatement()->Accept(this);
+			statement->SecondStatement()->Accept( this );
 			std::cout << std::endl;
-		}
-		else if (statement->GetStatementType() == "WhileStatement") {
+		} else if( statement->GetStatementType() == "WhileStatement" ) {
 			std::cout << "while (";
-			statement->FirstExpression()->Accept(this);
+			statement->FirstExpression()->Accept( this );
 			std::cout << ")" << std::endl;
-			statement->FirstStatement()->Accept(this);
+			statement->FirstStatement()->Accept( this );
 			std::cout << std::endl;
-		}
-		else if (statement->GetStatementType() == "PrintlnStatement") {
+		} else if( statement->GetStatementType() == "PrintlnStatement" ) {
 			std::cout << "System.out.println(";
-			statement->FirstExpression()->Accept(this);
+			statement->FirstExpression()->Accept( this );
 			std::cout << ");" << std::endl;
-		}
-		else if (statement->GetStatementType() == "AssignStatement") {
+		} else if( statement->GetStatementType() == "AssignStatement" ) {
 			std::cout << statement->GetId();
 			std::cout << " = ";
-			statement->FirstExpression()->Accept(this);
+			statement->FirstExpression()->Accept( this );
 			std::cout << ";";
-		}
-		else if (statement->GetStatementType() == "ArrayAssignStatement") {
+		} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
 			std::cout << statement->GetId();
 			std::cout << "[";
-			statement->FirstExpression()->Accept(this);
+			statement->FirstExpression()->Accept( this );
 			std::cout << "] = ";
-			statement->SecondExpression()->Accept(this);
+			statement->SecondExpression()->Accept( this );
 			std::cout << ";";
 		}
 	}
@@ -226,9 +211,9 @@ public:
 		( statementList->Statement )->Accept( this );
 	}
 
-	void visit( const IType* )
+	void visit( const CType* type )
 	{
-
+		std::cout << "Type: " << type->GetTypeName() << std::endl;
 	}
 
 	void visit( const CVarDecl* varDecl )
