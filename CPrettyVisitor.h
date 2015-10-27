@@ -116,9 +116,50 @@ public:
 		newMethodDeclList->Accept( this );
 	}
 
-	void visit( const IStatement* )
+	void visit( const CStatement* statement)
 	{
+		std::cout << "Statement: " << statement->GetStatementType << std::endl;
 
+		if (statement->GetStatementType == "BlockStatement") {
+			std::cout << "{";
+			statement->Statements.Accept(this);
+			std::cout << "}";
+		}
+		else if (statement->GetStatementType == "IfStatement") {
+			std::cout << "if (";
+			statement->FirstExpression.Accept(this);
+			std::cout << ")" << std::endl;
+			statement->FirstStatement.Accept(this);
+			std::cout << std::endl << "else" << std::endl;
+			statement->SecondStatement.Accept(this);
+			std::cout << std::endl;
+		}
+		else if (statement->GetStatementType == "WhileStatement") {
+			std::cout << "while (";
+			statement->FirstExpression.Accept(this);
+			std::cout << ")" << std::endl;
+			statement->FirstStatement.Accept(this);
+			std::cout << std::endl;
+		}
+		else if (statement->GetStatementType == "PrintlnStatement") {
+			std::cout << "System.out.println(";
+			statement->FirstExpression.Accept(this);
+			std::cout << ");" << std::endl;
+		}
+		else if (statement->GetStatementType == "AssignStatement") {
+			std::cout << statement->GetId();
+			std::cout << " = ";
+			statement->FirstExpression.Accept(this);
+			std::cout << ";";
+		}
+		else if (statement->GetStatementType == "ArrayAssignStatement") {
+			std::cout << statement->GetId();
+			std::cout << "[";
+			statement->FirstExpression.Accept(this);
+			std::cout << "] = ";
+			statement->SecondExpression.Accept(this);
+			std::cout << ";";
+		}
 	}
 
 	void visit( const CStatementList* statementList )
@@ -129,9 +170,9 @@ public:
 		( statementList->Statement )->Accept( this );
 	}
 
-	void visit( const IType* )
+	void visit(const CType* type)
 	{
-
+		std::cout << "Type: " << type->GetTypeName() << std::endl;
 	}
 
 	void visit( const CVarDecl* varDecl )

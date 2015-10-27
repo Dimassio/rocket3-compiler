@@ -45,6 +45,7 @@ void yyerror( const char* );
 	CFormalList* formalList;
 	CFormalRest* formalRest;
 	CFormalRestList* formalRestList;
+	CStatement* statement;
 	CStatementList* statementList;
 	/*опишите свои классы здесь*/
 }
@@ -96,8 +97,8 @@ void yyerror( const char* );
 %type<formalList> FormalList
 %type<formalRest> FormalRest
 %type<formalRestList> FormalRests
+%type<statement> Statement
 %type<statementList> Statements
-/*допишите определениея своих типов символов*/
 
 /* Секция с описанием правил парсера. */
 %%
@@ -170,21 +171,21 @@ Statements:
 
 /* Далее берет Женя */
 Type:
-	INT '['']' {}
-	| INT {}
-	| BOOLEAN {}
-	| STRING {}
-	| VOID {}
-	| ID { /* coding */}
+	INT '['']' { $$ = new Type("int []"); }
+	| INT { $$ = new Type("int"); }
+	| BOOLEAN { $$ = new Type("boolean"); }
+	| STRING { $$ = new Type("string"); }
+	| VOID { $$ = new Type("void"); }
+	| ID { $$ = new Type($1); }
 	;
 
 Statement:
-	'{' Statements '}' {}
-	| IF '(' Exp ')' Statement ELSE Statement {}
-	| WHILE '(' Exp ')' Statement {}
-	| SYSTEMOUTPRINTLN '(' Exp ')' ';' {}
-	| ID '=' Exp ';' {}
-	| ID '['Exp']' '=' Exp ';' {}
+	'{' Statements '}' { $$ = new CStatement( "BlockStatement", $2, 0, 0, 0, 0, "" ); }
+	| IF '(' Exp ')' Statement ELSE Statement { $$ = new CStatement( "IfStatement", 0, $5, $7, $3, 0, "" ); }
+	| WHILE '(' Exp ')' Statement { $$ = new CStatement( "WhileStatement", 0, $5, 0, $3, 0, "" ); }
+	| SYSTEMOUTPRINTLN '(' Exp ')' ';' { $$ = new CStatement( "PrintlnStatement", 0, 0, 0, $3, 0, "" ); }
+	| ID '=' Exp ';' { $$ = new CStatement( "AssignStatement", 0, 0, 0, $3, 0, $1 ); }
+	| ID '[' Exp ']' '=' Exp ';' { $$ = new CStatement( "ArrayAssignStatement", 0, 0, 0, $3, $6, $1 ); }
 	;
 
 Exp:
