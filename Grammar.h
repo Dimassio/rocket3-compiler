@@ -83,6 +83,22 @@ public:
 	virtual void Accept( IVisitor* ) const = 0;
 };
 
+class IFormalRest {
+public:
+	virtual ~IFormalRest()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IFormalRestList {
+public:
+	virtual ~IFormalRestList()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
 // Тип
 class IType {
 public:

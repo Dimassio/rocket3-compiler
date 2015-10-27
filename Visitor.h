@@ -16,6 +16,8 @@
 #include "Type.h"
 #include "VarDecl.h"
 #include "VarDeclList.h"
+#include "FormalRest.h"
+#include "FormalRestList.h"
 
 class IVisitor {
 public:
@@ -30,6 +32,8 @@ public:
 	void visit( const IExp* );
 	void visit( const IExpList* );
 	void visit( const IFormalList* );
+	void visit( const IFormalRest*);
+	void visit( const IFormalRestList*);
 	void visit( const IMethodDecl* );
 	void visit( const IMethodDeclList* );
 	void visit( const IStatement* );

@@ -3,10 +3,10 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-class CFormalList : IFormalList {
+class CFormalRest : IFormalRest {
 public:
-	CFormalList(IType* _type, std::string _id, IFormalRestList* _formalRestList) :
-		type(_type), id(_id), formalRestList(_formalRestList)
+	CFormalRest(IType* _type, std::string _id) :
+		type(_type), id(_id)
 	{
 	}
 
@@ -20,11 +20,6 @@ public:
 		return type;
 	}
 
-	const IFormalRestList* FormalRestList() const
-	{
-		return formalRestList;
-	}
-
 	const std::string Id() const
 	{
 		return id;
@@ -32,6 +27,6 @@ public:
 
 private:
 	IType* type;
-	IFormalRestList* formalRestList;
 	std::string id;
 };
+
