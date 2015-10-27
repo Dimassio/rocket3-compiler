@@ -5,25 +5,13 @@
 
 class CExpList : public IExpList {
 public:
-	CExpList( IExp* _exp, IExpRestList* _expRestList ) :
-		exp( _exp ), expRestList( _expRestList )
-	{
-	}
+	CExpList(IExp* _exp, IExpRestList* _expRestList);
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor->visit( this );
-	}
+	void Accept(IVisitor* visitor) const;
 
-	const IExp* Exp() const
-	{
-		return exp;
-	}
+	const IExp* Exp() const;
 
-	const IExpRestList* ExpRestList() const
-	{
-		return expRestList;
-	}
+	const IExpRestList* ExpRestList() const;
 
 private:
 	IExp* exp;
