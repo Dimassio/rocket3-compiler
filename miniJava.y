@@ -7,6 +7,8 @@
 #include "Exp.h"
 #include "ExpList.h"
 #include "FormalList.h"
+#include "FormalRest.h"
+#include "FormalRestList.h"
 #include "MethodDecl.h"
 #include "MethodDeclList.h"
 #include "Statement.h"
@@ -14,6 +16,7 @@
 #include "Type.h"
 #include "VarDecl.h"
 #include "VarDeclList.h"
+
 extern "C" int yylex();
 extern int yylineno;
 
@@ -35,14 +38,19 @@ void yyerror( const char* );
 	CMainClass* mainClass;
 	CClassDeclList* classDeclList;
 	CClassDecl* classDecl;
+	CVarDecl* varDecl;
 	CVarDeclList* varDeclList;
+	CMethodDecl* methodDecl;
 	CMethodDeclList* methodDeclList;
+	CFormalList* formalList;
+	CFormalRest* formalRest;
+	CFormalRestList* formalRestList;
+	CStatementList* statementList;
 	/*опишите свои классы здесь*/
 }
 
 /* Определение лево-ассоцитивности. Аналогично есть %right.
-Порядок объявление важен - чем позже объявлен оператор, тем больше его приоритет.
-В данном случае оба оператора лево-ассоциативные, но - имеет более высокий приоритет, чем & и |. */
+Порядок объявление важен - чем позже объявлен оператор, тем больше его приоритет. */
 %right '='
 %left '+''-' 
 %left '*''/' 
@@ -81,8 +89,15 @@ void yyerror( const char* );
 %type<classDeclList> ClassDecls
 %type<classDecl> ClassDecl
 %type<varDeclList> VarDecls
+%type<methodDecl> MethodDecl
 %type<methodDeclList> MethodDecls
-/*допишите определениея своих типао символов*/
+%type<varDecl> VarDecl
+%type<varDeclList> VarDecls
+%type<formalList> FormalList
+%type<formalRest> FormalRest
+%type<formalRestList> FormalRests
+%type<statementList> Statements
+/*допишите определениея своих типов символов*/
 
 /* Секция с описанием правил парсера. */
 %%
@@ -123,34 +138,34 @@ MethodDecls:
 
 /* Далее берет Саня */
 VarDecl:
-	Type ID ';' {}  
+	Type ID ';' { $$ = new CVarDecl( $1, $2 ); }  
 	;
 
 MethodDecl:
-	PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' '}' {}
-	| PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp ';' '}' {}
-	| PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' '}' {}
-	| PUBLIC Type ID '(' FormalList ')' '{' RETURN Exp ';' '}' {}
+	PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, $8, $9, $11); }
+	| PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, 0, $8, $10); }
+	| PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, $8, 0, $10 ); }
+	| PUBLIC Type ID '(' FormalList ')' '{' RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, 0, 0, $9 ); }
 	;
 
 FormalList:
-	Type ID FormalRests {}
-	| Type ID {}
-	|  {}
+	Type ID FormalRests { $$ = new CFormalList( $1, $2, $3 ); }
+	| Type ID { $$ = new CFormalList( $1, $2, 0 ); }
+	| { $$ = new CFormalList( 0, 0, 0 ); }
 	;
 
 FormalRests:
-	FormalRest {}
-	| FormalRests FormalRest {}
+	FormalRest { $$ = new CFormalRestList( $1, 0 ); }
+	| FormalRests FormalRest { $$ = new CFormalRestList( $2, $1 ); }
 	;
 
 FormalRest:
-	',' Type ID {}
+	',' Type ID { $$ = new CFormalRest( $2, $3 ); }
 	;
 
 Statements:
-	Statement {}
-	| Statements Statement {}
+	Statement { $$ = new CStatementList( $1, 0 ); }
+	| Statements Statement { $$ = new CStatementList( $2, $1 ); }
 	;
 
 /* Далее берет Женя */
