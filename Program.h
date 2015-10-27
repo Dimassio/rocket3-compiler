@@ -3,37 +3,15 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-/*
-Grammar:
-
-Program:
-MainClass {}
-| MainClass ClassDecls {}
-;
-
-*/
-
 class CProgram : public IProgram { 
 public:
-	CProgram( IMainClass* _mainClass, IClassDeclList* _classDeclList ) :
-		mainClass( _mainClass ), classDeclList( _classDeclList )
-	{
-	}
+	CProgram( IMainClass* _mainClass, IClassDeclList* _classDeclList );
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor->visit( this );
-	}
+	void Accept( IVisitor* visitor ) const;
 
-	const IMainClass* MainClass() const
-	{
-		return mainClass;
-	}
+	const IMainClass* MainClass() const;
 
-	const IClassDeclList* ClassDeclList() const
-	{
-		return classDeclList;
-	}
+	const IClassDeclList* ClassDeclList() const;
 
 private:
 	IMainClass* mainClass;

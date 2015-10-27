@@ -3,35 +3,15 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-/*
-ClassDecls:
-	ClassDecl {}
-	| ClassDecls ClassDecl {}
-	;
-*/
-
 class CClassDeclList : public IClassDeclList {
 public:
-	CClassDeclList( IClassDecl* _classDecl, IClassDeclList* _classDeclList) :
-		classDecl( _classDecl ), classDeclList(_classDeclList)
-	{
-	}
+	CClassDeclList( IClassDecl* _classDecl, IClassDeclList* _classDeclList );
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor->visit( this );
-	}
+	void Accept( IVisitor* visitor ) const;
 
-	const IClassDecl* ClassDecl() const
-	{
-		return classDecl;
-	}
+	const IClassDecl* ClassDecl() const;
 
-	const IClassDeclList* ClassDeclList() const
-	{
-		return classDeclList;
-	}
-
+	const IClassDeclList* ClassDeclList() const;
 
 private:
 	IClassDecl* classDecl;
