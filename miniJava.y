@@ -151,7 +151,7 @@ MethodDecl:
 FormalList:
 	Type ID FormalRests { $$ = new CFormalList( $1, $2, $3 ); }
 	| Type ID { $$ = new CFormalList( $1, $2, 0 ); }
-	| { $$ = new CFormalList( 0, 0, 0 ); }
+	| { $$ = new CFormalList( 0, "", 0 ); }
 	;
 
 FormalRests:

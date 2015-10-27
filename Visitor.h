@@ -16,6 +16,8 @@
 #include "Type.h"
 #include "VarDecl.h"
 #include "VarDeclList.h"
+#include "FormalRest.h"
+#include "FormalRestList.h"
 
 class IVisitor {
 public:

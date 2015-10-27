@@ -72,14 +72,36 @@ public:
 
 	}
 
-	void visit( const IFormalList* )
+	void visit( const CFormalList* formalList )
 	{
-
+		std::string id = formalList->Id;
+		CType* type = formalList->Type;
+		CFormalRestList* formalRestList = formalList->FormalRestList;
+		if( !type && id = "" && !formalRestList ) {
+			return;
+		}
+		type->Accept( this );
+		std::cout << id;
+		if( formalRestList ) {
+			formalRestList->Accept( this );
+		}
 	}
 
-	void visit( const IMethodDecl* )
+	void visit( const CMethodDecl* methodDecl )
 	{
-
+		std::cout << "public ";
+		( methodDecl->Type )->Accept( this );
+		std::cout << methodDecl->Id << "( ";
+		( methodDecl->FormalList )->Accept( this );
+		std::cout << ") {";
+		if( methodDecl->VarDeclList ) {
+			( methodDecl->VarDeclList )->Accept( this );
+		}
+		if( methodDecl->StatementList ) {
+			( methodDecl->StatementList )->Accept( this );
+		}
+		std::cout << "return ";
+		( methodDecl->Exp )->Accept( this );
 	}
 
 	void visit( const CMethodDeclList* methodDeclList )
@@ -99,9 +121,12 @@ public:
 
 	}
 
-	void visit( const IStatementList* )
+	void visit( const CStatementList* statementList )
 	{
-
+		if( statementList->StatementList ) {
+			( statementList->StatementList )->Accept( this );
+		}
+		( statementList->Statement )->Accept( this );
 	}
 
 	void visit( const IType* )
@@ -109,9 +134,10 @@ public:
 
 	}
 
-	void visit( const IVarDecl* )
+	void visit( const CVarDecl* varDecl )
 	{
-
+		( varDecl->Type )->Accept( this );
+		std::cout << varDecl->VarName << ";" << std::endl;
 	}
 
 	void visit( const CVarDeclList* varDeclList )
@@ -126,4 +152,18 @@ public:
 		newVarDeclList->Accept( this );
 	}
 
+	void visit( const CFormalRestList* formalRestList )
+	{
+		if( formalRestList->FormalRestList ) {
+			( formalRestList->FormalRestList )->Accept( this );
+		}
+		( formalRestList->FormalRest )->Accept( this );
+	}
+
+	void visit( const CFormalRest* formalRest )
+	{
+		std::cout << ", ";
+		formalRest->Type->Accept( this );
+		std::cout << formalRest->Id << std::endl;
+	}
 };
