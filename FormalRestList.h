@@ -5,25 +5,13 @@
 
 class CFormalRestList : public IFormalRestList {
 public:
-	CFormalRestList(IFormalRest* _formalRest, IFormalRestList* _formalRestList) :
-		formalRest(_formalRest), formalRestList(_formalRestList)
-	{
-	}
+	CFormalRestList(IFormalRest* _formalRest, IFormalRestList* _formalRestList);
 
-	void Accept(IVisitor* visitor) const
-	{
-		visitor->visit(this);
-	}
+	void Accept(IVisitor* visitor) const;
 
-	const IFormalRest* FormalRest() const
-	{
-		return formalRest;
-	}
+	const IFormalRest* FormalRest();
 
-	const IFormalRestList* FormalRestList() const
-	{
-		return formalRestList;
-	}
+	const IFormalRestList* FormalRestList() const;
 
 private:
 	IFormalRest* formalRest;

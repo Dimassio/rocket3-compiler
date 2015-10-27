@@ -5,25 +5,13 @@
 
 class CStatementList : public  IStatementList {
 public:
-	CStatementList(IStatement* _statement, CStatementList* _statementList) :
-		statement(_statement), statementList(_statementList)
-	{
-	}
+	CStatementList(IStatement* _statement, CStatementList* _statementList);
 
-	void Accept(IVisitor* visitor) const
-	{
-		visitor->visit(this);
-	}
+	void Accept(IVisitor* visitor) const;
 
-	const IStatement* Statement() const
-	{
-		return statement;
-	}
+	const IStatement* Statement() const;
 
-	const CStatementList* StatementList() const
-	{
-		return statementList;
-	}
+	const CStatementList* StatementList() const;
 
 private:
 	IStatement* statement;

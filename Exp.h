@@ -13,50 +13,21 @@ public:
 		IExp* _firstExpression,
 		IExp* _secondExperssion,
 		std::string _id
-	)
-		: expressionType(_expressionType),
-		expressionName(_expressionName),
-		expressionList(_expressionList),
-		firstExpression(_firstExpression),
-		secondExperssion(_secondExperssion),
-		id(_id)
-	{
-	}
+	);
 
-	void Accept(IVisitor* visitor) const
-	{
-		visitor->visit(this);
-	}
+	void Accept(IVisitor* visitor) const;
 
-	const IExpList* ExpressionList() const
-	{
-		return expressionList;
-	}
+	const IExpList* ExpressionList() const;
 
-	const IExp* FirstExpression() const
-	{
-		return firstExpression;
-	}
+	const IExp* FirstExpression() const;
 
-	const IExp* SecondExpression() const
-	{
-		return secondExperssion;
-	}
+	const IExp* SecondExpression() const;
 
-	const std::string GetId() const
-	{
-		return id;
-	}
+	const std::string GetId() const;
 
-	const std::string GetExpressionType() const
-	{
-		return expressionType;
-	}
+	const std::string GetExpressionType() const;
 
-	const std::string GetExpressionName() const
-	{
-		return expressionName;
-	}
+	const std::string GetExpressionName() const;
 
 private:
 	std::string expressionType;

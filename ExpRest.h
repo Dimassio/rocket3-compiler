@@ -5,20 +5,11 @@
 
 class CExpRest : public  IExpRest {
 public:
-	CExpRest( IExp* _exp ) :
-		exp( _exp )
-	{
-	}
+	CExpRest(IExp* _exp);
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor->visit( this );
-	}
+	void Accept(IVisitor* visitor) const;
 
-	const IExp* Exp() const
-	{
-		return exp;
-	}
+	const IExp* Exp() const;
 
 private:
 	IExp* exp;

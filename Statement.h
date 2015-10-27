@@ -7,63 +7,31 @@
 
 class CStatement : public IStatement {
 public:
-	CStatement (
+	CStatement(
 		std::string _statementType,
 		IStatementList* _statements,
 		IStatement* _firstStatement,
 		IStatement* _secondStatement,
 		IExp* _firstExpression,
 		IExp* _secondExperssion,
-		std::string _id )
-		: statementType( _statementType ),
-		statements( _statements ),
-		firstStatement( _firstStatement ),
-		secondStatement( _secondStatement ),
-		firstExpression( _firstExpression ),
-		secondExperssion( _secondExperssion ),
-		id( _id )
-	{
-	}
+		std::string _id
+	);
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor-> visit( this );
-	}
+	void Accept(IVisitor* visitor) const;
 
-	const IStatementList* Statements() const
-	{
-		return statements;
-	}
+	const IStatementList* Statements() const;
 
-	const IStatement* FirstStatement() const
-	{
-		return firstStatement;
-	}
+	const IStatement* FirstStatement() const;
 
-	const IStatement* SecondStatement() const
-	{
-		return secondStatement;
-	}
+	const IStatement* SecondStatement() const;
 
-	const IExp* FirstExpression() const
-	{
-		return firstExpression;
-	}
+	const IExp* FirstExpression() const;
 
-	const IExp* SecondExpression() const
-	{
-		return secondExperssion;
-	}
+	const IExp* SecondExpression() const;
 
-	const std::string GetId() const
-	{
-		return id;
-	}
+	const std::string GetId() const;
 
-	const std::string GetStatementType() const
-	{
-		return statementType;
-	}
+	const std::string GetStatementType() const;
 
 private:
 	std::string statementType;
