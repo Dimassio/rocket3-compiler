@@ -2,22 +2,7 @@
 
 #include <iostream>
 #include "Grammar.h"
-#include "Program.h"
-#include "MainClass.h"
-#include "ClassDecl.h"
-#include "ClassDeclList.h"
-#include "Exp.h"
-#include "ExpList.h"
-#include "FormalList.h"
-#include "MethodDecl.h"
-#include "MethodDeclList.h"
-#include "Statement.h"
-#include "StatementList.h"
-#include "Type.h"
-#include "VarDecl.h"
-#include "VarDeclList.h"
-#include "FormalRest.h"
-#include "FormalRestList.h"
+#include "Common.h"
 
 class IVisitor {
 public:
@@ -41,4 +26,6 @@ public:
 	void visit( const IType* );
 	void visit( const IVarDecl* );
 	void visit( const IVarDeclList* );
+	void visit( const IExpRest* );
+	void visit( const IExpRestList* );
 };

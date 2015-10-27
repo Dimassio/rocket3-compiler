@@ -3,10 +3,10 @@
 #include "Grammar.h"
 #include "Visitor.h"
 
-class CExpList : IExpList {
+class CExpRestList : IExpRestList {
 public:
-	CExpList( IExp* _exp, IExpRestList* _expRestList ) :
-		exp( _exp ), expRestList( _expRestList )
+	CExpRestList( IExpRest* _expRest, IExpRestList* _expRestList ) :
+		expRest( _expRest ), expRestList( _expRestList )
 	{
 	}
 
@@ -15,9 +15,9 @@ public:
 		visitor->visit( this );
 	}
 
-	const IExp* Exp() const
+	const IExpRest* Exp() const
 	{
-		return exp;
+		return expRest;
 	}
 
 	const IExpRestList* ExpRestList() const
@@ -26,6 +26,6 @@ public:
 	}
 
 private:
-	IExp* exp;
+	IExpRest* expRest;
 	IExpRestList* expRestList;
 };

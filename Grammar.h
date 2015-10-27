@@ -143,3 +143,19 @@ public:
 	}
 	virtual void Accept( IVisitor* ) const = 0;
 };
+
+class IExpRest {
+public:
+	virtual ~IExpRest()
+	{
+	}
+	virtual void Accept( IVisitor* ) const = 0;
+};
+
+class IExpRestList {
+public:
+	virtual ~IExpRestList()
+	{
+	}
+	virtual void Accept( IVisitor* ) const = 0;
+};

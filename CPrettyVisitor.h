@@ -67,9 +67,16 @@ public:
 
 	}
 
-	void visit( const IExpList* )
+	void visit( const CExpList* expList )
 	{
-
+		CExp* exp = expList->Exp;
+		CExpRestList* expRestList = expList->ExpRestList;
+		if( exp ) {
+			exp->Accept( this );
+		}
+		if( expRestList ) {
+			expRestList->Accept( this );
+		}
 	}
 
 	void visit( const CFormalList* formalList )
@@ -77,7 +84,7 @@ public:
 		std::string id = formalList->Id;
 		CType* type = formalList->Type;
 		CFormalRestList* formalRestList = formalList->FormalRestList;
-		if( !type && id == "" && !formalRestList ) {
+		if( !type && id = "" && !formalRestList ) {
 			return;
 		}
 		type->Accept( this );
@@ -116,50 +123,9 @@ public:
 		newMethodDeclList->Accept( this );
 	}
 
-	void visit( const CStatement* statement)
+	void visit( const IStatement* )
 	{
-		std::cout << "Statement: " << statement->GetStatementType << std::endl;
 
-		if (statement->GetStatementType == "BlockStatement") {
-			std::cout << "{";
-			statement->Statements.Accept(this);
-			std::cout << "}";
-		}
-		else if (statement->GetStatementType == "IfStatement") {
-			std::cout << "if (";
-			statement->FirstExpression.Accept(this);
-			std::cout << ")" << std::endl;
-			statement->FirstStatement.Accept(this);
-			std::cout << std::endl << "else" << std::endl;
-			statement->SecondStatement.Accept(this);
-			std::cout << std::endl;
-		}
-		else if (statement->GetStatementType == "WhileStatement") {
-			std::cout << "while (";
-			statement->FirstExpression.Accept(this);
-			std::cout << ")" << std::endl;
-			statement->FirstStatement.Accept(this);
-			std::cout << std::endl;
-		}
-		else if (statement->GetStatementType == "PrintlnStatement") {
-			std::cout << "System.out.println(";
-			statement->FirstExpression.Accept(this);
-			std::cout << ");" << std::endl;
-		}
-		else if (statement->GetStatementType == "AssignStatement") {
-			std::cout << statement->GetId();
-			std::cout << " = ";
-			statement->FirstExpression.Accept(this);
-			std::cout << ";";
-		}
-		else if (statement->GetStatementType == "ArrayAssignStatement") {
-			std::cout << statement->GetId();
-			std::cout << "[";
-			statement->FirstExpression.Accept(this);
-			std::cout << "] = ";
-			statement->SecondExpression.Accept(this);
-			std::cout << ";";
-		}
 	}
 
 	void visit( const CStatementList* statementList )
@@ -170,9 +136,9 @@ public:
 		( statementList->Statement )->Accept( this );
 	}
 
-	void visit(const CType* type)
+	void visit( const IType* )
 	{
-		std::cout << "Type: " << type->GetTypeName() << std::endl;
+
 	}
 
 	void visit( const CVarDecl* varDecl )
@@ -206,5 +172,21 @@ public:
 		std::cout << ", ";
 		formalRest->Type->Accept( this );
 		std::cout << formalRest->Id << std::endl;
+	}
+
+	void visit( const CExpRestList* expRestList )
+	{
+		if( expRestList->ExpRestList ) {
+			( expRestList->ExpRestList )->Accept( this );
+		}
+		if( expRestList->Exp ) {
+			( expRestList->Exp )->Accept( this );
+		}
+	}
+
+	void visit( const CExpRest* expRest )
+	{
+		std::cout << ", ";
+		( expRest->Exp )->Accept( this );
 	}
 };

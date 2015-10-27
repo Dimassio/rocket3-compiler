@@ -1,21 +1,6 @@
 %{
 #include <iostream>
-#include "Program.h"
-#include "MainClass.h"
-#include "ClassDecl.h"
-#include "ClassDeclList.h"
-#include "Exp.h"
-#include "ExpList.h"
-#include "FormalList.h"
-#include "FormalRest.h"
-#include "FormalRestList.h"
-#include "MethodDecl.h"
-#include "MethodDeclList.h"
-#include "Statement.h"
-#include "StatementList.h"
-#include "Type.h"
-#include "VarDecl.h"
-#include "VarDeclList.h"
+#include "Common.h"
 
 extern "C" int yylex();
 extern int yylineno;
@@ -45,9 +30,11 @@ void yyerror( const char* );
 	CFormalList* formalList;
 	CFormalRest* formalRest;
 	CFormalRestList* formalRestList;
-	CStatement* statement;
 	CStatementList* statementList;
-	/*опишите свои классы здесь*/
+	CExpList* expList;
+	CExp* exp;
+	CExpRestList* expRestList;
+	CExpRest* expRest;
 }
 
 /* Определение лево-ассоцитивности. Аналогично есть %right.
@@ -97,8 +84,11 @@ void yyerror( const char* );
 %type<formalList> FormalList
 %type<formalRest> FormalRest
 %type<formalRestList> FormalRests
-%type<statement> Statement
 %type<statementList> Statements
+%type<expList> ExpList
+%type<expRestList> ExpRests
+%type<expRest> ExpRest
+%type<exp> Exp
 
 /* Секция с описанием правил парсера. */
 %%
@@ -171,21 +161,21 @@ Statements:
 
 /* Далее берет Женя */
 Type:
-	INT '['']' { $$ = new Type("int []"); }
-	| INT { $$ = new Type("int"); }
-	| BOOLEAN { $$ = new Type("boolean"); }
-	| STRING { $$ = new Type("string"); }
-	| VOID { $$ = new Type("void"); }
-	| ID { $$ = new Type($1); }
+	INT '['']' {}
+	| INT {}
+	| BOOLEAN {}
+	| STRING {}
+	| VOID {}
+	| ID { /* coding */}
 	;
 
 Statement:
-	'{' Statements '}' { $$ = new CStatement( "BlockStatement", $2, 0, 0, 0, 0, "" ); }
-	| IF '(' Exp ')' Statement ELSE Statement { $$ = new CStatement( "IfStatement", 0, $5, $7, $3, 0, "" ); }
-	| WHILE '(' Exp ')' Statement { $$ = new CStatement( "WhileStatement", 0, $5, 0, $3, 0, "" ); }
-	| SYSTEMOUTPRINTLN '(' Exp ')' ';' { $$ = new CStatement( "PrintlnStatement", 0, 0, 0, $3, 0, "" ); }
-	| ID '=' Exp ';' { $$ = new CStatement( "AssignStatement", 0, 0, 0, $3, 0, $1 ); }
-	| ID '[' Exp ']' '=' Exp ';' { $$ = new CStatement( "ArrayAssignStatement", 0, 0, 0, $3, $6, $1 ); }
+	'{' Statements '}' {}
+	| IF '(' Exp ')' Statement ELSE Statement {}
+	| WHILE '(' Exp ')' Statement {}
+	| SYSTEMOUTPRINTLN '(' Exp ')' ';' {}
+	| ID '=' Exp ';' {}
+	| ID '['Exp']' '=' Exp ';' {}
 	;
 
 Exp:
@@ -212,18 +202,18 @@ Exp:
 	;
 
 ExpList:
-	Exp ExpRests {}
-	| Exp {}
-	| {}
+	Exp ExpRests { $$ = new CExpList($1, $2); }
+	| Exp { $$ = new CExpList($1, 0); }
+	| { $$ = new CExpList(0, 0); }
 	;
 
 ExpRests:
-	ExpRest {}
-	| ExpRests ExpRest {}
+	ExpRest { $$ = new CExpRestList($1, 0); }
+	| ExpRests ExpRest { $$ = new CExpRestList($2, $1); }
 	;
 
 ExpRest:
-	',' Exp {}
+	',' Exp { $$ = new CExpRest($1); }
 	;
 
 %%
