@@ -2,6 +2,7 @@
 
 #include "Grammar.h"
 #include "Visitor.h"
+#include <string>
 
 class CFormalList : public  IFormalList {
 public:

@@ -1,8 +1,6 @@
 #include "CPrettyVisitor.h"
 
 // ќн выполн€ет вывод того, что находитс€ в узле дерева.
-
-
 CPrettyPrinterVisitor::CPrettyPrinterVisitor()
 {
 }
