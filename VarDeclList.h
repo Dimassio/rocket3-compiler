@@ -5,26 +5,13 @@
 
 class CVarDeclList : public IVarDeclList {
 public:
-	CVarDeclList( IVarDecl* _varDecl, IVarDeclList* _varDeclList ) :
-		varDecl(_varDecl), varDeclList(_varDeclList)
-	{
-	}
+	CVarDeclList( IVarDecl* _varDecl, IVarDeclList* _varDeclList );
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor->visit( this );
-	}
+	void Accept( IVisitor* visitor ) const;
 
-	const IVarDecl* VarDecl() const
-	{
-		return varDecl;
-	}
+	const IVarDecl* VarDecl() const;
 
-	const IVarDeclList* VarDeclList() const
-	{
-		return varDeclList;
-	}
-
+	const IVarDeclList* VarDeclList() const;
 
 private:
 	IVarDecl* varDecl;

@@ -5,25 +5,13 @@
 
 class CMethodDeclList : public  IMethodDeclList {
 public:
-	CMethodDeclList( IMethodDecl* _methodDecl, IMethodDeclList* _methodDeclList ) :
-		methodDecl( _methodDecl ), methodDeclList( _methodDeclList )
-	{
-	}
+	CMethodDeclList( IMethodDecl* _methodDecl, IMethodDeclList* _methodDeclList );
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor->visit( this );
-	}
+	void Accept( IVisitor* visitor ) const;
 
-	const IMethodDecl* MethodDecl() const
-	{
-		return methodDecl;
-	}
+	const IMethodDecl* MethodDecl() const;
 
-	const IMethodDeclList* MethodDeclList() const
-	{
-		return methodDeclList;
-	}
+	const IMethodDeclList* MethodDeclList() const;
 
 private:
 	IMethodDecl* methodDecl;

@@ -6,30 +6,15 @@
 
 class CMainClass : public IMainClass {
 public:
-	CMainClass( std::string _className, std::string _argName, IStatement* _statement ) :
-		className( _className ), argName( _argName ), statement( _statement )
-	{
-	}
+	CMainClass( std::string _className, std::string _argName, IStatement* _statement );
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor->visit( this );
-	}
+	void Accept( IVisitor* visitor ) const;
 
-	const IStatement* Statement() const
-	{
-		return statement;
-	}
+	const IStatement* Statement() const;
 
-	const std::string GetClassName() const
-	{
-		return className;
-	}
+	const std::string GetClassName() const;
 
-	const std::string GetArgName() const
-	{
-		return argName;
-	}
+	const std::string GetArgName() const;
 
 private:
 	std::string className;
