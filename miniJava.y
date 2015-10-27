@@ -179,26 +179,26 @@ Statement:
 	;
 
 Exp:
-	Exp '<' Exp {}
-	| Exp AND Exp {}
-	| Exp '|' Exp {}
-	| Exp '&' Exp {}
-	| Exp '-' Exp {}
-	| Exp '+' Exp {}
-	| Exp '/' Exp {}
-	| Exp '*' Exp {}
-	| Exp '['Exp']' {}
-	| Exp '.'LENGTH {}
-	| Exp '.'ID '('ExpList')' {}
-	| NUMBER {}
-	| TRUE {}
-	| FALSE {}
-	| ID {}
-	| THIS {}
-	| NEW INT '['Exp']' {}
-	| NEW ID '('')' {}
-	| '!' Exp {}
-	| '(' Exp ')' {}
+	Exp '<' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
+	| Exp AND Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
+	| Exp '|' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
+	| Exp '&' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
+	| Exp '-' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
+	| Exp '+' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
+	| Exp '/' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
+	| Exp '*' Exp { $$ = new CExp( "BinOp", $2, 0, $1, $3, "" ) }
+	| Exp '[' Exp ']' { $$ = new CExp( "SquareBrackets", "", 0, $1, $3, "" ) }
+	| Exp '.' LENGTH { $$ = new CExp( "Length", "", 0, $1, 0, "" ) }
+	| Exp '.' ID '(' ExpList ')' { $$ = new CExp( "MethodCall", "", $5, $1, 0, "" ) }
+	| NUMBER { $$ = new CExp( "SingleExp", "Number", 0, 0, 0, $1 ) }
+	| TRUE { $$ = new CExp( "SingleExp", "True", 0, 0, 0, "" ) }
+	| FALSE { $$ = new CExp( "SingleExp", "False", 0, 0, 0, "" ) }
+	| ID { $$ = new CExp( "SingleExp", "Id", 0, 0, 0, $1 ) }
+	| THIS { $$ = new CExp( "SingleExp", "This", 0, 0, 0, "" ) }
+	| NEW INT '[' Exp ']' { $$ = new CExp( "NewIntArray", "", 0, $4, 0, "" ) }
+	| NEW ID '(' ')' { $$ = new CExp( "NewCustomType", "", 0, 0, 0, $2 ) }
+	| '!' Exp { $$ = new CExp( "NotExp", "", 0, $2, 0, "" ) }
+	| '(' Exp ')' { $$ = new CExp( "RoundBrackets", "", 0, $2, 0, "" ) }
 	;
 
 ExpList:

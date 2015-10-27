@@ -62,9 +62,58 @@ public:
 		newClassDeclList->Accept( this );
 	}
 
-	void visit( const IExp* )
+	void visit( const CExp* expression )
 	{
+		std::cout << "Expression: " << expression->GetExpressionType() << " " << expression->GetExpressionName() << std::endl;
 
+		if (expression->GetExpressionType() == "BinOp") {
+			expression->FirstExpression()->Accept(this);
+			std::cout << " " << expression->GetExpressionName() << " ";
+			expression->SecondExpression()->Accept(this);
+		}
+		else if (expression->GetExpressionType() == "SquareBrackets") {
+			expression->FirstExpression()->Accept(this);
+			std::cout << "[";
+			expression->SecondExpression()->Accept(this);
+			std::cout << "]";
+		}
+		else if (expression->GetExpressionType() == "Length") {
+			expression->FirstExpression()->Accept(this);
+			std::cout << ".Length";
+		}
+		else if (expression->GetExpressionType() == "MethodCall") {
+			expression->FirstExpression()->Accept(this);
+			std::cout << "." << expression->GetId() << "(";
+			expression->ExpressionList()->Accept(this);
+			std::cout << ")";
+		}
+		else if (expression->GetExpressionType() == "SingleExp") {
+			if (expression->GetExpressionName() == "Number" || expression->GetExpressionName() == "Id") {
+				std::cout << expression->GetId();
+			}
+			else {
+				std::cout << expression->GetExpressionName();
+			}
+		}
+		else if (expression->GetExpressionType() == "NewIntArray") {
+			std::cout << "new int[";
+			expression->FirstExpression()->Accept(this);
+			std::cout << "]";
+		}
+		else if (expression->GetExpressionType() == "NewCustomType") {
+			std::cout << "new " << expression->GetId() << "()";
+		}
+		else if (expression->GetExpressionType() == "NotExp") {
+			std::cout << "!";
+			expression->FirstExpression()->Accept(this);
+		}
+		else if (expression->GetExpressionType() == "RoundBrackets") {
+			std::cout << "(";
+			expression->FirstExpression()->Accept(this);
+			std::cout << ")";
+		}
+
+		std::cout << std::endl;
 	}
 
 	void visit( const CExpList* expList )
@@ -125,7 +174,48 @@ public:
 
 	void visit( const IStatement* )
 	{
+		std::cout << "Statement: " << statement->GetStatementType() << std::endl;
 
+		if (statement->GetStatementType() == "BlockStatement") {
+			std::cout << "{";
+			statement->Statements()->Accept(this);
+			std::cout << "}";
+		}
+		else if (statement->GetStatementType() == "IfStatement") {
+			std::cout << "if (";
+			statement->FirstExpression()->Accept(this);
+			std::cout << ")" << std::endl;
+			statement->FirstStatement()->Accept(this);
+			std::cout << std::endl << "else" << std::endl;
+			statement->SecondStatement()->Accept(this);
+			std::cout << std::endl;
+		}
+		else if (statement->GetStatementType() == "WhileStatement") {
+			std::cout << "while (";
+			statement->FirstExpression()->Accept(this);
+			std::cout << ")" << std::endl;
+			statement->FirstStatement()->Accept(this);
+			std::cout << std::endl;
+		}
+		else if (statement->GetStatementType() == "PrintlnStatement") {
+			std::cout << "System.out.println(";
+			statement->FirstExpression()->Accept(this);
+			std::cout << ");" << std::endl;
+		}
+		else if (statement->GetStatementType() == "AssignStatement") {
+			std::cout << statement->GetId();
+			std::cout << " = ";
+			statement->FirstExpression()->Accept(this);
+			std::cout << ";";
+		}
+		else if (statement->GetStatementType() == "ArrayAssignStatement") {
+			std::cout << statement->GetId();
+			std::cout << "[";
+			statement->FirstExpression()->Accept(this);
+			std::cout << "] = ";
+			statement->SecondExpression()->Accept(this);
+			std::cout << ";";
+		}
 	}
 
 	void visit( const CStatementList* statementList )
