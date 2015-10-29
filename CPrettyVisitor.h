@@ -1,4 +1,9 @@
-﻿#include "Visitor.h"
+﻿#ifndef CPRETTYVISITOR_H_INCLUDED
+#define CPRETTYVISITOR_H_INCLUDED
+#include "Visitor.h"
+#include <iostream>
+#include <string>
+#include "Common.h"
 
 class CPrettyPrinterVisitor : public IVisitor {
 public:
@@ -40,3 +45,4 @@ public:
 
 	void visit( const CExpRest* expRest );
 };
+#endif

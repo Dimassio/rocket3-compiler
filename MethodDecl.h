@@ -6,45 +6,21 @@
 
 class CMethodDecl : public IMethodDecl {
 public:
-	CMethodDecl( IType* _type, std::string _id, IFormalList* _formalList, IVarDeclList* _varDeclList, IStatementList* _statementList, IExp* _exp ) :
-		type( _type ), id( _id ), formalList( _formalList ), varDeclList( _varDeclList ), statementList( _statementList ), exp( _exp )
-	{
-	}
+	CMethodDecl( IType* _type, std::string _id, IFormalList* _formalList, IVarDeclList* _varDeclList, IStatementList* _statementList, IExp* _exp );
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor->visit( this );
-	}
+	void Accept( IVisitor* visitor ) const;
 
-	const IType* Type() const
-	{
-		return type;
-	}
+	const IType* Type() const;
 
-	const std::string Id() const
-	{
-		return id;
-	}
+	const std::string Id() const;
 
-	const IFormalList* FormalList() const
-	{
-		return formalList;
-	}
+	const IFormalList* FormalList() const;
 
-	const IVarDeclList* VarDeclList() const
-	{
-		return varDeclList;
-	}
+	const IVarDeclList* VarDeclList() const;
 
-	const IStatementList* StatementList() const
-	{
-		return statementList;
-	}
+	const IStatementList* StatementList() const;
 
-	const IExp* Exp() const
-	{
-		return exp;
-	}
+	const IExp* Exp() const;
 
 private:
 	IType* type;

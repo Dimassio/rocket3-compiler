@@ -6,30 +6,15 @@
 
 class CFormalList : public  IFormalList {
 public:
-	CFormalList(IType* _type, std::string _id, IFormalRestList* _formalRestList) :
-		type(_type), id(_id), formalRestList(_formalRestList)
-	{
-	}
+	CFormalList( IType* _type, std::string _id, IFormalRestList* _formalRestList );
 
-	void Accept(IVisitor* visitor) const
-	{
-		visitor->visit(this);
-	}
+	void Accept( IVisitor* visitor ) const;
 
-	const IType* Type() const
-	{
-		return type;
-	}
+	const IType* Type() const;
 
-	const IFormalRestList* FormalRestList() const
-	{
-		return formalRestList;
-	}
+	const IFormalRestList* FormalRestList() const;
 
-	const std::string Id() const
-	{
-		return id;
-	}
+	const std::string Id() const;
 
 private:
 	IType* type;

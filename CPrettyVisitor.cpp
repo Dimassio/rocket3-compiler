@@ -1,3 +1,5 @@
+#ifndef CPRETTYVISITOP_CPP_INCLUDED
+#define CPRETTYVISITOP_CPP_INCLUDED
 #include "CPrettyVisitor.h"
 
 // Он выполняет вывод того, что находится в узле дерева.
@@ -7,60 +9,51 @@ CPrettyPrinterVisitor::CPrettyPrinterVisitor()
 
 void CPrettyPrinterVisitor::visit( const CProgram* program )
 {
-	std::cout << "Program has started:" << std::endl;
-	CMainClass* mainClass = program->MainClass;
-	mainClass->Accept( this );
-	CClassDeclList* classDeclList = program->ClassDeclList;
-	if( !classDeclList ) {
+	std::cout << "Program has started:" << std::endl << std::endl;
+	( program->MainClass() )->Accept( this );
+	if( !( program->ClassDeclList() ) ) {
 		return;
 	}
-	classDeclList->Accept( this );
+	( program->ClassDeclList() )->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CMainClass* mainClass )
 {
-	std::cout << "class " << mainClass->GetClassName << " public static void main(String[] "
-		<< mainClass->GetArgName << " ) { " << std::endl;
-	CStatement* statement = mainClass->Statement;
-	statement->Accept( this );
+	std::cout << "class " << mainClass->GetClassName() << " public static void main(String[] "
+		<< mainClass->GetArgName() << " ) { " << std::endl;
+	mainClass->Statement()->Accept( this );
 	std::cout << "}" << std::endl;
 	std::cout << "}" << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CClassDecl* classDecl )
 {
-	std::cout << "class " << classDecl->GetClassName;
-	if( classDecl->GetExtendedClassName != "" ) {
-		std::cout << " extends " << classDecl->GetExtendedClassName;
+	std::cout << "class " << classDecl->GetClassName();
+	if( classDecl->GetExtendedClassName() != "" ) {
+		std::cout << " extends " << classDecl->GetExtendedClassName();
 	}
 	std::cout << " { ";
-	CVarDeclList* varDeclList = classDecl->VarDeclList;
-	if( varDeclList != 0 ) {
-		varDeclList->Accept( this );
+	if( classDecl->VarDeclList() != 0 ) {
+		classDecl->VarDeclList()->Accept( this );
 	}
-	CMethodDeclList* methodDeclList = classDecl->MethodDeclList;
-	if( methodDeclList != 0 ) {
-		methodDeclList->Accept( this );
+	if( classDecl->MethodDeclList() != 0 ) {
+		classDecl->MethodDeclList()->Accept( this );
 	}
 	std::cout << " } " << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CClassDeclList* classDeclList )
 {
-	std::cout << "Class declarations:" << std::endl; // todo: или не нужен тут вывод?
-	CClassDecl* classDecl = classDeclList->ClassDecl;
-	classDecl->Accept( this );
-	CClassDeclList* newClassDeclList = classDeclList->ClassDeclList;
-	if( !newClassDeclList ) {
+	classDeclList->ClassDecl()->Accept( this );
+	if( !classDeclList->ClassDeclList() ) {
 		return;
 	}
-	newClassDeclList->Accept( this );
+	classDeclList->ClassDeclList()->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CExp* expression )
 {
-	std::cout << "Expression: " << expression->GetExpressionType() << " " << expression->GetExpressionName() << std::endl;
-
+	/*std::cout " " << expression->GetExpressionName() << std::endl;*/
 	if( expression->GetExpressionType() == "BinOp" ) {
 		expression->FirstExpression()->Accept( this );
 		std::cout << " " << expression->GetExpressionName() << " ";
@@ -98,69 +91,61 @@ void CPrettyPrinterVisitor::visit( const CExp* expression )
 		expression->FirstExpression()->Accept( this );
 		std::cout << ")";
 	}
-
 	std::cout << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CExpList* expList )
 {
-	CExp* exp = expList->Exp;
-	CExpRestList* expRestList = expList->ExpRestList;
-	if( exp ) {
-		exp->Accept( this );
+	if( expList->Exp() ) {
+		expList->Exp()->Accept( this );
 	}
-	if( expRestList ) {
-		expRestList->Accept( this );
+	if( expList->ExpRestList() ) {
+		expList->ExpRestList()->Accept( this );
 	}
 }
 
 void CPrettyPrinterVisitor::visit( const CFormalList* formalList )
 {
-	std::string id = formalList->Id;
-	CType* type = formalList->Type;
-	CFormalRestList* formalRestList = formalList->FormalRestList;
-	if( !type && id == "" && !formalRestList ) {
+	std::string id = formalList->Id();
+	if( !formalList->Type() && id == "" && !formalList->FormalRestList() ) {
 		return;
 	}
-	type->Accept( this );
+	formalList->Type()->Accept( this );
 	std::cout << id;
-	if( formalRestList ) {
-		formalRestList->Accept( this );
+	if( formalList->FormalRestList() ) {
+		formalList->FormalRestList()->Accept( this );
 	}
 }
 
 void CPrettyPrinterVisitor::visit( const CMethodDecl* methodDecl )
 {
 	std::cout << "public ";
-	( methodDecl->Type )->Accept( this );
-	std::cout << methodDecl->Id << "( ";
-	( methodDecl->FormalList )->Accept( this );
+	( methodDecl->Type() )->Accept( this );
+	std::cout << methodDecl->Id() << "( ";
+	( methodDecl->FormalList() )->Accept( this );
 	std::cout << ") {";
-	if( methodDecl->VarDeclList ) {
-		( methodDecl->VarDeclList )->Accept( this );
+	if( methodDecl->VarDeclList() ) {
+		( methodDecl->VarDeclList() )->Accept( this );
 	}
-	if( methodDecl->StatementList ) {
-		( methodDecl->StatementList )->Accept( this );
+	if( methodDecl->StatementList() ) {
+		( methodDecl->StatementList() )->Accept( this );
 	}
 	std::cout << "return ";
-	( methodDecl->Exp )->Accept( this );
+	( methodDecl->Exp() )->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CMethodDeclList* methodDeclList )
 {
-	std::cout << "Methods declaration list" << std::endl; // todo: или не нужен тут вывод?
-	CMethodDecl* methodDecl = methodDeclList->MethodDecl;
-	methodDecl->Accept( this );
-	CMethodDeclList* newMethodDeclList = methodDeclList->MethodDeclList;
-	if( !newMethodDeclList ) {
+	methodDeclList->MethodDecl()->Accept( this );
+	if( !methodDeclList->MethodDeclList() ) {
 		return;
 	}
-	newMethodDeclList->Accept( this );
+	methodDeclList->MethodDeclList()->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CStatement* statement )
 {
-	std::cout << "Statement: " << statement->GetStatementType() << std::endl;
+	//std::cout << statement->GetStatementType() << std::endl;
 
 	if( statement->GetStatementType() == "BlockStatement" ) {
 		std::cout << "{";
@@ -201,62 +186,61 @@ void CPrettyPrinterVisitor::visit( const CStatement* statement )
 
 void CPrettyPrinterVisitor::visit( const CStatementList* statementList )
 {
-	if( statementList->StatementList ) {
-		( statementList->StatementList )->Accept( this );
+	if( statementList->StatementList() ) {
+		( statementList->StatementList() )->Accept( this );
 	}
-	( statementList->Statement )->Accept( this );
+	( statementList->Statement() )->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CType* type )
 {
-	std::cout << "Type: " << type->GetTypeName() << std::endl;
+	std::cout /*<< "Type: "*/ << type->GetTypeName() << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CVarDecl* varDecl )
 {
-	( varDecl->Type )->Accept( this );
-	std::cout << varDecl->VarName << ";" << std::endl;
+	( varDecl->Type() )->Accept( this );
+	std::cout << varDecl->VarName() << ";" << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CVarDeclList* varDeclList )
 {
-	std::cout << "Variables declaration list" << std::endl; // todo: или не нужен тут вывод?
-	CVarDecl* varDecl = varDeclList->VarDecl;
-	varDecl->Accept( this );
-	CVarDeclList* newVarDeclList = varDeclList->VarDeclList;
-	if( !newVarDeclList ) {
+	varDeclList->VarDecl()->Accept( this );
+	if( !varDeclList->VarDeclList() ) {
 		return;
 	}
-	newVarDeclList->Accept( this );
+	varDeclList->VarDeclList()->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CFormalRestList* formalRestList )
 {
-	if( formalRestList->FormalRestList ) {
-		( formalRestList->FormalRestList )->Accept( this );
+	if( formalRestList->FormalRestList() ) {
+		( formalRestList->FormalRestList() )->Accept( this );
 	}
-	( formalRestList->FormalRest )->Accept( this );
+	( formalRestList->FormalRest() )->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CFormalRest* formalRest )
 {
 	std::cout << ", ";
-	formalRest->Type->Accept( this );
-	std::cout << formalRest->Id << std::endl;
+	formalRest->Type()->Accept( this );
+	std::cout << formalRest->Id() << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CExpRestList* expRestList )
 {
-	if( expRestList->ExpRestList ) {
-		( expRestList->ExpRestList )->Accept( this );
+	if( expRestList->ExpRestList() ) {
+		( expRestList->ExpRestList() )->Accept( this );
 	}
-	if( expRestList->Exp ) {
-		( expRestList->Exp )->Accept( this );
+	if( expRestList->Exp() ) {
+		( expRestList->Exp() )->Accept( this );
 	}
 }
 
 void CPrettyPrinterVisitor::visit( const CExpRest* expRest )
 {
 	std::cout << ", ";
-	( expRest->Exp )->Accept( this );
+	( expRest->Exp() )->Accept( this );
 }
+
+#endif

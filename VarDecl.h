@@ -6,25 +6,13 @@
 
 class CVarDecl : public  IVarDecl {
 public:
-	CVarDecl( IType* _type, std::string _varName ) :
-		type( _type ), varName( _varName )
-	{
-	}
+	CVarDecl( IType* _type, std::string _varName );
 
-	void Accept( IVisitor* visitor ) const
-	{
-		visitor->visit( this );
-	}
+	void Accept( IVisitor* visitor ) const;
 
-	const IType* Type() const
-	{
-		return type;
-	}
+	const IType* Type() const;
 
-	const std::string VarName() const
-	{
-		return varName;
-	}
+	const std::string VarName() const;
 
 private:
 	IType* type;
