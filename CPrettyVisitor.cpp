@@ -28,50 +28,47 @@ void CPrettyPrinterVisitor::visit( const CProgram* program )
 
 void CPrettyPrinterVisitor::visit( const CMainClass* mainClass )
 {
+	printIdentation();
 	std::cout << "class " << mainClass->GetClassName() << " {" << std::endl;
 	++identation;
 	printIdentation();
 	std::cout << "public static void main(String[] " << mainClass->GetArgName() << " ) { " << std::endl;
 	++identation;
-	printIdentation();
 	mainClass->Statement()->Accept( this );
 	--identation;
 	printIdentation();
 	std::cout << "}" << std::endl;
 	--identation;
 	printIdentation();
-	std::cout << "}" << std::endl;
-	printIdentation();
+	std::cout << "}" << std::endl << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CClassDecl* classDecl )
 {
+	printIdentation();
 	std::cout << "class " << classDecl->GetClassName();
 	if( classDecl->GetExtendedClassName() != "" ) {
 		std::cout << " extends " << classDecl->GetExtendedClassName();
 	}
 	std::cout << " { " << std::endl;
 	++identation;
-	printIdentation();
 	if( classDecl->VarDeclList() != 0 ) {
 		classDecl->VarDeclList()->Accept( this );
 	}
 	if( classDecl->MethodDeclList() != 0 ) {
 		classDecl->MethodDeclList()->Accept( this );
 	}
-	++identation;
+	--identation;
 	printIdentation();
-	std::cout << " } " << std::endl;
-	printIdentation();
+	std::cout << " } " << std::endl << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CClassDeclList* classDeclList )
 {
-	classDeclList->ClassDecl()->Accept( this );
-	if( !classDeclList->ClassDeclList() ) {
-		return;
+	if( classDeclList->ClassDeclList() ) {
+		classDeclList->ClassDeclList()->Accept(this);
 	}
-	classDeclList->ClassDeclList()->Accept( this );
+	classDeclList->ClassDecl()->Accept(this);
 }
 
 void CPrettyPrinterVisitor::visit( const CExp* exp )
@@ -196,13 +193,13 @@ void CPrettyPrinterVisitor::visit( const CFormalList* formalList )
 
 void CPrettyPrinterVisitor::visit( const CMethodDecl* methodDecl )
 {
+	printIdentation();
 	std::cout << "public ";
 	( methodDecl->Type() )->Accept( this );
 	std::cout << methodDecl->Id() << "(";
 	( methodDecl->FormalList() )->Accept( this );
 	std::cout << ") {" << std::endl;
 	++identation;
-	printIdentation();
 	if( methodDecl->VarDeclList() ) {
 		( methodDecl->VarDeclList() )->Accept( this );
 	}
@@ -215,77 +212,71 @@ void CPrettyPrinterVisitor::visit( const CMethodDecl* methodDecl )
 	std::cout << ";" << std::endl;
 	--identation;
 	printIdentation();
+	std::cout << "}" << std::endl << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CMethodDeclList* methodDeclList )
 {
-	methodDeclList->MethodDecl()->Accept( this );
-	if( !methodDeclList->MethodDeclList() ) {
-		return;
+	if( methodDeclList->MethodDeclList() ) {
+		methodDeclList->MethodDeclList()->Accept(this);
 	}
-	methodDeclList->MethodDeclList()->Accept( this );
+	methodDeclList->MethodDecl()->Accept(this);
 }
 
 void CPrettyPrinterVisitor::visit( const CStatement* statement )
 {
 	if( statement->GetStatementType() == "BlockStatement" ) {
+		--identation;
 		printIdentation();
 		std::cout << "{" << std::endl;
 		++identation;
-		printIdentation();
 		statement->Statements()->Accept( this );
 		--identation;
 		printIdentation();
 		std::cout << "}" << std::endl;
-		printIdentation();
+		++identation;
 	} else if( statement->GetStatementType() == "IfStatement" ) {
 		printIdentation();
 		std::cout << "if (";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ")" << std::endl;
 		++identation;
-		printIdentation();
 		statement->FirstStatement()->Accept( this );
-		std::cout << std::endl;
 		--identation;
 		printIdentation();
 		std::cout << "else" << std::endl;
 		++identation;
-		printIdentation();
 		statement->SecondStatement()->Accept( this );
 		std::cout << std::endl;
 		--identation;
-		printIdentation();
 	} else if( statement->GetStatementType() == "WhileStatement" ) {
 		printIdentation();
 		std::cout << "while (";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ")" << std::endl;
 		++identation;
-		printIdentation();
 		statement->FirstStatement()->Accept( this );
 		std::cout << std::endl;
 		--identation;
-		printIdentation();
 	} else if( statement->GetStatementType() == "PrintlnStatement" ) {
+		printIdentation();
 		std::cout << "System.out.println(";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ");" << std::endl;
-		printIdentation();
 	} else if( statement->GetStatementType() == "AssignStatement" ) {
+		printIdentation();
 		std::cout << statement->GetId();
 		std::cout << " = ";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ";" << std::endl;
-		printIdentation();
 	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
+		printIdentation();
 		std::cout << statement->GetId();
 		std::cout << "[";
 		statement->FirstExpression()->Accept( this );
 		std::cout << "] = ";
 		statement->SecondExpression()->Accept( this );
 		std::cout << ";" << std::endl;
-		printIdentation();
 	}
 }
 
@@ -304,17 +295,17 @@ void CPrettyPrinterVisitor::visit( const CType* type )
 
 void CPrettyPrinterVisitor::visit( const CVarDecl* varDecl )
 {
+	printIdentation();
 	( varDecl->Type() )->Accept( this );
 	std::cout << varDecl->VarName() << ";" << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CVarDeclList* varDeclList )
 {
-	varDeclList->VarDecl()->Accept( this );
-	if( !varDeclList->VarDeclList() ) {
-		return;
+	if (varDeclList->VarDeclList()) {
+		varDeclList->VarDeclList()->Accept(this);
 	}
-	varDeclList->VarDeclList()->Accept( this );
+	varDeclList->VarDecl()->Accept(this);
 }
 
 void CPrettyPrinterVisitor::visit( const CFormalRestList* formalRestList )
@@ -329,7 +320,7 @@ void CPrettyPrinterVisitor::visit( const CFormalRest* formalRest )
 {
 	std::cout << ", ";
 	formalRest->Type()->Accept( this );
-	std::cout << formalRest->Id() << std::endl;
+	std::cout << formalRest->Id();
 }
 
 void CPrettyPrinterVisitor::visit( const CExpRestList* expRestList )
