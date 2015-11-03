@@ -237,6 +237,7 @@ void CPrettyPrinterVisitor::visit( const CStatement* statement )
 		--identation;
 		printIdentation();
 		std::cout << "}" << std::endl;
+		printIdentation();
 	} else if( statement->GetStatementType() == "IfStatement" ) {
 		printIdentation();
 		std::cout << "if (";
@@ -267,24 +268,24 @@ void CPrettyPrinterVisitor::visit( const CStatement* statement )
 		--identation;
 		printIdentation();
 	} else if( statement->GetStatementType() == "PrintlnStatement" ) {
-		printIdentation();
 		std::cout << "System.out.println(";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ");" << std::endl;
-	} else if( statement->GetStatementType() == "AssignStatement" ) {
 		printIdentation();
+	} else if( statement->GetStatementType() == "AssignStatement" ) {
 		std::cout << statement->GetId();
 		std::cout << " = ";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ";" << std::endl;
-	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
 		printIdentation();
+	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
 		std::cout << statement->GetId();
 		std::cout << "[";
 		statement->FirstExpression()->Accept( this );
 		std::cout << "] = ";
 		statement->SecondExpression()->Accept( this );
-		std::cout << ";" << std::endl;;
+		std::cout << ";" << std::endl;
+		printIdentation();
 	}
 }
 
@@ -303,7 +304,6 @@ void CPrettyPrinterVisitor::visit( const CType* type )
 
 void CPrettyPrinterVisitor::visit( const CVarDecl* varDecl )
 {
-	printIdentation();
 	( varDecl->Type() )->Accept( this );
 	std::cout << varDecl->VarName() << ";" << std::endl;
 }
