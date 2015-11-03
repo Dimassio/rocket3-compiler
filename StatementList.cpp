@@ -1,6 +1,6 @@
 #include "StatementList.h"
 
-CStatementList::CStatementList(IStatement* _statement, CStatementList* _statementList) :
+CStatementList::CStatementList( IStatement* _statement, CStatementList* _statementList ) :
 	statement(_statement), statementList(_statementList)
 {
 }

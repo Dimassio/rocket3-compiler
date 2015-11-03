@@ -9,8 +9,8 @@ void yyerror( CProgram*& root, const char* );
 %}
 
 %code requires { #include "Common.h"}
-/* Параметры функции парсера. */
 
+/* Параметры функции парсера. */
 %parse-param { CProgram*& root }
 
 /* Определение возможных типов выражения. */
@@ -32,12 +32,23 @@ void yyerror( CProgram*& root, const char* );
 	CStatement* statement;
 	CExpList* expList;
 	CExp* exp;
+	CExpMethodCall* expMethodCall;
+	CExpBinOperation* expBinOperation;
+	CExpNewIntArray* expNewIntArray;
+	CExpNewCustomType* expNewCustomType;
+	CExpSquareBrackets* expSquareBrackets;
+	CExpRoundBrackets* expRoundBrackets;
+	CExpNot* expNot;
+	CExpNumber* expNumber;
+	CExpId* expId;
+	CExpSingle* expSingle;
+	CExpLength* expLength;
 	CType* type;
 	CExpRestList* expRestList;
 	CExpRest* expRest;
 }
 
-/* Определение лево-ассоцитивности. Аналогично есть %right.
+/* Определение ассоцитивности.
 Порядок объявление важен - чем позже объявлен оператор, тем больше его приоритет. */
 %right '='
 %left '+''-' 
@@ -89,6 +100,17 @@ void yyerror( CProgram*& root, const char* );
 %type<expRestList> ExpRests
 %type<expRest> ExpRest
 %type<exp> Exp
+%type<expMethodCall> ExpMethodCall
+%type<expBinOperation> ExpBinOperation
+%type<expNewIntArray> ExpNewIntArray
+%type<expNewCustomType> ExpNewCustomType
+%type<expSquareBrackets> ExpSquareBrackets
+%type<expRoundBrackets> ExpRoundBrackets
+%type<expNot> ExpNot
+%type<expNumber> ExpNumber
+%type<expId> ExpId
+%type<expSingle> ExpSingle
+%type<expLength> ExpLength
 %type<type> Type
 
 /* Секция с описанием правил парсера. */
@@ -128,7 +150,6 @@ MethodDecls:
 	| MethodDecls MethodDecl { $$ = new CMethodDeclList( $2, $1 ); }
 	;
 
-/* Далее берет Саня */
 VarDecl:
 	Type ID ';' { $$ = new CVarDecl( $1, $2 ); }  
 	;
@@ -160,7 +181,6 @@ Statements:
 	| Statements Statement { $$ = new CStatementList( $2, $1 ); }
 	;
 
-/* Далее берет Женя */
 Type:
 	INT '['']' { $$ = new CType("int []"); }
 	| INT { $$ = new CType("int"); }
@@ -180,35 +200,79 @@ Statement:
 	;
 
 Exp:
-	Exp '<' Exp { $$ = new CExp( "BinOp", "<", 0, $1, $3, "" ); }
-	| Exp '&' Exp { $$ = new CExp( "BinOp", "&", 0, $1, $3, "" ); }
-	| Exp '-' Exp { $$ = new CExp( "BinOp", "-", 0, $1, $3, "" ); }
-	| Exp '+' Exp { $$ = new CExp( "BinOp", "+", 0, $1, $3, "" ); }
-	| Exp '/' Exp { $$ = new CExp( "BinOp", "/", 0, $1, $3, "" ); }
-	| Exp '*' Exp { $$ = new CExp( "BinOp", "*", 0, $1, $3, "" ); }
-	| Exp '[' Exp ']' { $$ = new CExp( "SquareBrackets", "", 0, $1, $3, "" ); }
-	| Exp '.' LENGTH { $$ = new CExp( "Length", "", 0, $1, 0, "" ); }
-	| Exp '.' ID '(' ExpList ')' { $$ = new CExp( "MethodCall", "", $5, $1, 0, "" ); }
-	| NUMBER { $$ = new CExp( "SingleExp", "Number", 0, 0, 0, "" ); } /* послений - int*/
-	| TRUE { $$ = new CExp( "SingleExp", "True", 0, 0, 0, "" ); }
-	| FALSE { $$ = new CExp( "SingleExp", "False", 0, 0, 0, "" ); }
-	| ID { $$ = new CExp( "SingleExp", "Id", 0, 0, 0, $1 ); }
-	| THIS { $$ = new CExp( "SingleExp", "This", 0, 0, 0, "" ); }
-	| NEW INT '[' Exp ']' { $$ = new CExp( "NewIntArray", "", 0, $4, 0, "" ); }
-	| NEW ID '(' ')' { $$ = new CExp( "NewCustomType", "", 0, 0, 0, $2 ); }
-	| '!' Exp { $$ = new CExp( "NotExp", "", 0, $2, 0, "" ); }
-	| '(' Exp ')' { $$ = new CExp( "RoundBrackets", "", 0, $2, 0, "" ); }
+	ExpLength { $$ = new CExp( $1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ); }
+	| ExpMethodCall { $$ = new CExp( 0, $1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ); }
+	| ExpNewIntArray { $$ = new CExp( 0, 0, $1, 0, 0, 0, 0, 0, 0, 0, 0 ); }
+	| ExpNewCustomType { $$ = new CExp( 0, 0, 0, $1, 0, 0, 0, 0, 0, 0, 0 ); }
+	| ExpSquareBrackets { $$ = new CExp( 0, 0, 0, 0, $1, 0, 0, 0, 0, 0, 0 ); }
+	| ExpRoundBrackets { $$ = new CExp( 0, 0, 0, 0, 0, $1, 0, 0, 0, 0, 0 ); }
+	| ExpNot { $$ = new CExp( 0, 0, 0, 0, 0, 0, $1, 0, 0, 0, 0 ); }
+	| ExpNumber { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, $1, 0, 0, 0 ); }
+	| ExpId { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, $1, 0, 0 ); }
+	| ExpSingle { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, $1, 0 ); }
+	| ExpBinOperation { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $1 ); }
+	;
+
+ExpLength:
+	Exp '.' LENGTH { $$ = new CExpLength( $1 ); }
+	;
+
+ExpMethodCall:
+	Exp '.' ID '(' ExpList ')' { $$ = new CExpMethodCall( $1, $3, $5 ); }
+	;
+
+ExpNewIntArray:
+	NEW INT '[' Exp ']' { $$ = new CExpNewIntArray( $4 ); }
+	;
+
+ExpNewCustomType:
+	NEW ID '(' ')' { $$ = new CExpNewCustomType( $2 ); }
+	;
+
+ExpSquareBrackets:
+	Exp '[' Exp ']' { $$ = new CExpSquareBrackets( $1, $3 ); }
+	;
+
+ExpRoundBrackets:
+	'(' Exp ')' { $$ = new CExpRoundBrackets( $2 ); }
+	;
+
+ExpNot:
+	'!' Exp { $$ = new CExpNot( $2 ); }
+	;
+
+ExpBinOperation:
+	Exp '<' Exp { $$ = new CExpBinOperation( "<", $1, $3 ); }
+	| Exp '&' Exp { $$ = new CExpBinOperation( "&", $1, $3 ); }
+	| Exp '-' Exp { $$ = new CExpBinOperation( "-", $1, $3 ); }
+	| Exp '+' Exp { $$ = new CExpBinOperation( "+", $1, $3 ); }
+	| Exp '/' Exp { $$ = new CExpBinOperation( "/", $1, $3 ); }
+	| Exp '*' Exp { $$ = new CExpBinOperation( "*", $1, $3 ); }
+	;
+
+ExpNumber:
+	NUMBER { $$ = new CExpNumber( $1 ); }
+	;
+
+ExpId:	
+	ID { $$ = new CExpId( $1 ); }
+	;
+
+ExpSingle:
+	TRUE { $$ = new CExpSingle( "True" ); }
+	| FALSE { $$ = new CExpSingle( "False" ); }
+	| THIS { $$ = new CExpSingle( "this" ); }
 	;
 
 ExpList:
-	Exp ExpRests { $$ = new CExpList($1, $2); }
-	| Exp { $$ = new CExpList($1, 0); }
-	| { $$ = new CExpList(0, 0); }
+	Exp ExpRests { $$ = new CExpList( $1, $2 ); }
+	| Exp { $$ = new CExpList( $1, 0 ); }
+	| { $$ = new CExpList( 0, 0 ); }
 	;
 
 ExpRests:
-	ExpRest { $$ = new CExpRestList($1, 0); }
-	| ExpRests ExpRest { $$ = new CExpRestList($2, $1); }
+	ExpRest { $$ = new CExpRestList( $1, 0 ); }
+	| ExpRests ExpRest { $$ = new CExpRestList( $2, $1 ); }
 	;
 
 ExpRest:

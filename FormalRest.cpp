@@ -1,6 +1,6 @@
 #include "FormalRest.h"
 
-CFormalRest::CFormalRest(IType* _type, std::string _id) :
+CFormalRest::CFormalRest( IType* _type, std::string _id ) :
 	type(_type), id(_id)
 {
 }

@@ -1,6 +1,6 @@
 #include "ExpRestList.h"
 
-CExpRestList::CExpRestList(IExpRest* _expRest, IExpRestList* _expRestList) :
+CExpRestList::CExpRestList( IExpRest* _expRest, IExpRestList* _expRestList ) :
 	expRest(_expRest), expRestList(_expRestList)
 {
 }

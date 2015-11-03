@@ -1,53 +1,75 @@
 #include "Exp.h"
 
-CExp::CExp(
-	std::string _expressionType,
-	std::string _expressionName,
-	IExpList* _expressionList,
-	IExp* _firstExpression,
-	IExp* _secondExperssion,
-	std::string _id
-)
-	: expressionType(_expressionType),
-	expressionName(_expressionName),
-	expressionList(_expressionList),
-	firstExpression(_firstExpression),
-	secondExperssion(_secondExperssion),
-	id(_id)
+CExp::CExp(IExpLength* _expLength,
+	IExpMethodCall* _expMethodCall,
+	IExpNewIntArray* _expNewIntArray,
+	IExpNewCustomType* _expNewCustomType,
+	IExpSquareBrackets* _expSquareBrackets,
+	IExpRoundBrackets* _expRoundBrackets,
+	IExpNot* _expNot,
+	IExpNumber* _expNumber,
+	IExpId* _expId,
+	IExpSingle* _expSingle,
+	IExpBinOperation* _expBinOperation
+	)
+	: expLength(_expLength),
+	expMethodCall(_expMethodCall),
+	expNewIntArray(_expNewIntArray),
+	expNewCustomType(_expNewCustomType),
+	expSquareBrackets(_expSquareBrackets),
+	expRoundBrackets(_expRoundBrackets),
+	expBinOperation(_expBinOperation),
+	expNot(_expNot),
+	expNumber(_expNumber),
+	expId(_expId),
+	expSingle(_expSingle)
 {
 }
 
-void CExp::Accept(IVisitor* visitor) const
-{
+void CExp::Accept(IVisitor* visitor) const {
 	visitor->visit(this);
 }
 
-const IExpList* CExp::ExpressionList() const
-{
-	return expressionList;
+const IExpLength* CExp::ExpLength() const {
+	return expLength;
 }
 
-const IExp* CExp::FirstExpression() const
-{
-	return firstExpression;
+const IExpMethodCall* CExp::ExpMethodCall() const {
+	return expMethodCall;
 }
 
-const IExp* CExp::SecondExpression() const
-{
-	return secondExperssion;
+const IExpBinOperation* CExp::ExpBinOperation() const {
+	return expBinOperation;
 }
 
-const std::string CExp::GetId() const
-{
-	return id;
+const IExpNewIntArray* CExp::ExpNewIntArray() const {
+	return expNewIntArray;
 }
 
-const std::string CExp::GetExpressionType() const
-{
-	return expressionType;
+const IExpNewCustomType* CExp::ExpNewCustomType() const {
+	return expNewCustomType;
 }
 
-const std::string CExp::GetExpressionName() const
-{
-	return expressionName;
+const IExpSquareBrackets* CExp::ExpSquareBrackets() const {
+	return expSquareBrackets;
+}
+
+const IExpRoundBrackets* CExp::ExpRoundBrackets() const {
+	return expRoundBrackets;
+}
+
+const IExpNot* CExp::ExpNot() const {
+	return expNot;
+}
+
+const IExpNumber* CExp::ExpNumber() const {
+	return expNumber;
+}
+
+const IExpId* CExp::ExpId() const {
+	return expId;
+}
+
+const IExpSingle* CExp::ExpSingle() const {
+	return expSingle;
 }

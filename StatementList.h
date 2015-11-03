@@ -5,9 +5,9 @@
 
 class CStatementList : public  IStatementList {
 public:
-	CStatementList(IStatement* _statement, CStatementList* _statementList);
+	CStatementList( IStatement* _statement, CStatementList* _statementList );
 
-	void Accept(IVisitor* visitor) const;
+	void Accept( IVisitor* visitor ) const;
 
 	const IStatement* Statement() const;
 

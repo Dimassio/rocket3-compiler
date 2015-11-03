@@ -5,9 +5,9 @@
 
 class CExpRestList : public  IExpRestList {
 public:
-	CExpRestList(IExpRest* _expRest, IExpRestList* _expRestList);
+	CExpRestList( IExpRest* _expRest, IExpRestList* _expRestList );
 	
-	void Accept(IVisitor* visitor) const;
+	void Accept( IVisitor* visitor ) const;
 
 	const IExpRest* Exp() const;
 

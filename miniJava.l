@@ -44,8 +44,8 @@ OTHERSYMBOLS								[\"\'_]
 "return"									{ return RETURN; }
 "/*"({LETTER}|{DIGIT}|{OPERANDS}|{BRACKETS}|{WHITESPACES}|{OTHERSYMBOLS})*"*/"				{ /* block comment */ }
 "//"({LETTER}|{DIGIT}|{OPERANDS}|{BRACKETS}|" "|\t|{OTHERSYMBOLS})*"\n"						{ /* line comment */ }
-{INTEGER_LITERAL}							{ return NUMBER; }  
-{ID}										{ return ID; }
+{INTEGER_LITERAL}							{ yylval.ival = atoi(yytext); return NUMBER; }  
+{ID}										{ strcpy(yylval.sval, yytext); return ID; }
 .											{ std::cout << "Unexpected symbol at line: " << yylineno << std::endl; }
 
 %%

@@ -1,6 +1,6 @@
 #include "FormalRestList.h"
 
-CFormalRestList::CFormalRestList(IFormalRest* _formalRest, IFormalRestList* _formalRestList) :
+CFormalRestList::CFormalRestList( IFormalRest* _formalRest, IFormalRestList* _formalRestList ) :
 	formalRest(_formalRest), formalRestList(_formalRestList)
 {
 }

@@ -6,34 +6,44 @@
 
 class CExp : public IExp {
 public:
-	CExp(
-		std::string _expressionType,
-		std::string _expressionName,
-		IExpList* _expressionList,
-		IExp* _firstExpression,
-		IExp* _secondExperssion,
-		std::string _id
+	CExp(IExpLength* _expLength,
+		IExpMethodCall* _expMethodCall,
+		IExpNewIntArray* _expNewIntArray,
+		IExpNewCustomType* _expNewCustomType,
+		IExpSquareBrackets* _expSquareBrackets,
+		IExpRoundBrackets* _expRoundBrackets,
+		IExpNot* _expNot,
+		IExpNumber* _expNumber,
+		IExpId* _expId,
+		IExpSingle* _expSingle,
+		IExpBinOperation* _expBinOperation
 	);
 
 	void Accept(IVisitor* visitor) const;
 
-	const IExpList* ExpressionList() const;
-
-	const IExp* FirstExpression() const;
-
-	const IExp* SecondExpression() const;
-
-	const std::string GetId() const;
-
-	const std::string GetExpressionType() const;
-
-	const std::string GetExpressionName() const;
+	const IExpLength* ExpLength() const;
+	const IExpMethodCall* ExpMethodCall() const;
+	const IExpNewIntArray* ExpNewIntArray() const;
+	const IExpBinOperation* ExpBinOperation() const;
+	const IExpNewCustomType* ExpNewCustomType() const;
+	const IExpSquareBrackets* ExpSquareBrackets() const;
+	const IExpRoundBrackets* ExpRoundBrackets() const;
+	const IExpNot* ExpNot() const;
+	const IExpNumber* ExpNumber() const;
+	const IExpId* ExpId() const;
+	const IExpSingle* ExpSingle() const;
 
 private:
-	std::string expressionType;
-	std::string expressionName;
-	IExp* firstExpression;
-	IExp* secondExperssion;
-	IExpList *expressionList;
-	std::string id;
+	IExpLength* expLength;
+	IExpMethodCall* expMethodCall;
+	IExpNewIntArray* expNewIntArray;
+	IExpNewCustomType* expNewCustomType;
+	IExpSquareBrackets* expSquareBrackets;
+	IExpBinOperation* expBinOperation;
+	IExpRoundBrackets* expRoundBrackets;
+	IExpNot* expNot;
+	IExpNumber* expNumber;
+	IExpId* expId;
+	IExpSingle* expSingle;
+	;
 };

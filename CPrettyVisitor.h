@@ -1,8 +1,9 @@
 ﻿#ifndef CPRETTYVISITOR_H_INCLUDED
 #define CPRETTYVISITOR_H_INCLUDED
-#include "Visitor.h"
+
 #include <iostream>
 #include <string>
+#include "Visitor.h"
 #include "Common.h"
 
 class CPrettyPrinterVisitor : public IVisitor {
@@ -17,7 +18,29 @@ public:
 
 	void visit( const CClassDeclList* classDeclList );
 
-	void visit( const CExp* expression );
+	void visit( const CExp* exp );
+
+	void visit( const CExpMethodCall* expMethodCall );
+
+	void visit( const CExpNewIntArray* expNewIntArray );
+
+	void visit( const CExpNewCustomType* expNewCustomType );
+
+	void visit( const CExpSquareBrackets* expSquareBrackets );
+
+	void visit( const CExpRoundBrackets* expRoundBrackets );
+
+	void visit( const CExpNot* expNot );
+
+	void visit( const CExpNumber* expNumber );
+
+	void visit( const CExpId* expId );
+
+	void visit( const CExpSingle* expSingle );
+
+	void visit( const CExpBinOperation* expBinOperation );
+
+	void visit( const CExpLength* expLength );
 
 	void visit( const CExpList* expList );
 
@@ -45,4 +68,5 @@ public:
 
 	void visit( const CExpRest* expRest );
 };
+
 #endif

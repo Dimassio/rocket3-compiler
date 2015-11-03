@@ -4,13 +4,14 @@
 #include "Visitor.h"
 #include <string>
 
-class CType : public IType {
+class CExpSingle : public IExpSingle {
 public:
-	CType(std::string _typeName);
+	CExpSingle( std::string _expName );
 
 	void Accept(IVisitor* visitor) const;
-	const std::string GetTypeName() const;
+
+	const std::string ExpName() const;
 
 private:
-	std::string typeName;
+	std::string expName;
 };

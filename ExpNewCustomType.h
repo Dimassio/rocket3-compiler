@@ -4,18 +4,14 @@
 #include "Visitor.h"
 #include <string>
 
-class CFormalRest : public IFormalRest {
+class CExpNewCustomType : public IExpNewCustomType {
 public:
-	CFormalRest( IType* _type, std::string _id );
+	CExpNewCustomType( std::string _id );
 
 	void Accept( IVisitor* visitor ) const;
-
-	const IType* Type() const;
 
 	const std::string Id() const;
 
 private:
-	IType* type;
 	std::string id;
 };
-

@@ -5,9 +5,9 @@
 
 class CFormalRestList : public IFormalRestList {
 public:
-	CFormalRestList(IFormalRest* _formalRest, IFormalRestList* _formalRestList);
+	CFormalRestList( IFormalRest* _formalRest, IFormalRestList* _formalRestList );
 
-	void Accept(IVisitor* visitor) const;
+	void Accept( IVisitor* visitor ) const;
 
 	const IFormalRest* FormalRest() const;
 

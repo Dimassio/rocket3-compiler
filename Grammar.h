@@ -141,7 +141,95 @@ public:
 	virtual ~IExp()
 	{
 	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpBinOperation {
+public:
+	virtual ~IExpBinOperation()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpLength {
+public:
+	virtual ~IExpLength()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpNewIntArray {
+public:
+	virtual ~IExpNewIntArray()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpNumber {
+public:
+	virtual ~IExpNumber()
+	{
+	}
 	virtual void Accept( IVisitor* ) const = 0;
+};
+
+class IExpNot {
+public:
+	virtual ~IExpNot()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpNewCustomType {
+public:
+	virtual ~IExpNewCustomType()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpRoundBrackets {
+public:
+	virtual ~IExpRoundBrackets()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpSingle {
+public:
+	virtual ~IExpSingle()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpSquareBrackets {
+public:
+	virtual ~IExpSquareBrackets()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpMethodCall {
+public:
+	virtual ~IExpMethodCall()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
+};
+
+class IExpId {
+public:
+	virtual ~IExpId()
+	{
+	}
+	virtual void Accept(IVisitor*) const = 0;
 };
 
 class IExpRest {
