@@ -4,8 +4,16 @@
 #include "CPrettyVisitor.h"
 
 // ќн выполн€ет вывод того, что находитс€ в узле дерева.
-CPrettyPrinterVisitor::CPrettyPrinterVisitor()
+CPrettyPrinterVisitor::CPrettyPrinterVisitor() :
+	identation( 0 )
 {
+}
+
+void CPrettyPrinterVisitor::printIdentation()
+{
+	for( size_t i = 0; i < identation; ++i ) {
+		std::cout << "  ";
+	}
 }
 
 void CPrettyPrinterVisitor::visit( const CProgram* program )
@@ -21,10 +29,19 @@ void CPrettyPrinterVisitor::visit( const CProgram* program )
 void CPrettyPrinterVisitor::visit( const CMainClass* mainClass )
 {
 	std::cout << "class " << mainClass->GetClassName() << " {" << std::endl;
-	std::cout << "static void main(String[] " << mainClass->GetArgName() << " ) { " << std::endl;
+	++identation;
+	printIdentation();
+	std::cout << "public static void main(String[] " << mainClass->GetArgName() << " ) { " << std::endl;
+	++identation;
+	printIdentation();
 	mainClass->Statement()->Accept( this );
+	--identation;
+	printIdentation();
 	std::cout << "}" << std::endl;
+	--identation;
+	printIdentation();
 	std::cout << "}" << std::endl;
+	printIdentation();
 }
 
 void CPrettyPrinterVisitor::visit( const CClassDecl* classDecl )
@@ -34,13 +51,18 @@ void CPrettyPrinterVisitor::visit( const CClassDecl* classDecl )
 		std::cout << " extends " << classDecl->GetExtendedClassName();
 	}
 	std::cout << " { " << std::endl;
+	++identation;
+	printIdentation();
 	if( classDecl->VarDeclList() != 0 ) {
 		classDecl->VarDeclList()->Accept( this );
 	}
 	if( classDecl->MethodDeclList() != 0 ) {
 		classDecl->MethodDeclList()->Accept( this );
 	}
+	++identation;
+	printIdentation();
 	std::cout << " } " << std::endl;
+	printIdentation();
 }
 
 void CPrettyPrinterVisitor::visit( const CClassDeclList* classDeclList )
@@ -54,97 +76,98 @@ void CPrettyPrinterVisitor::visit( const CClassDeclList* classDeclList )
 
 void CPrettyPrinterVisitor::visit( const CExp* exp )
 {
-	if (exp->ExpMethodCall()) {
-		exp->ExpMethodCall()->Accept(this);
-	}
-	else if (exp->ExpBinOperation()) {
-		exp->ExpBinOperation()->Accept(this);
-	}
-	else if (exp->ExpNewIntArray()) {
-		exp->ExpNewIntArray()->Accept(this);
-	}
-	else if (exp->ExpNewCustomType()) {
-		exp->ExpNewCustomType()->Accept(this);
-	}
-	else if (exp->ExpSquareBrackets()) {
-		exp->ExpSquareBrackets()->Accept(this);
-	}
-	else if (exp->ExpRoundBrackets()) {
-		exp->ExpRoundBrackets()->Accept(this);
-	}
-	else if (exp->ExpNot()) {
-		exp->ExpNot()->Accept(this);
-	}
-	else if (exp->ExpNumber()) {
-		exp->ExpNumber()->Accept(this);
-	}
-	else if (exp->ExpId()) {
-		exp->ExpId()->Accept(this);
-	}
-	else if (exp->ExpSingle()) {
-		exp->ExpSingle()->Accept(this);
-	}
-	else if (exp->ExpLength()) {
-		exp->ExpLength()->Accept(this);
+	if( exp->ExpMethodCall() ) {
+		exp->ExpMethodCall()->Accept( this );
+	} else if( exp->ExpBinOperation() ) {
+		exp->ExpBinOperation()->Accept( this );
+	} else if( exp->ExpNewIntArray() ) {
+		exp->ExpNewIntArray()->Accept( this );
+	} else if( exp->ExpNewCustomType() ) {
+		exp->ExpNewCustomType()->Accept( this );
+	} else if( exp->ExpSquareBrackets() ) {
+		exp->ExpSquareBrackets()->Accept( this );
+	} else if( exp->ExpRoundBrackets() ) {
+		exp->ExpRoundBrackets()->Accept( this );
+	} else if( exp->ExpNot() ) {
+		exp->ExpNot()->Accept( this );
+	} else if( exp->ExpNumber() ) {
+		exp->ExpNumber()->Accept( this );
+	} else if( exp->ExpId() ) {
+		exp->ExpId()->Accept( this );
+	} else if( exp->ExpSingle() ) {
+		exp->ExpSingle()->Accept( this );
+	} else if( exp->ExpLength() ) {
+		exp->ExpLength()->Accept( this );
 	}
 }
 
-void CPrettyPrinterVisitor::visit(const CExpMethodCall* expMethodCall) {
-	expMethodCall->Exp()->Accept(this);
+void CPrettyPrinterVisitor::visit( const CExpMethodCall* expMethodCall )
+{
+	expMethodCall->Exp()->Accept( this );
 	std::cout << "." << expMethodCall->Id() << "(";
 
-	expMethodCall->ExpList()->Accept(this);
+	expMethodCall->ExpList()->Accept( this );
 	std::cout << ")";
 }
 
-void CPrettyPrinterVisitor::visit(const CExpBinOperation* expBinOperation) {
-	expBinOperation->FirstExp()->Accept(this);
+void CPrettyPrinterVisitor::visit( const CExpBinOperation* expBinOperation )
+{
+	expBinOperation->FirstExp()->Accept( this );
 	std::cout << " " << expBinOperation->ExpName() << " ";
-	expBinOperation->SecondExp()->Accept(this);
+	expBinOperation->SecondExp()->Accept( this );
 }
 
-void CPrettyPrinterVisitor::visit(const CExpNewIntArray* expNewIntArray) {
+void CPrettyPrinterVisitor::visit( const CExpNewIntArray* expNewIntArray )
+{
 	std::cout << "new int[";
-	expNewIntArray->Exp()->Accept(this);
+	expNewIntArray->Exp()->Accept( this );
 	std::cout << "]";
 }
 
-void CPrettyPrinterVisitor::visit(const CExpNewCustomType* expNewCustomType) {
+void CPrettyPrinterVisitor::visit( const CExpNewCustomType* expNewCustomType )
+{
 	std::cout << "new" << expNewCustomType->Id() << "()";
 }
 
-void CPrettyPrinterVisitor::visit(const CExpSquareBrackets* expSquareBrackets) {
-	expSquareBrackets->FirstExp()->Accept(this);
+void CPrettyPrinterVisitor::visit( const CExpSquareBrackets* expSquareBrackets )
+{
+	expSquareBrackets->FirstExp()->Accept( this );
 	std::cout << "[";
-	expSquareBrackets->SecondExp()->Accept(this);
+	expSquareBrackets->SecondExp()->Accept( this );
 	std::cout << "]";
 }
 
-void CPrettyPrinterVisitor::visit(const CExpRoundBrackets* expRoundBrackets) {
+void CPrettyPrinterVisitor::visit( const CExpRoundBrackets* expRoundBrackets )
+{
 	std::cout << "(";
-	expRoundBrackets->Exp()->Accept(this);
+	expRoundBrackets->Exp()->Accept( this );
 	std::cout << ")";
 }
 
-void CPrettyPrinterVisitor::visit(const CExpNot* expNot) {
+void CPrettyPrinterVisitor::visit( const CExpNot* expNot )
+{
 	std::cout << "!";
-	expNot->Exp()->Accept(this);
+	expNot->Exp()->Accept( this );
 }
 
-void CPrettyPrinterVisitor::visit(const CExpNumber* expNumber) {
+void CPrettyPrinterVisitor::visit( const CExpNumber* expNumber )
+{
 	std::cout << expNumber->Number();
 }
 
-void CPrettyPrinterVisitor::visit(const CExpId* expId) {
+void CPrettyPrinterVisitor::visit( const CExpId* expId )
+{
 	std::cout << expId->Id();
 }
 
-void CPrettyPrinterVisitor::visit(const CExpSingle* expSingle) {
+void CPrettyPrinterVisitor::visit( const CExpSingle* expSingle )
+{
 	std::cout << expSingle->ExpName();
 }
 
-void CPrettyPrinterVisitor::visit(const CExpLength* expLength) {
-	expLength->Exp()->Accept(this);
+void CPrettyPrinterVisitor::visit( const CExpLength* expLength )
+{
+	expLength->Exp()->Accept( this );
 	std::cout << ".Length";
 }
 
@@ -177,15 +200,21 @@ void CPrettyPrinterVisitor::visit( const CMethodDecl* methodDecl )
 	( methodDecl->Type() )->Accept( this );
 	std::cout << methodDecl->Id() << "(";
 	( methodDecl->FormalList() )->Accept( this );
-	std::cout << ") {";
+	std::cout << ") {" << std::endl;
+	++identation;
+	printIdentation();
 	if( methodDecl->VarDeclList() ) {
 		( methodDecl->VarDeclList() )->Accept( this );
 	}
 	if( methodDecl->StatementList() ) {
 		( methodDecl->StatementList() )->Accept( this );
 	}
+	printIdentation();
 	std::cout << "return ";
 	( methodDecl->Exp() )->Accept( this );
+	std::cout << ";" << std::endl;
+	--identation;
+	printIdentation();
 }
 
 void CPrettyPrinterVisitor::visit( const CMethodDeclList* methodDeclList )
@@ -200,39 +229,62 @@ void CPrettyPrinterVisitor::visit( const CMethodDeclList* methodDeclList )
 void CPrettyPrinterVisitor::visit( const CStatement* statement )
 {
 	if( statement->GetStatementType() == "BlockStatement" ) {
-		std::cout << "{";
+		printIdentation();
+		std::cout << "{" << std::endl;
+		++identation;
+		printIdentation();
 		statement->Statements()->Accept( this );
-		std::cout << "}";
+		--identation;
+		printIdentation();
+		std::cout << "}" << std::endl;
 	} else if( statement->GetStatementType() == "IfStatement" ) {
+		printIdentation();
 		std::cout << "if (";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ")" << std::endl;
+		++identation;
+		printIdentation();
 		statement->FirstStatement()->Accept( this );
-		std::cout << std::endl << "else" << std::endl;
+		std::cout << std::endl;
+		--identation;
+		printIdentation();
+		std::cout << "else" << std::endl;
+		++identation;
+		printIdentation();
 		statement->SecondStatement()->Accept( this );
 		std::cout << std::endl;
+		--identation;
+		printIdentation();
 	} else if( statement->GetStatementType() == "WhileStatement" ) {
+		printIdentation();
 		std::cout << "while (";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ")" << std::endl;
+		++identation;
+		printIdentation();
 		statement->FirstStatement()->Accept( this );
 		std::cout << std::endl;
+		--identation;
+		printIdentation();
 	} else if( statement->GetStatementType() == "PrintlnStatement" ) {
+		printIdentation();
 		std::cout << "System.out.println(";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ");" << std::endl;
 	} else if( statement->GetStatementType() == "AssignStatement" ) {
+		printIdentation();
 		std::cout << statement->GetId();
 		std::cout << " = ";
 		statement->FirstExpression()->Accept( this );
-		std::cout << ";";
+		std::cout << ";" << std::endl;
 	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
+		printIdentation();
 		std::cout << statement->GetId();
 		std::cout << "[";
 		statement->FirstExpression()->Accept( this );
 		std::cout << "] = ";
 		statement->SecondExpression()->Accept( this );
-		std::cout << ";";
+		std::cout << ";" << std::endl;;
 	}
 }
 
@@ -251,6 +303,7 @@ void CPrettyPrinterVisitor::visit( const CType* type )
 
 void CPrettyPrinterVisitor::visit( const CVarDecl* varDecl )
 {
+	printIdentation();
 	( varDecl->Type() )->Accept( this );
 	std::cout << varDecl->VarName() << ";" << std::endl;
 }

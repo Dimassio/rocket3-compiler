@@ -67,6 +67,11 @@ public:
 	void visit( const CExpRestList* expRestList );
 
 	void visit( const CExpRest* expRest );
+
+private:
+	size_t identation;
+
+	void printIdentation();
 };
 
 #endif
