@@ -1,7 +1,10 @@
+#include "StaticVariables.h"
 #include "FormalList.h"
 
-CFormalList::CFormalList( IType* _type, std::string _id, IFormalRestList* _formalRestList ) :
-	type( _type ), id( _id ), formalRestList( _formalRestList )
+CFormalList::CFormalList( IType* _type, std::string id, IFormalRestList* _formalRestList ) :
+	type( _type ),
+	symbol( symbolStorage.Get(id) ),
+	formalRestList( _formalRestList )
 {
 }
 
@@ -20,8 +23,8 @@ const IFormalRestList* CFormalList::FormalRestList() const
 	return formalRestList;
 }
 
-const std::string CFormalList::Id() const
-{
-	return id;
+
+const Symbols::CSymbol* CFormalList::Symbol() const {
+	return symbol;
 }
 

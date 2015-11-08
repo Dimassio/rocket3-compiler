@@ -45,5 +45,4 @@ private:
 	IExpNumber* expNumber;
 	IExpId* expId;
 	IExpSingle* expSingle;
-	;
 };

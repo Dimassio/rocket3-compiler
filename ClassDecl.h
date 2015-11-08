@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Grammar.h"
+#include "Symbols.h"
 #include "Visitor.h"
 #include <string>
 
 class CClassDecl : public IClassDecl {
 public:
-	CClassDecl( std::string _className, std::string _extendedClassName, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList );
+	CClassDecl( std::string className, std::string extendedClassName, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList );
 	
 	void Accept( IVisitor* visitor ) const;
 
@@ -14,13 +15,13 @@ public:
 
 	const IMethodDeclList* MethodDeclList() const;
 
-	const std::string GetClassName() const;
+	const Symbols::CSymbol* ClassSymbol() const;
 
-	const std::string GetExtendedClassName() const;
+	const Symbols::CSymbol* ExtendedClassSymbol() const;
 
 private:
-	std::string className;
-	std::string extendedClassName;
+	const Symbols::CSymbol* classSymbol;
+	const Symbols::CSymbol*  extendedClassSymbol;
 	IVarDeclList* varDeclList;
 	IMethodDeclList* methodDeclList;
 };

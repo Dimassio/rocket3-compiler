@@ -6,12 +6,12 @@
 
 class CExpNewCustomType : public IExpNewCustomType {
 public:
-	CExpNewCustomType( std::string _id );
+	CExpNewCustomType( std::string _type );
 
 	void Accept( IVisitor* visitor ) const;
 
-	const std::string Id() const;
+	const std::string Type() const;
 
 private:
-	std::string id;
+	std::string type;
 };

@@ -1,7 +1,7 @@
 #pragma once
 
-
 #include "Grammar.h"
+#include "Symbols.h"
 #include "Visitor.h"
 #include <string>
 
@@ -14,7 +14,7 @@ public:
 		IStatement* _secondStatement,
 		IExp* _firstExpression,
 		IExp* _secondExperssion,
-		std::string _id
+		std::string id
 	);
 
 	void Accept(IVisitor* visitor) const;
@@ -29,7 +29,7 @@ public:
 
 	const IExp* SecondExpression() const;
 
-	const std::string GetId() const;
+	const Symbols::CSymbol* Symbol() const;
 
 	const std::string GetStatementType() const;
 
@@ -40,5 +40,5 @@ private:
 	IStatement* secondStatement;
 	IExp* firstExpression;
 	IExp* secondExperssion;
-	std::string id;
+	const Symbols::CSymbol* symbol;
 };

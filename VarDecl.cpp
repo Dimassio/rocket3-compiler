@@ -1,7 +1,9 @@
+#include "StaticVariables.h"
 #include "VarDecl.h"
 
-CVarDecl::CVarDecl( IType* _type, std::string _varName ) :
-	type( _type ), varName( _varName )
+CVarDecl::CVarDecl( IType* _type, std::string id ) :
+	type( _type ),
+	symbol( symbolStorage.Get(id) )
 {
 }
 
@@ -15,7 +17,7 @@ const IType* CVarDecl::Type() const
 	return type;
 }
 
-const std::string CVarDecl::VarName() const
+const Symbols::CSymbol* CVarDecl::Symbol() const
 {
-	return varName;
+	return symbol;
 }

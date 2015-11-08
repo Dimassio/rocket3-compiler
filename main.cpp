@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <iostream>
+#include "StaticVariables.h"
 #include "CPrettyVisitor.h"
+#include "CSymbTableBuilder.h"
 
 int yyparse(CProgram*& root);
 
@@ -18,6 +20,9 @@ int main( int argc, char *argv[] )
 	if( !yyparse( root ) ) {
 		std::cout << "SUCCESS" << std::endl;
 	}
+
+	CSymbTableBuilder symbTableBuilder;
+	symbTableBuilder.visit(root);
 
 	CPrettyPrinterVisitor prettyVisitor;
 	prettyVisitor.visit( root );

@@ -1,7 +1,11 @@
+#include "StaticVariables.h"
 #include "ClassDecl.h"
 
-CClassDecl::CClassDecl( std::string _className, std::string _extendedClassName, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList ) :
-	className( _className ), extendedClassName( _extendedClassName ), varDeclList( _varDeclList ), methodDeclList( _methodDeclList )
+CClassDecl::CClassDecl( std::string className, std::string extendedClassName, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList ) :
+	classSymbol( symbolStorage.Get(className) ), 
+	extendedClassSymbol( symbolStorage.Get(extendedClassName) ),
+	varDeclList( _varDeclList ),
+	methodDeclList( _methodDeclList )
 {
 }
 
@@ -20,12 +24,12 @@ const IMethodDeclList*  CClassDecl::MethodDeclList() const
 	return methodDeclList;
 }
 
-const std::string CClassDecl::GetClassName() const
+const Symbols::CSymbol* CClassDecl::ClassSymbol() const
 {
-	return className;
+	return classSymbol;
 }
 
-const std::string CClassDecl::GetExtendedClassName() const
+const Symbols::CSymbol* CClassDecl::ExtendedClassSymbol() const
 {
-	return extendedClassName;
+	return extendedClassSymbol;
 }

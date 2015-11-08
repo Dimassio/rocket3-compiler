@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Grammar.h"
+#include "Symbols.h"
 #include "Visitor.h"
 #include <string>
 
 class CExpMethodCall : public IExpMethodCall {
 public:
-	CExpMethodCall( IExp* _exp, std::string _id, IExpList* _expList);
+	CExpMethodCall( IExp* _exp, std::string id, IExpList* _expList);
 
 	void Accept(IVisitor* visitor) const;
 
@@ -14,10 +15,10 @@ public:
 
 	const IExpList* ExpList() const;
 
-	const std::string Id() const;
+	const Symbols::CSymbol* Symbol() const;
 
 private:
 	IExp* exp;
 	IExpList* expList;
-	std::string id;
+	const Symbols::CSymbol* symbol;
 };

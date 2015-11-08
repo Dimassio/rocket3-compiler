@@ -1,7 +1,10 @@
+#include "StaticVariables.h"
 #include "MainClass.h"
 
-CMainClass::CMainClass( std::string _className, std::string _argName, IStatement* _statement ) :
-	className( _className ), argName( _argName ), statement( _statement )
+CMainClass::CMainClass( std::string className, std::string argName, IStatement* _statement ) :
+	classSymbol( symbolStorage.Get(className) ),
+	argSymbol( symbolStorage.Get(argName) ),
+	statement( _statement )
 {
 }
 
@@ -15,12 +18,10 @@ const IStatement* CMainClass::Statement() const
 	return statement;
 }
 
-const std::string CMainClass::GetClassName() const
-{
-	return className;
+const Symbols::CSymbol* CMainClass::ClassSymbol() const {
+	return classSymbol;
 }
 
-const std::string CMainClass::GetArgName() const
-{
-	return argName;
+const Symbols::CSymbol* CMainClass::ArgSymbol() const {
+	return argSymbol;
 }

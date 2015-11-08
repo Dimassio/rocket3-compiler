@@ -1,23 +1,24 @@
 #pragma once
 
 #include "Grammar.h"
+#include "Symbols.h"
 #include "Visitor.h"
 #include <string>
 
 class CMainClass : public IMainClass {
 public:
-	CMainClass( std::string _className, std::string _argName, IStatement* _statement );
+	CMainClass( std::string className, std::string argName, IStatement* _statement );
 
 	void Accept( IVisitor* visitor ) const;
 
 	const IStatement* Statement() const;
 
-	const std::string GetClassName() const;
+	const Symbols::CSymbol* ClassSymbol() const;
 
-	const std::string GetArgName() const;
+	const Symbols::CSymbol* ArgSymbol() const;
 
 private:
-	std::string className;
-	std::string argName;
+	const Symbols::CSymbol* classSymbol;
+	const Symbols::CSymbol* argSymbol;
 	IStatement* statement;
 };

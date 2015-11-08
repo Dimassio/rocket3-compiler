@@ -1,7 +1,8 @@
+#include "StaticVariables.h"
 #include "FormalRest.h"
 
-CFormalRest::CFormalRest( IType* _type, std::string _id ) :
-	type(_type), id(_id)
+CFormalRest::CFormalRest( IType* _type, std::string id ) :
+	type(_type), symbol( symbolStorage.Get(id) )
 {
 }
 
@@ -15,7 +16,6 @@ const IType* CFormalRest::Type() const
 	return type;
 }
 
-const std::string CFormalRest::Id() const
-{
-	return id;
+const Symbols::CSymbol* CFormalRest::Symbol() const {
+	return symbol;
 }

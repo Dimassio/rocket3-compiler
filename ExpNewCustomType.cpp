@@ -1,8 +1,8 @@
 #include "ExpNewCustomType.h"
 
-CExpNewCustomType::CExpNewCustomType( std::string _id )
+CExpNewCustomType::CExpNewCustomType( std::string _type )
 	: 
-	id(_id)
+	type( _type )
 {
 }
 
@@ -11,7 +11,7 @@ void CExpNewCustomType::Accept(IVisitor* visitor) const
 	visitor->visit(this);
 }
 
-const std::string CExpNewCustomType::Id() const
+const std::string CExpNewCustomType::Type() const
 {
-	return id;
+	return type;
 }

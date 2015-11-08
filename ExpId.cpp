@@ -1,7 +1,8 @@
+#include "StaticVariables.h"
 #include "ExpId.h"
 
-CExpId::CExpId( std::string _id )
-	: id(_id)
+CExpId::CExpId( std::string id )
+	: symbol( symbolStorage.Get(id) )
 {
 }
 
@@ -10,7 +11,6 @@ void CExpId::Accept(IVisitor* visitor) const
 	visitor->visit(this);
 }
 
-const std::string CExpId::Id() const
-{
-	return id;
+const Symbols::CSymbol* CExpId::Symbol() const {
+	return symbol;
 }

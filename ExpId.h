@@ -1,17 +1,18 @@
 #pragma once
 
 #include "Grammar.h"
+#include "Symbols.h"
 #include "Visitor.h"
 #include <string>
 
 class CExpId : public IExpId {
 public:
-	CExpId( std::string _id );
+	CExpId( std::string id );
 
 	void Accept(IVisitor* visitor) const;
 
-	const std::string Id() const;
+	const Symbols::CSymbol* Symbol() const;
 
 private:
-	std::string id;
+	const Symbols::CSymbol* symbol;
 };

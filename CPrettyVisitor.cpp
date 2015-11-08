@@ -29,10 +29,10 @@ void CPrettyPrinterVisitor::visit( const CProgram* program )
 void CPrettyPrinterVisitor::visit( const CMainClass* mainClass )
 {
 	printIdentation();
-	std::cout << "class " << mainClass->GetClassName() << " {" << std::endl;
+	std::cout << "class " << mainClass->ClassSymbol()->String() << " {" << std::endl;
 	++identation;
 	printIdentation();
-	std::cout << "public static void main(String[] " << mainClass->GetArgName() << " ) { " << std::endl;
+	std::cout << "public static void main(String[] " << mainClass->ArgSymbol()->String() << " ) { " << std::endl;
 	++identation;
 	mainClass->Statement()->Accept( this );
 	--identation;
@@ -46,9 +46,9 @@ void CPrettyPrinterVisitor::visit( const CMainClass* mainClass )
 void CPrettyPrinterVisitor::visit( const CClassDecl* classDecl )
 {
 	printIdentation();
-	std::cout << "class " << classDecl->GetClassName();
-	if( classDecl->GetExtendedClassName() != "" ) {
-		std::cout << " extends " << classDecl->GetExtendedClassName();
+	std::cout << "class " << classDecl->ClassSymbol()->String();
+	if( classDecl->ExtendedClassSymbol()->String() != "" ) {
+		std::cout << " extends " << classDecl->ExtendedClassSymbol()->String();
 	}
 	std::cout << " { " << std::endl;
 	++identation;
@@ -60,7 +60,7 @@ void CPrettyPrinterVisitor::visit( const CClassDecl* classDecl )
 	}
 	--identation;
 	printIdentation();
-	std::cout << " } " << std::endl << std::endl;
+	std::cout << "}" << std::endl << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CClassDeclList* classDeclList )
@@ -101,7 +101,7 @@ void CPrettyPrinterVisitor::visit( const CExp* exp )
 void CPrettyPrinterVisitor::visit( const CExpMethodCall* expMethodCall )
 {
 	expMethodCall->Exp()->Accept( this );
-	std::cout << "." << expMethodCall->Id() << "(";
+	std::cout << "." << expMethodCall->Symbol()->String() << "(";
 
 	expMethodCall->ExpList()->Accept( this );
 	std::cout << ")";
@@ -123,7 +123,7 @@ void CPrettyPrinterVisitor::visit( const CExpNewIntArray* expNewIntArray )
 
 void CPrettyPrinterVisitor::visit( const CExpNewCustomType* expNewCustomType )
 {
-	std::cout << "new" << expNewCustomType->Id() << "()";
+	std::cout << "new" << expNewCustomType->Type() << "()";
 }
 
 void CPrettyPrinterVisitor::visit( const CExpSquareBrackets* expSquareBrackets )
@@ -154,7 +154,7 @@ void CPrettyPrinterVisitor::visit( const CExpNumber* expNumber )
 
 void CPrettyPrinterVisitor::visit( const CExpId* expId )
 {
-	std::cout << expId->Id();
+	std::cout << expId->Symbol()->String();
 }
 
 void CPrettyPrinterVisitor::visit( const CExpSingle* expSingle )
@@ -180,7 +180,7 @@ void CPrettyPrinterVisitor::visit( const CExpList* expList )
 
 void CPrettyPrinterVisitor::visit( const CFormalList* formalList )
 {
-	std::string id = formalList->Id();
+	std::string id = formalList->Symbol()->String();
 	if( !formalList->Type() && id == "" && !formalList->FormalRestList() ) {
 		return;
 	}
@@ -196,7 +196,7 @@ void CPrettyPrinterVisitor::visit( const CMethodDecl* methodDecl )
 	printIdentation();
 	std::cout << "public ";
 	( methodDecl->Type() )->Accept( this );
-	std::cout << methodDecl->Id() << "(";
+	std::cout << methodDecl->Symbol()->String() << "(";
 	( methodDecl->FormalList() )->Accept( this );
 	std::cout << ") {" << std::endl;
 	++identation;
@@ -265,13 +265,13 @@ void CPrettyPrinterVisitor::visit( const CStatement* statement )
 		std::cout << ");" << std::endl;
 	} else if( statement->GetStatementType() == "AssignStatement" ) {
 		printIdentation();
-		std::cout << statement->GetId();
+		std::cout << statement->Symbol()->String();
 		std::cout << " = ";
 		statement->FirstExpression()->Accept( this );
 		std::cout << ";" << std::endl;
 	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
 		printIdentation();
-		std::cout << statement->GetId();
+		std::cout << statement->Symbol()->String();
 		std::cout << "[";
 		statement->FirstExpression()->Accept( this );
 		std::cout << "] = ";
@@ -297,7 +297,7 @@ void CPrettyPrinterVisitor::visit( const CVarDecl* varDecl )
 {
 	printIdentation();
 	( varDecl->Type() )->Accept( this );
-	std::cout << varDecl->VarName() << ";" << std::endl;
+	std::cout << varDecl->Symbol()->String() << ";" << std::endl;
 }
 
 void CPrettyPrinterVisitor::visit( const CVarDeclList* varDeclList )
@@ -320,7 +320,7 @@ void CPrettyPrinterVisitor::visit( const CFormalRest* formalRest )
 {
 	std::cout << ", ";
 	formalRest->Type()->Accept( this );
-	std::cout << formalRest->Id();
+	std::cout << formalRest->Symbol()->String();
 }
 
 void CPrettyPrinterVisitor::visit( const CExpRestList* expRestList )

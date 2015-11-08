@@ -1,18 +1,19 @@
 #pragma once
 
 #include "Grammar.h"
+#include "Symbols.h"
 #include "Visitor.h"
 #include <string>
 
 class CMethodDecl : public IMethodDecl {
 public:
-	CMethodDecl( IType* _type, std::string _id, IFormalList* _formalList, IVarDeclList* _varDeclList, IStatementList* _statementList, IExp* _exp );
+	CMethodDecl( IType* _type, std::string id, IFormalList* _formalList, IVarDeclList* _varDeclList, IStatementList* _statementList, IExp* _exp );
 
 	void Accept( IVisitor* visitor ) const;
 
 	const IType* Type() const;
 
-	const std::string Id() const;
+	const Symbols::CSymbol* Symbol() const;
 
 	const IFormalList* FormalList() const;
 
@@ -23,8 +24,9 @@ public:
 	const IExp* Exp() const;
 
 private:
+	const Symbols::CSymbol* symbol;
+
 	IType* type;
-	std::string id;
 	IFormalList* formalList;
 	IVarDeclList* varDeclList;
 	IStatementList* statementList;

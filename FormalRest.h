@@ -1,21 +1,22 @@
 #pragma once
 
 #include "Grammar.h"
+#include "Symbols.h"
 #include "Visitor.h"
 #include <string>
 
 class CFormalRest : public IFormalRest {
 public:
-	CFormalRest( IType* _type, std::string _id );
+	CFormalRest( IType* _type, std::string id );
 
 	void Accept( IVisitor* visitor ) const;
 
 	const IType* Type() const;
 
-	const std::string Id() const;
+	const Symbols::CSymbol* Symbol() const;
 
 private:
 	IType* type;
-	std::string id;
+	const Symbols::CSymbol* symbol;
 };
 

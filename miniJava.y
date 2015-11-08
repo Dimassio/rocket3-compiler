@@ -243,7 +243,7 @@ ExpNot:
 
 ExpBinOperation:
 	Exp '<' Exp { $$ = new CExpBinOperation( "<", $1, $3 ); }
-	| Exp '&' Exp { $$ = new CExpBinOperation( "&", $1, $3 ); }
+	| Exp AND Exp { $$ = new CExpBinOperation( "&&", $1, $3 ); }
 	| Exp '-' Exp { $$ = new CExpBinOperation( "-", $1, $3 ); }
 	| Exp '+' Exp { $$ = new CExpBinOperation( "+", $1, $3 ); }
 	| Exp '/' Exp { $$ = new CExpBinOperation( "/", $1, $3 ); }
