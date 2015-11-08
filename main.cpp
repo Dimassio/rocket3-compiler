@@ -3,8 +3,9 @@
 #include "StaticVariables.h"
 #include "CPrettyVisitor.h"
 #include "CSymbTableBuilder.h"
+#include "CTypeChecker.h"
 
-int yyparse(CProgram*& root);
+int yyparse( CProgram*& root );
 
 int main( int argc, char *argv[] )
 {
@@ -22,10 +23,13 @@ int main( int argc, char *argv[] )
 	}
 
 	CSymbTableBuilder symbTableBuilder;
-	symbTableBuilder.visit(root);
+	symbTableBuilder.visit( root );
 
 	CPrettyPrinterVisitor prettyVisitor;
 	prettyVisitor.visit( root );
+
+	CTypeChecker typeChecker;
+	typeChecker.visit( root );
 
 	fclose( yyin );
 
