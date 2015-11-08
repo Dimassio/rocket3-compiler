@@ -43,7 +43,7 @@ bool CClassInfo::AddMethod(const Symbols::CSymbol* methodSymbol, CType* type) {
 
 CMethodInfo* CClassInfo::GetMethod(const Symbols::CSymbol* methodSymbol) {
 	if (methods.find(methodSymbol) == methods.end()) {
-		return false;
+		return nullptr;
 	} else {
 		return &methods[methodSymbol];
 	}
