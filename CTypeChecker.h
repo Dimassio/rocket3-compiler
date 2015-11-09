@@ -73,7 +73,7 @@ private:
 	const CTable* symbolTable;	
 	CClassInfo* currClass;
 	CMethodInfo* currMethod;
-	CType* lastTypeValue;
+	std::string lastTypeValue;
 };
 
 #endif

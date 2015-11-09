@@ -176,6 +176,15 @@ void CTypeChecker::visit( const CExpNumber* expNumber )
 
 void CTypeChecker::visit( const CExpId* expId ) 
 {
+	if (currMethod->GetLocalVariable(expId->GetId()) != nullptr) {
+		lastTypeValue = currMethod->GetLocalVariable(expId->GetID())->Type()->GetTypeName();
+	}
+	else if (currClass->GetVariable(expId->GetId()) != nullptr) {
+		lastTypeValue = currClass->GetVariable(expId->GetId())->Type()->GetTypeName();
+	}
+	else {
+		// Undeclared variable
+	}
 }
 
 void CTypeChecker::visit( const CExpSingle* expSingle ) 
@@ -264,16 +273,55 @@ void CTypeChecker::visit( const CStatement* statement ) // +
 		statement->FirstExpression()->Accept( this );
 
 	} else if( statement->GetStatementType() == "AssignStatement" ) { // +
+		const CType* idType;
+		
+		if (currMethod->GetLocalVariable(statement->GetId()) != nullptr) {
+			idType = currMethod->GetLocalVariable(statement->GetId())->Type();
+		}
+		else if (currClass->GetVariable(statement->GetId()) != nullptr) {
+			idType = currClass->GetVariable(statement->GetId())->Type();
+		}
+		else {
+			// Undeclared variable
+		}
 
-		std::cout << statement->Symbol()->String();
+		statement->FirstExpression()->Accept(this);
+		
+		if (idType->GetTypeName() != lastTypeValue) {
+			// Type mismatch
+		}
 
-		statement->FirstExpression()->Accept( this );
 
 	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) { // +
+		const CType* idType;
 
-		statement->FirstExpression()->Accept( this );
+		if (currMethod->GetLocalVariable(statement->GetId()) != nullptr) {
+			idType = currMethod->GetLocalVariable(statement->GetId())->Type();
+		}
+		else if (currClass->GetVariable(statement->GetId()) != nullptr) {
+			idType = currClass->GetVariable(statement->GetId())->Type();
+		}
+		else {
+			// Undeclared variable
+		}
 
-		statement->SecondExpression()->Accept( this );
+
+		if (idType->GetTypeName() != "int []") {
+			// The variable isn't an array
+		}
+
+		statement->FirstExpression()->Accept(this);
+
+		if (lastTypeValue != "int") {
+			// Wrong index type
+		}
+
+
+		statement->SecondExpression()->Accept(this);
+
+		if (lastTypeValue != "int") {
+			// Type mismatch
+		}
 	}
 }
 
@@ -292,7 +340,18 @@ void CTypeChecker::visit( const CType* type )
 
 void CTypeChecker::visit( const CVarDecl* varDecl )
 {
-	( varDecl->Type() )->Accept( this );
+	varDecl->Type()->Accept( this );
+
+	if (lastTypeValue != "int" &&
+		lastTypeValue != "int []" &&
+		lastTypeValue != "boolean" &&
+		lastTypeValue != "string" &&
+		lastTypeValue != "void" &&
+		symbolTable->GetClass(lastTypeValue) == nullptr
+		)
+	{
+		// Такого типа не существует
+	}
 }
 
 void CTypeChecker::visit( const CVarDeclList* varDeclList )
