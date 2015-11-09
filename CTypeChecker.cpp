@@ -11,6 +11,9 @@ CTypeChecker::CTypeChecker()
 void CTypeChecker::visit( const CProgram* program )
 {
 	std::cout << "Program has started:" << std::endl << std::endl;
+	if( program->MainClass() == nullptr ) {
+		// МЕР main
+	}
 	( program->MainClass() )->Accept( this );
 	if( !( program->ClassDeclList() ) ) {
 		return;
@@ -93,7 +96,7 @@ void CTypeChecker::visit( const CExp* exp )
 	}
 }
 
-void CTypeChecker::visit( const CExpMethodCall* expMethodCall ) // +
+void CTypeChecker::visit( const CExpMethodCall* expMethodCall ) 
 {
 	expMethodCall->Exp()->Accept( this );
 	std::string expName = lastTypeValue->GetTypeName();
@@ -106,7 +109,7 @@ void CTypeChecker::visit( const CExpMethodCall* expMethodCall ) // +
 	currMethod = expInfo->GetMethod( expName );
 }
 
-void CTypeChecker::visit( const CExpBinOperation* expBinOperation ) // мер, ме +
+void CTypeChecker::visit( const CExpBinOperation* expBinOperation ) 
 {
 	std::string operation = expBinOperation->ExpName();
 	expBinOperation->FirstExp()->Accept( this );
@@ -125,7 +128,7 @@ void CTypeChecker::visit( const CExpBinOperation* expBinOperation ) // мер, ме +
 	}
 }
 
-void CTypeChecker::visit( const CExpNewIntArray* expNewIntArray ) // +
+void CTypeChecker::visit( const CExpNewIntArray* expNewIntArray ) 
 {
 	expNewIntArray->Exp()->Accept( this );
 	if( lastTypeValue->GetTypeName() != "int" ) {
@@ -133,7 +136,7 @@ void CTypeChecker::visit( const CExpNewIntArray* expNewIntArray ) // +
 	}
 }
 
-void CTypeChecker::visit( const CExpNewCustomType* expNewCustomType ) // + new Type()
+void CTypeChecker::visit( const CExpNewCustomType* expNewCustomType ) 
 {
 	expNewCustomType->Type()->Accept( this );
 	
@@ -142,7 +145,7 @@ void CTypeChecker::visit( const CExpNewCustomType* expNewCustomType ) // + new T
 	}
 }
 
-void CTypeChecker::visit( const CExpSquareBrackets* expSquareBrackets ) // + first[secondexp]
+void CTypeChecker::visit( const CExpSquareBrackets* expSquareBrackets ) 
 {
 	expSquareBrackets->FirstExp()->Accept( this );
 	if( lastTypeValue->GetTypeName() != "int []" ) {
@@ -159,7 +162,7 @@ void CTypeChecker::visit( const CExpRoundBrackets* expRoundBrackets )
 	expRoundBrackets->Exp()->Accept( this );
 }
 
-void CTypeChecker::visit( const CExpNot* expNot ) // +
+void CTypeChecker::visit( const CExpNot* expNot )
 {
 	expNot->Exp()->Accept( this );
 	if( lastTypeValue->GetTypeName() != "boolean" ) {
@@ -169,23 +172,22 @@ void CTypeChecker::visit( const CExpNot* expNot ) // +
 
 void CTypeChecker::visit( const CExpNumber* expNumber )
 {
-
 }
 
-void CTypeChecker::visit( const CExpId* expId ) //+
+void CTypeChecker::visit( const CExpId* expId ) 
 {
-
 }
 
-void CTypeChecker::visit( const CExpSingle* expSingle ) //+
+void CTypeChecker::visit( const CExpSingle* expSingle ) 
 {
-
 }
 
-void CTypeChecker::visit( const CExpLength* expLength ) // +
+void CTypeChecker::visit( const CExpLength* expLength ) 
 {
 	expLength->Exp()->Accept( this );
-
+	if( lastTypeValue->GetTypeName() != "string" ) {
+		// must be string
+	}
 }
 
 void CTypeChecker::visit( const CExpList* expList )  // +
@@ -202,7 +204,7 @@ void CTypeChecker::visit( const CExpList* expList )  // +
 	}
 }
 
-void CTypeChecker::visit( const CFormalList* formalList )
+void CTypeChecker::visit( const CFormalList* formalList ) // +
 {
 	std::string id = formalList->Symbol()->String();
 	if( !formalList->Type() && id == "" && !formalList->FormalRestList() ) {
@@ -225,9 +227,10 @@ void CTypeChecker::visit( const CMethodDecl* methodDecl )
 		( methodDecl->StatementList() )->Accept( this );
 	}
 	( methodDecl->Exp() )->Accept( this );
+	currMethod = methodDecl->MethodName(); // todo: method name
 }
 
-void CTypeChecker::visit( const CMethodDeclList* methodDeclList )
+void CTypeChecker::visit( const CMethodDeclList* methodDeclList ) // +
 {
 	if( methodDeclList->MethodDeclList() ) {
 		methodDeclList->MethodDeclList()->Accept( this );
@@ -235,7 +238,7 @@ void CTypeChecker::visit( const CMethodDeclList* methodDeclList )
 	methodDeclList->MethodDecl()->Accept( this );
 }
 
-void CTypeChecker::visit( const CStatement* statement )
+void CTypeChecker::visit( const CStatement* statement ) // +
 {
 	if( statement->GetStatementType() == "BlockStatement" ) {
 
@@ -284,7 +287,7 @@ void CTypeChecker::visit( const CStatementList* statementList )
 
 void CTypeChecker::visit( const CType* type )
 {
-
+	// todo: lastTypeValue = type->GetTypeName();
 }
 
 void CTypeChecker::visit( const CVarDecl* varDecl )
