@@ -73,7 +73,10 @@ private:
 	const CTable* symbolTable;	
 	CClassInfo* currClass;
 	CMethodInfo* currMethod;
-	CType* lastTypeValue;
+	CMethodInfo* currMethodCall;
+	std::string lastTypeValue;
+	int numOfArgument;
+	bool errorOccured;
 };
 
 #endif

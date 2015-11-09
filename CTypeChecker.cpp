@@ -6,15 +6,20 @@
 
 CTypeChecker::CTypeChecker()
 {
+	errorOccured = false;
 }
 
 void CTypeChecker::visit( const CProgram* program )
 {
 	std::cout << "Program has started:" << std::endl << std::endl;
 	if( program->MainClass() == nullptr ) {
-		// нет main
+		std::cout << "Can't find main" << std::endl;
+		errorOccured = true;
 	}
-	( program->MainClass() )->Accept( this );
+	else {
+		program->MainClass()->Accept(this);
+	}
+
 	if( !( program->ClassDeclList() ) ) {
 		return;
 	}
@@ -23,32 +28,34 @@ void CTypeChecker::visit( const CProgram* program )
 
 void CTypeChecker::visit( const CMainClass* mainClass )
 {
-	if (!mainClass->Statement()) {
-		// нет main
+	if (mainClass->Statement()) {
+		mainClass->Statement()->Accept(this);
 	}
-	mainClass->Statement()->Accept( this );
 }
 
-void CTypeChecker::visit(const CClassDecl* classDecl)
+void CTypeChecker::visit( const CClassDecl* classDecl )
 {
-	if (classDecl->ExtendedClassSymbol() != nullptr) {
-		const CClassInfo *currentPredecessor = symbolTable->GetClass(classDecl->ExtendedClassSymbol());
+	currClass = classDecl->ClassName();
+	if( classDecl->ExtendedClassSymbol() != nullptr ) {
+		const CClassInfo *currentPredecessor = symbolTable->GetClass( classDecl->ExtendedClassSymbol() );
 
-		while (currentPredecessor != nullptr) {
-			if (currentPredecessor->ExtendedClassSymbol() == classDecl->ClassSymbol()) {
-				// Циклическая зависимось
-
+		while( currentPredecessor != nullptr ) {
+			if( currentPredecessor->ExtendedClassSymbol() == classDecl->ClassSymbol() ) {
+				std::cout << "Cyclic dependance" << std::endl;
+				errorOccured = true;
+				break;
 			}
-			currentPredecessor = symbolTable->GetClass(currentPredecessor->ExtendedClassSymbol());
+			currentPredecessor = symbolTable->GetClass( currentPredecessor->ExtendedClassSymbol() );
 		}
 	}
 
-	if (classDecl->VarDeclList() != 0) {
-		classDecl->VarDeclList()->Accept(this);
+	if( classDecl->VarDeclList() != 0 ) {
+		classDecl->VarDeclList()->Accept( this );
 	}
-	if (classDecl->MethodDeclList() != 0) {
-		classDecl->MethodDeclList()->Accept(this);
+	if( classDecl->MethodDeclList() != 0 ) {
+		classDecl->MethodDeclList()->Accept( this );
 	}
+	currClass = nullptr;
 }
 
 void CTypeChecker::visit( const CClassDeclList* classDeclList )
@@ -96,64 +103,84 @@ void CTypeChecker::visit( const CExp* exp )
 	}
 }
 
-void CTypeChecker::visit( const CExpMethodCall* expMethodCall ) 
+void CTypeChecker::visit( const CExpMethodCall* expMethodCall )
 {
 	expMethodCall->Exp()->Accept( this );
-	std::string expName = lastTypeValue->GetTypeName();
-	expMethodCall->ExpList()->Accept( this );
+	std::string expName = lastTypeValue;
 	std::string methodName = expMethodCall->GetId(); // todo: methods name
 	const CClassInfo* expInfo = symbolTable->GetClass( expName );
 	if( expInfo->GetMethod( expName ) == nullptr ) {
-		// no method with such name
+		std::cout << "No method with such name" << std::endl;
+		errorOccured = true;
 	}
-	currMethod = expInfo->GetMethod( expName );
+	currMethodCall = expInfo->GetMethod( expName );
+	numOfArgument = 0;
+	expMethodCall->ExpList()->Accept( this ); // Разбор аргументов метода
+	lastTypeValue = currMethodCall->Type()->GetTypeName(); // Запомнием последний тип
+	currMethodCall = nullptr;
 }
 
-void CTypeChecker::visit( const CExpBinOperation* expBinOperation ) 
+void CTypeChecker::visit( const CExpBinOperation* expBinOperation )
 {
 	std::string operation = expBinOperation->ExpName();
 	expBinOperation->FirstExp()->Accept( this );
-	std::string firstExpType = lastTypeValue->GetTypeName();
+	std::string firstExpType = lastTypeValue;
 	expBinOperation->SecondExp()->Accept( this );
-	std::string secondExpType = lastTypeValue->GetTypeName();
+	std::string secondExpType = lastTypeValue;
 	if( operation == "&&" ) {
 		if( !( firstExpType == "boolean" && secondExpType == "boolean" ) ) {
-			// bad type
+			std::cout << "Bad type" << std::endl;
+			errorOccured = true;
 		}
+
+		lastTypeValue = "boolean"; // Запомнием последний тип
 	}
-	if( operation == "-" || operation == "+" || operation == "*" || operation == "/" || operation == "<" ) {
+	else if( operation == "-" || operation == "+" || operation == "*" || operation == "/" || operation == "<" ) {
 		if( !( firstExpType == "int" && secondExpType == "int" ) ) {
-			// bad type
+			std::cout << "Bad type" << std::endl;
+			errorOccured = true;
+		}
+
+		if (operation == "<") {
+			lastTypeValue = "boolean";
+		}
+		else {
+			lastTypeValue = "int"; // Запомнием последний тип
 		}
 	}
 }
 
-void CTypeChecker::visit( const CExpNewIntArray* expNewIntArray ) 
+void CTypeChecker::visit( const CExpNewIntArray* expNewIntArray )
 {
 	expNewIntArray->Exp()->Accept( this );
-	if( lastTypeValue->GetTypeName() != "int" ) {
-		// bad type
+	if( lastTypeValue != "int" ) {
+		std::cout << "Bad type" << std::endl;
+		errorOccured = true;
 	}
+	lastTypeValue = "int []"; // Запомнием последний тип
 }
 
-void CTypeChecker::visit( const CExpNewCustomType* expNewCustomType ) 
+void CTypeChecker::visit( const CExpNewCustomType* expNewCustomType )
 {
 	expNewCustomType->Type()->Accept( this );
-	
-	if (symbolTable->GetClass(lastTypeValue->GetTypeName()) == nullptr) {
-		// Такого типа не существует
+
+	if( symbolTable->GetClass( lastTypeValue ) == nullptr ) { // todo: изменения Сани
+		std::cout << "Bad type" << std::endl;
+		errorOccured = true;
 	}
 }
 
-void CTypeChecker::visit( const CExpSquareBrackets* expSquareBrackets ) 
+void CTypeChecker::visit( const CExpSquareBrackets* expSquareBrackets )
 {
 	expSquareBrackets->FirstExp()->Accept( this );
-	if( lastTypeValue->GetTypeName() != "int []" ) {
-		// bad type
+	if( lastTypeValue != "int []" ) {
+		std::cout << "Bad type" << std::endl;
+		errorOccured = true;
 	}
 	expSquareBrackets->SecondExp()->Accept( this );
-	if( lastTypeValue->GetTypeName() != "int" ) {
-		// bad type
+	if( lastTypeValue != "int" ) {
+		std::cout << "Bad type" << std::endl;
+		errorOccured = true;
 	}
 }
 
@@ -165,46 +192,65 @@ void CTypeChecker::visit( const CExpRoundBrackets* expRoundBrackets )
 void CTypeChecker::visit( const CExpNot* expNot )
 {
 	expNot->Exp()->Accept( this );
-	if( lastTypeValue->GetTypeName() != "boolean" ) {
-		// bad type
+	if( lastTypeValue != "boolean" ) {
+		std::cout << "Bad type" << std::endl;
+		errorOccured = true;
 	}
+	lastTypeValue = "boolean";
 }
 
 void CTypeChecker::visit( const CExpNumber* expNumber )
 {
+	lastTypeValue = "int";
 }
 
-void CTypeChecker::visit( const CExpId* expId ) 
+void CTypeChecker::visit( const CExpId* expId )
 {
-}
-
-void CTypeChecker::visit( const CExpSingle* expSingle ) 
-{
-}
-
-void CTypeChecker::visit( const CExpLength* expLength ) 
-{
-	expLength->Exp()->Accept( this );
-	if( lastTypeValue->GetTypeName() != "string" ) {
-		// must be string
+	if (currMethod->GetLocalVariable(expId->GetId()) != nullptr) {
+		lastTypeValue = currMethod->GetLocalVariable(expId->GetID())->Type()->GetTypeName();
+	}
+	else if (currClass->GetVariable(expId->GetId()) != nullptr) {
+		lastTypeValue = currClass->GetVariable(expId->GetId())->Type()->GetTypeName();
+	}
+	else {
+		std::cout << "Undeclared variable" << std::endl;
+		errorOccured = true;
 	}
 }
 
-void CTypeChecker::visit( const CExpList* expList )  // +
+void CTypeChecker::visit( const CExpSingle* expSingle )
+{
+	if( expSingle->ExpName() == "True" || expSingle->ExpName() == "False" ) {
+		lastTypeValue == "boolean";
+	} else {
+		lastTypeValue == currClass->ClassName(); //  todo: у Сани имя класса
+	}
+}
+
+void CTypeChecker::visit( const CExpLength* expLength )
+{
+	expLength->Exp()->Accept( this );
+	if( lastTypeValue != "string" ) {
+		std::cout << "Must be string" << std::endl;
+		errorOccured = true;
+	}
+	lastTypeValue = "int";
+}
+
+void CTypeChecker::visit( const CExpList* expList )  // TODO
 {
 	if( expList->Exp() ) {
+		++numOfArgument;
 		expList->Exp()->Accept( this );
-		std::string expType = lastTypeValue->GetTypeName();
-		if( currMethod->GetArgument( expType ) == nullptr ) {
-			// no such argument
-		}
+		std::string expType = lastTypeValue;
+		// using currMethodCall проверить что он на позиции numOfArgument - получив вектор аргументов от Сани
 	}
 	if( expList->ExpRestList() ) {
 		expList->ExpRestList()->Accept( this );
 	}
 }
 
-void CTypeChecker::visit( const CFormalList* formalList ) // +
+void CTypeChecker::visit( const CFormalList* formalList )
 {
 	std::string id = formalList->Symbol()->String();
 	if( !formalList->Type() && id == "" && !formalList->FormalRestList() ) {
@@ -218,6 +264,7 @@ void CTypeChecker::visit( const CFormalList* formalList ) // +
 
 void CTypeChecker::visit( const CMethodDecl* methodDecl )
 {
+	currMethod = methodDecl->MethodName(); // todo: change name
 	( methodDecl->Type() )->Accept( this );
 	( methodDecl->FormalList() )->Accept( this );
 	if( methodDecl->VarDeclList() ) {
@@ -227,10 +274,10 @@ void CTypeChecker::visit( const CMethodDecl* methodDecl )
 		( methodDecl->StatementList() )->Accept( this );
 	}
 	( methodDecl->Exp() )->Accept( this );
-	currMethod = methodDecl->MethodName(); // todo: method name
+	currMethod = nullptr;
 }
 
-void CTypeChecker::visit( const CMethodDeclList* methodDeclList ) // +
+void CTypeChecker::visit( const CMethodDeclList* methodDeclList )
 {
 	if( methodDeclList->MethodDeclList() ) {
 		methodDeclList->MethodDeclList()->Accept( this );
@@ -238,42 +285,86 @@ void CTypeChecker::visit( const CMethodDeclList* methodDeclList ) // +
 	methodDeclList->MethodDecl()->Accept( this );
 }
 
-void CTypeChecker::visit( const CStatement* statement ) // +
+void CTypeChecker::visit( const CStatement* statement ) 
 {
 	if( statement->GetStatementType() == "BlockStatement" ) {
-
 		statement->Statements()->Accept( this );
-
-	} else if( statement->GetStatementType() == "IfStatement" ) { // +
-
+	} else if( statement->GetStatementType() == "IfStatement" ) {
 		statement->FirstExpression()->Accept( this );
-
+		if( lastTypeValue != "boolean" ) {
+			std::cout << "Wrong type in condition" << std::endl;
+			errorOccured = true;
+		}
 		statement->FirstStatement()->Accept( this );
-
-
 		statement->SecondStatement()->Accept( this );
-
-	} else if( statement->GetStatementType() == "WhileStatement" ) { // +
-
-
+	} else if( statement->GetStatementType() == "WhileStatement" ) {  
 		statement->FirstExpression()->Accept( this );
-
+		if( lastTypeValue != "boolean" ) {
+			std::cout << "Wrong type in condition" << std::endl;
+			errorOccured = true;
+		}
 		statement->FirstStatement()->Accept( this );
-
-	} else if( statement->GetStatementType() == "PrintlnStatement" ) { // +
+	} else if( statement->GetStatementType() == "PrintlnStatement" ) {
 		statement->FirstExpression()->Accept( this );
-
+		
+		if (lastTypeValue != "int") {
+			std::cout << "Wrong type in println" << std::endl;
+			errorOccured = true;
+		}
 	} else if( statement->GetStatementType() == "AssignStatement" ) { // +
+		const CType* idType;
+		
+		if (currMethod->GetLocalVariable(statement->GetId()) != nullptr) {
+			idType = currMethod->GetLocalVariable(statement->GetId())->Type();
+		}
+		else if (currClass->GetVariable(statement->GetId()) != nullptr) {
+			idType = currClass->GetVariable(statement->GetId())->Type();
+		}
+		else {
+			std::cout << "Undeclared variable" << std::endl;
+			errorOccured = true;
+		}
 
-		std::cout << statement->Symbol()->String();
+		statement->FirstExpression()->Accept(this);
+		
+		if (idType->GetTypeName() != lastTypeValue) {
+			std::cout << "Type mismatch" << std::endl;
+			errorOccured = true;
+		}
+	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
+		const CType* idType;
 
-		statement->FirstExpression()->Accept( this );
+		if (currMethod->GetLocalVariable(statement->GetId()) != nullptr) {
+			idType = currMethod->GetLocalVariable(statement->GetId())->Type();
+		}
+		else if (currClass->GetVariable(statement->GetId()) != nullptr) {
+			idType = currClass->GetVariable(statement->GetId())->Type();
+		}
+		else {
+			std::cout << "Undeclared variable" << std::endl;
+			errorOccured = true;
+		}
 
-	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) { // +
 
-		statement->FirstExpression()->Accept( this );
+		if (idType->GetTypeName() != "int []") {
+			std::cout << "The variable isn't an array" << std::endl;
+			errorOccured = true;
+		}
 
-		statement->SecondExpression()->Accept( this );
+		statement->FirstExpression()->Accept(this);
+
+		if (lastTypeValue != "int") {
+			std::cout << "Wrong index type" << std::endl;
+			errorOccured = true;
+		}
+
+
+		statement->SecondExpression()->Accept(this);
+
+		if (lastTypeValue != "int") {
+			std::cout << "Type mismatch" << std::endl;
+			errorOccured = true;
+		}
 	}
 }
 
@@ -287,12 +378,24 @@ void CTypeChecker::visit( const CStatementList* statementList )
 
 void CTypeChecker::visit( const CType* type )
 {
-	// todo: lastTypeValue = type->GetTypeName();
+	lastTypeValue = type->GetTypeName();
 }
 
 void CTypeChecker::visit( const CVarDecl* varDecl )
 {
-	( varDecl->Type() )->Accept( this );
+	varDecl->Type()->Accept( this );
+
+	if (lastTypeValue != "int" &&
+		lastTypeValue != "int []" &&
+		lastTypeValue != "boolean" &&
+		lastTypeValue != "string" &&
+		lastTypeValue != "void" &&
+		symbolTable->GetClass(lastTypeValue) == nullptr
+		)
+	{
+		std::cout << "Undefined type" << std::endl;
+		errorOccured = true;
+	}
 }
 
 void CTypeChecker::visit( const CVarDeclList* varDeclList )
