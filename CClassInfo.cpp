@@ -42,6 +42,17 @@ CVarInfo* CClassInfo::GetVariable(const std::string& variableId) {
 	}
 }
 
+const CVarInfo* CClassInfo::GetVariable( const std::string& variableId ) const
+{
+	const Symbols::CSymbol* variableSymbol = symbolStorage.Get( variableId );
+
+	if( variables.find( variableSymbol ) == variables.end() ) {
+		return nullptr;
+	} else {
+		return &variables.find( variableSymbol )->second;
+	}
+}
+
 bool CClassInfo::AddMethod(const std::string& methodId, CType* type) {
 	const Symbols::CSymbol* methodSymbol = symbolStorage.Get( methodId );
 
@@ -62,4 +73,25 @@ CMethodInfo* CClassInfo::GetMethod(const std::string& methodId) {
 	} else {
 		return &methods[methodSymbol];
 	}
+}
+
+const CMethodInfo* CClassInfo::GetMethod( const std::string& methodId ) const
+{
+	const Symbols::CSymbol* methodSymbol = symbolStorage.Get( methodId );
+
+	if( methods.find( methodSymbol ) == methods.end() ) {
+		return nullptr;
+	} else {
+		return &methods.find( methodSymbol )->second;
+	}
+}
+
+const std::string& CClassInfo::ClassName() const
+{
+	return classSymbol->String();
+}
+
+const std::string& CClassInfo::ExtendedClassName() const
+{
+	return extendedClassSymbol->String();
 }

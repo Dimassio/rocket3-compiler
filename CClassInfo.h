@@ -12,12 +12,16 @@ public:
 
 	const Symbols::CSymbol* ClassSymbol() const;
 	const Symbols::CSymbol* ExtendedClassSymbol() const;
+	const std::string& ClassName() const;
+	const std::string& ExtendedClassName() const;
 
 	bool AddVariable(const std::string& variableId, CType* type);
 	CVarInfo* GetVariable(const std::string& variableId);
+	const CVarInfo* GetVariable( const std::string& variableId ) const;
 
 	bool AddMethod(const std::string& methodId, CType* type);
 	CMethodInfo* GetMethod(const std::string& methodId);
+	const CMethodInfo* GetMethod( const std::string& methodId ) const;
 
 private:
 	const Symbols::CSymbol* classSymbol;

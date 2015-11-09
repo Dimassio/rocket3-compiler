@@ -35,17 +35,17 @@ void CTypeChecker::visit( const CMainClass* mainClass )
 
 void CTypeChecker::visit( const CClassDecl* classDecl )
 {
-	currClass = classDecl->ClassName();
-	if( classDecl->ExtendedClassSymbol() != nullptr ) {
-		const CClassInfo *currentPredecessor = symbolTable->GetClass( classDecl->ExtendedClassSymbol() );
+	currClass = symbolTable->GetClass(classDecl->ClassId()); 
+	if( classDecl->ExtendedClassId() != "" ) {
+		const CClassInfo *currentPredecessor = symbolTable->GetClass( classDecl->ExtendedClassId() );
 
 		while( currentPredecessor != nullptr ) {
-			if( currentPredecessor->ExtendedClassSymbol() == classDecl->ClassSymbol() ) {
+			if( currentPredecessor->ExtendedClassSymbol()->String() == classDecl->ClassId() ) {
 				std::cout << "Cyclic dependance" << std::endl;
 				errorOccured = true;
 				break;
 			}
-			currentPredecessor = symbolTable->GetClass( currentPredecessor->ExtendedClassSymbol() );
+			currentPredecessor = symbolTable->GetClass( currentPredecessor->ExtendedClassName );
 		}
 	}
 
@@ -107,7 +107,7 @@ void CTypeChecker::visit( const CExpMethodCall* expMethodCall )
 {
 	expMethodCall->Exp()->Accept( this );
 	std::string expName = lastTypeValue;
-	std::string methodName = expMethodCall->GetId(); // todo: methods name
+	std::string methodName = expMethodCall->Id(); 
 	const CClassInfo* expInfo = symbolTable->GetClass( expName );
 	if( expInfo->GetMethod( expName ) == nullptr ) {
 		std::cout << "No method with such name" << std::endl;
@@ -116,7 +116,7 @@ void CTypeChecker::visit( const CExpMethodCall* expMethodCall )
 	currMethodCall = expInfo->GetMethod( expName );
 	numOfArgument = 0;
 	expMethodCall->ExpList()->Accept( this ); // Разбор аргументов метода
-	lastTypeValue = currMethodCall->Type()->GetTypeName(); // Запомнием последний тип
+	lastTypeValue = const_cast<CMethodInfo*>(currMethodCall)->Type()->GetTypeName(); // Запомнием последний тип
 	currMethodCall = nullptr;
 }
 
@@ -206,11 +206,11 @@ void CTypeChecker::visit( const CExpNumber* expNumber )
 
 void CTypeChecker::visit( const CExpId* expId )
 {
-	if (currMethod->GetLocalVariable(expId->GetId()) != nullptr) {
-		lastTypeValue = currMethod->GetLocalVariable(expId->GetID())->Type()->GetTypeName();
+	if (currMethod->GetLocalVariable(expId->Id()) != nullptr) {
+		lastTypeValue = currMethod->GetLocalVariable(expId->Id())->Type()->GetTypeName();
 	}
-	else if (currClass->GetVariable(expId->GetId()) != nullptr) {
-		lastTypeValue = currClass->GetVariable(expId->GetId())->Type()->GetTypeName();
+	else if (currClass->GetVariable(expId->Id()) != nullptr) {
+		lastTypeValue = currClass->GetVariable(expId->Id())->Type()->GetTypeName();
 	}
 	else {
 		std::cout << "Undeclared variable" << std::endl;
@@ -223,7 +223,7 @@ void CTypeChecker::visit( const CExpSingle* expSingle )
 	if( expSingle->ExpName() == "True" || expSingle->ExpName() == "False" ) {
 		lastTypeValue == "boolean";
 	} else {
-		lastTypeValue == currClass->ClassName(); //  todo: у Сани имя класса
+		lastTypeValue == currClass->ClassName(); 
 	}
 }
 
@@ -252,7 +252,7 @@ void CTypeChecker::visit( const CExpList* expList )  // TODO
 
 void CTypeChecker::visit( const CFormalList* formalList )
 {
-	std::string id = formalList->Symbol()->String();
+	std::string id = formalList->Id();
 	if( !formalList->Type() && id == "" && !formalList->FormalRestList() ) {
 		return;
 	}
@@ -264,7 +264,7 @@ void CTypeChecker::visit( const CFormalList* formalList )
 
 void CTypeChecker::visit( const CMethodDecl* methodDecl )
 {
-	currMethod = methodDecl->MethodName(); // todo: change name
+	currMethod = currClass->GetMethod( methodDecl->Id() );
 	( methodDecl->Type() )->Accept( this );
 	( methodDecl->FormalList() )->Accept( this );
 	if( methodDecl->VarDeclList() ) {
@@ -311,14 +311,14 @@ void CTypeChecker::visit( const CStatement* statement )
 			std::cout << "Wrong type in println" << std::endl;
 			errorOccured = true;
 		}
-	} else if( statement->GetStatementType() == "AssignStatement" ) { // +
+	} else if( statement->GetStatementType() == "AssignStatement" ) { 
 		const CType* idType;
 		
-		if (currMethod->GetLocalVariable(statement->GetId()) != nullptr) {
-			idType = currMethod->GetLocalVariable(statement->GetId())->Type();
+		if (currMethod->GetLocalVariable(statement->Id()) != nullptr) {
+			idType = currMethod->GetLocalVariable(statement->Id())->Type();
 		}
-		else if (currClass->GetVariable(statement->GetId()) != nullptr) {
-			idType = currClass->GetVariable(statement->GetId())->Type();
+		else if (currClass->GetVariable(statement->Id()) != nullptr) {
+			idType = currClass->GetVariable(statement->Id())->Type();
 		}
 		else {
 			std::cout << "Undeclared variable" << std::endl;
@@ -334,11 +334,11 @@ void CTypeChecker::visit( const CStatement* statement )
 	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
 		const CType* idType;
 
-		if (currMethod->GetLocalVariable(statement->GetId()) != nullptr) {
-			idType = currMethod->GetLocalVariable(statement->GetId())->Type();
+		if (currMethod->GetLocalVariable(statement->Id()) != nullptr) {
+			idType = currMethod->GetLocalVariable(statement->Id())->Type();
 		}
-		else if (currClass->GetVariable(statement->GetId()) != nullptr) {
-			idType = currClass->GetVariable(statement->GetId())->Type();
+		else if (currClass->GetVariable(statement->Id()) != nullptr) {
+			idType = currClass->GetVariable(statement->Id())->Type();
 		}
 		else {
 			std::cout << "Undeclared variable" << std::endl;

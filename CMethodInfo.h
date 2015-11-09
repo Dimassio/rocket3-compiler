@@ -18,6 +18,7 @@ public:
 
 	bool AddLocalVariable(const std::string &variableId, CType* type);
 	CVarInfo* GetLocalVariable(const std::string &variableId);
+	const CVarInfo* GetLocalVariable( const std::string &variableId ) const;
 
 private:
 	const Symbols::CSymbol* methodSymbol;

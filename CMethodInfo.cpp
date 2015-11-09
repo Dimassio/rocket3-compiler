@@ -60,3 +60,14 @@ CVarInfo* CMethodInfo::GetLocalVariable(const std::string &variableId) {
 		return &localVariables[variableSymbol];
 	}
 }
+
+const CVarInfo* CMethodInfo::GetLocalVariable( const std::string &variableId ) const
+{
+	const Symbols::CSymbol* variableSymbol = symbolStorage.Get( variableId );
+
+	if( localVariables.find( variableSymbol ) == localVariables.end() ) {
+		return nullptr;
+	} else {
+		return &localVariables.find( variableSymbol )->second;
+	}
+}

@@ -71,9 +71,9 @@ public:
 
 private:
 	const CTable* symbolTable;	
-	CClassInfo* currClass;
-	CMethodInfo* currMethod;
-	CMethodInfo* currMethodCall;
+	const CClassInfo* currClass;
+	const CMethodInfo* currMethod;
+	const CMethodInfo* currMethodCall;
 	std::string lastTypeValue;
 	int numOfArgument;
 	bool errorOccured;
