@@ -76,6 +76,7 @@ private:
 	CMethodInfo* currMethodCall;
 	std::string lastTypeValue;
 	int numOfArgument;
+	bool errorOccured;
 };
 
 #endif
