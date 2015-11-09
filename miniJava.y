@@ -226,7 +226,7 @@ ExpNewIntArray:
 	;
 
 ExpNewCustomType:
-	NEW ID '(' ')' { $$ = new CExpNewCustomType( $2 ); }
+	NEW ID '(' ')' { $$ = new CExpNewCustomType( new CType( $2 ) ) }
 	;
 
 ExpSquareBrackets:

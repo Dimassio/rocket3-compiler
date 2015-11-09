@@ -9,8 +9,14 @@ CClassInfo::CClassInfo(const Symbols::CSymbol* _classSymbol, const Symbols::CSym
 {
 }
 
-const Symbols::CSymbol* CClassInfo::ClassSymbol() {
+const Symbols::CSymbol* CClassInfo::ClassSymbol() const
+{
 	return classSymbol;
+}
+
+const Symbols::CSymbol * CClassInfo::ExtendedClassSymbol() const
+{
+	return extendedClassSymbol;
 }
 
 bool CClassInfo::AddVariable(const Symbols::CSymbol* variableSymbol, CType* type) {

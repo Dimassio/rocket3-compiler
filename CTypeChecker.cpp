@@ -1,4 +1,5 @@
 #include "CTypeChecker.h"
+#include "StaticVariables.h"
 
 #ifndef CTYPECHECKER_CPP_INCLUDED
 #define CTYPECHECKER_CPP_INCLUDED
@@ -19,16 +20,31 @@ void CTypeChecker::visit( const CProgram* program )
 
 void CTypeChecker::visit( const CMainClass* mainClass )
 {
+	if (!mainClass->Statement()) {
+		// нет main
+	}
 	mainClass->Statement()->Accept( this );
 }
 
-void CTypeChecker::visit( const CClassDecl* classDecl ) // + Женя
+void CTypeChecker::visit(const CClassDecl* classDecl)
 {
-	if( classDecl->VarDeclList() != 0 ) {
-		classDecl->VarDeclList()->Accept( this );
+	if (classDecl->ExtendedClassSymbol() != nullptr) {
+		const CClassInfo *currentPredecessor = symbolTable->GetClass(classDecl->ExtendedClassSymbol());
+
+		while (currentPredecessor != nullptr) {
+			if (currentPredecessor->ExtendedClassSymbol() == classDecl->ClassSymbol()) {
+				// Циклическая зависимось
+
+			}
+			currentPredecessor = symbolTable->GetClass(currentPredecessor->ExtendedClassSymbol());
+		}
 	}
-	if( classDecl->MethodDeclList() != 0 ) {
-		classDecl->MethodDeclList()->Accept( this );
+
+	if (classDecl->VarDeclList() != 0) {
+		classDecl->VarDeclList()->Accept(this);
+	}
+	if (classDecl->MethodDeclList() != 0) {
+		classDecl->MethodDeclList()->Accept(this);
 	}
 }
 
@@ -44,24 +60,34 @@ void CTypeChecker::visit( const CExp* exp )
 {
 	if( exp->ExpMethodCall() ) {
 		exp->ExpMethodCall()->Accept( this );
+
 	} else if( exp->ExpBinOperation() ) {
 		exp->ExpBinOperation()->Accept( this );
+
 	} else if( exp->ExpNewIntArray() ) {
 		exp->ExpNewIntArray()->Accept( this );
+
 	} else if( exp->ExpNewCustomType() ) {
 		exp->ExpNewCustomType()->Accept( this );
+
 	} else if( exp->ExpSquareBrackets() ) {
 		exp->ExpSquareBrackets()->Accept( this );
+
 	} else if( exp->ExpRoundBrackets() ) {
 		exp->ExpRoundBrackets()->Accept( this );
+
 	} else if( exp->ExpNot() ) {
 		exp->ExpNot()->Accept( this );
+
 	} else if( exp->ExpNumber() ) {
 		exp->ExpNumber()->Accept( this );
+
 	} else if( exp->ExpId() ) {
 		exp->ExpId()->Accept( this );
+
 	} else if( exp->ExpSingle() ) {
 		exp->ExpSingle()->Accept( this );
+
 	} else if( exp->ExpLength() ) {
 		exp->ExpLength()->Accept( this );
 	}
@@ -74,7 +100,7 @@ void CTypeChecker::visit( const CExpMethodCall* expMethodCall ) // +
 	expMethodCall->ExpList()->Accept( this );
 }
 
-void CTypeChecker::visit( const CExpBinOperation* expBinOperation ) // +
+void CTypeChecker::visit( const CExpBinOperation* expBinOperation ) // НЕТ, НЕ +
 {
 	expBinOperation->FirstExp()->Accept( this );
 	expBinOperation->SecondExp()->Accept( this );
@@ -87,13 +113,16 @@ void CTypeChecker::visit( const CExpNewIntArray* expNewIntArray ) // + new int[]
 
 void CTypeChecker::visit( const CExpNewCustomType* expNewCustomType ) // + new Type()
 {
+	expNewCustomType->Type()->Accept( this );
 	
+	if (symbolTable->GetClass(lastTypeValue->GetTypeName()) == nullptr) {
+		// Такого типа не существует
+	}
 }
 
 void CTypeChecker::visit( const CExpSquareBrackets* expSquareBrackets ) // + first[]
 {
 	expSquareBrackets->FirstExp()->Accept( this );
-
 	expSquareBrackets->SecondExp()->Accept( this );
 }
 
