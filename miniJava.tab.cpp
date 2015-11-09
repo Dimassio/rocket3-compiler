@@ -1942,7 +1942,7 @@ yyreduce:
   case 58:
 /* Line 1792 of yacc.c  */
 #line 229 "miniJava.y"
-    { (yyval.expNewCustomType) = new CExpNewCustomType( (yyvsp[(2) - (4)].sval) ); }
+    { (yyval.expNewCustomType) = new CExpNewCustomType( new CType( (yyvsp[(2) - (4)].sval) ) ) ;}
     break;
 
   case 59:

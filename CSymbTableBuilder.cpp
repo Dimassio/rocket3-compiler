@@ -16,15 +16,14 @@ void CSymbTableBuilder::visit(const CProgram* program) {
 }
 
 void CSymbTableBuilder::visit(const CMainClass* mainClass) {
-	if (!symbTable->AddClass(mainClass->ClassSymbol(), nullptr)) {
+	if (!symbTable->AddClass(mainClass->ClassId(), "")) {
 		//duplicate class definition
 	} else {
-		currClass = symbTable->GetClass(mainClass->ClassSymbol());
+		currClass = symbTable->GetClass(mainClass->ClassId());
 
-		const Symbols::CSymbol* mainSymbol = symbolStorage.Get("main");
 		CType* type = new CType(std::string("void"));
 
-		if (!currClass->AddMethod(mainSymbol, type)) {
+		if (!currClass->AddMethod(std::string("main"), type)) {
 			//duplicate main definition
 		} else {
 			if (mainClass->Statement()) {
@@ -35,11 +34,11 @@ void CSymbTableBuilder::visit(const CMainClass* mainClass) {
 }
 
 void CSymbTableBuilder::visit(const CClassDecl* classDecl) {
-	if (!symbTable->AddClass(classDecl->ClassSymbol(), classDecl->ExtendedClassSymbol())) {
+	if (!symbTable->AddClass(classDecl->ClassId(), classDecl->ExtendedClassId())) {
 		//duplicate class definition
 	}
 	else {
-		currClass = symbTable->GetClass(classDecl->ClassSymbol());
+		currClass = symbTable->GetClass(classDecl->ClassId());
 		if (classDecl->VarDeclList() != 0) {
 			classDecl->VarDeclList()->Accept(this);
 		}
@@ -146,7 +145,7 @@ void CSymbTableBuilder::visit(const CExpList* expList) {
 }
 
 void CSymbTableBuilder::visit(const CFormalList* formalList) {
-	if (!formalList->Type() && formalList->Symbol()->String() == "" && !formalList->FormalRestList()) {
+	if (!formalList->Type() && formalList->Id() == "" && !formalList->FormalRestList()) {
 		return;
 	}
 
@@ -156,7 +155,7 @@ void CSymbTableBuilder::visit(const CFormalList* formalList) {
 	if (!currMethod) {
 		//no method
 	} else {
-		if (!currMethod->AddArgument(formalList->Symbol(), type)) {
+		if (!currMethod->AddArgument(formalList->Id(), type)) {
 			//duplicated definition
 		}
 	}
@@ -169,10 +168,10 @@ void CSymbTableBuilder::visit(const CFormalList* formalList) {
 void CSymbTableBuilder::visit(const CMethodDecl* methodDecl) {
 	(methodDecl->Type())->Accept(this);
 	CType* type = lastTypeValue;
-	if (!currClass->AddMethod(methodDecl->Symbol(), type)) {
+	if (!currClass->AddMethod(methodDecl->Id(), type)) {
 		//duplicate method definition
 	} else {
-		currMethod = currClass->GetMethod(methodDecl->Symbol());
+		currMethod = currClass->GetMethod(methodDecl->Id());
 		if (methodDecl->FormalList()) {
 			methodDecl->FormalList()->Accept(this);
 		}
@@ -227,13 +226,13 @@ void CSymbTableBuilder::visit(const CType* type) {
 void CSymbTableBuilder::visit(const CVarDecl* varDecl) {
 	varDecl->Type()->Accept(this);
 	CType* type = lastTypeValue;
-	const Symbols::CSymbol* symbol = varDecl->Symbol();
+	const std::string id = varDecl->Id();
 	if (currMethod == NULL) {
-		if (!currClass->AddVariable(symbol, type)) {
+		if (!currClass->AddVariable(id, type)) {
 			//duplicated definition
 		}
 	}
-	else if (!currMethod->AddLocalVariable(symbol, type)) {
+	else if (!currMethod->AddLocalVariable(id, type)) {
 		//duplicated definition
 	}
 }

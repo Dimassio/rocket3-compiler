@@ -1,6 +1,6 @@
 #include "ExpBinOperation.h"
 
-CExpBinOperation::CExpBinOperation( std::string _expName, IExp* _firstExp, IExp* _secondExp )
+CExpBinOperation::CExpBinOperation( const std::string &_expName, IExp* _firstExp, IExp* _secondExp )
 	: expName(_expName),
 	firstExp(_firstExp),
 	secondExp(_secondExp)
@@ -22,7 +22,7 @@ const IExp* CExpBinOperation::SecondExp() const
 	return secondExp;
 }
 
-const std::string CExpBinOperation::ExpName() const
+const std::string& CExpBinOperation::ExpName() const
 {
 	return expName;
 }

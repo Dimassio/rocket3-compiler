@@ -13,11 +13,11 @@ public:
 	const Symbols::CSymbol* MethodSymbol();
 	CType* Type();
 
-	bool AddArgument(const Symbols::CSymbol* argumentSymbol, CType* type);
-	CVarInfo* GetArgument(const Symbols::CSymbol* argumentSymbol);
+	bool AddArgument(const std::string &argumentId, CType* type);
+	CVarInfo* GetArgument(const std::string &argumentId);
 
-	bool AddLocalVariable(const Symbols::CSymbol* variableSymbol, CType* type);
-	CVarInfo* GetLocalVariable(const Symbols::CSymbol* variableSymbol);
+	bool AddLocalVariable(const std::string &variableId, CType* type);
+	CVarInfo* GetLocalVariable(const std::string &variableId);
 
 private:
 	const Symbols::CSymbol* methodSymbol;

@@ -7,15 +7,15 @@
 
 class CVarDecl : public  IVarDecl {
 public:
-	CVarDecl( IType* _type, std::string id );
+	CVarDecl( IType* _type, const std::string &_id );
 
 	void Accept( IVisitor* visitor ) const;
 
 	const IType* Type() const;
 
-	const Symbols::CSymbol* Symbol() const;
+	const std::string& Id() const;
 
 private:
 	IType* type;
-	const Symbols::CSymbol* symbol;
+	const std::string id;
 };

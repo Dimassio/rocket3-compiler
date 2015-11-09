@@ -1,6 +1,6 @@
 #include "ExpSingle.h"
 
-CExpSingle::CExpSingle(std::string _expName)
+CExpSingle::CExpSingle(const std::string &_expName)
 	: expName(_expName)
 {
 }
@@ -11,7 +11,7 @@ void CExpSingle::Accept(IVisitor* visitor) const
 }
 
 
-const std::string CExpSingle::ExpName() const
+const std::string& CExpSingle::ExpName() const
 {
 	return expName;
 }

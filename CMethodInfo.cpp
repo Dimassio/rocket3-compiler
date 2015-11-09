@@ -1,3 +1,4 @@
+#include "StaticVariables.h"
 #include "CMethodInfo.h"
 
 CMethodInfo::CMethodInfo() {
@@ -17,7 +18,9 @@ CType* CMethodInfo::Type() {
 	return type;
 }
 
-bool CMethodInfo::AddArgument(const Symbols::CSymbol* argumentSymbol, CType* type) {
+bool CMethodInfo::AddArgument(const std::string &argumentId, CType* type) {
+	const Symbols::CSymbol* argumentSymbol = symbolStorage.Get( argumentId );
+
 	if (arguments.find(argumentSymbol) != arguments.end()) {
 		return false;
 	}
@@ -27,7 +30,9 @@ bool CMethodInfo::AddArgument(const Symbols::CSymbol* argumentSymbol, CType* typ
 	return true;
 }
 
-CVarInfo* CMethodInfo::GetArgument(const Symbols::CSymbol* argumentSymbol) {
+CVarInfo* CMethodInfo::GetArgument(const std::string &argumentId) {
+	const Symbols::CSymbol* argumentSymbol = symbolStorage.Get( argumentId );
+
 	if (arguments.find(argumentSymbol) == arguments.end()) {
 		return nullptr;
 	} else {
@@ -35,7 +40,9 @@ CVarInfo* CMethodInfo::GetArgument(const Symbols::CSymbol* argumentSymbol) {
 	}
 }
 
-bool CMethodInfo::AddLocalVariable(const Symbols::CSymbol* variableSymbol, CType* type) {
+bool CMethodInfo::AddLocalVariable(const std::string &variableId, CType* type) {
+	const Symbols::CSymbol* variableSymbol = symbolStorage.Get( variableId );
+
 	if (localVariables.find(variableSymbol) != localVariables.end()) {
 		return false;
 	} else {
@@ -44,7 +51,9 @@ bool CMethodInfo::AddLocalVariable(const Symbols::CSymbol* variableSymbol, CType
 	return true;
 }
 
-CVarInfo* CMethodInfo::GetLocalVariable(const Symbols::CSymbol* variableSymbol) {
+CVarInfo* CMethodInfo::GetLocalVariable(const std::string &variableId) {
+	const Symbols::CSymbol* variableSymbol = symbolStorage.Get( variableId );
+
 	if (localVariables.find(variableSymbol) == localVariables.end()) {
 		return nullptr;
 	} else {

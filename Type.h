@@ -6,11 +6,11 @@
 
 class CType : public IType {
 public:
-	CType(std::string _typeName);
+	CType(const std::string &_typeName);
 
 	void Accept(IVisitor* visitor) const;
-	const std::string GetTypeName() const;
+	const std::string& GetTypeName() const;
 
 private:
-	std::string typeName;
+	const std::string typeName;
 };

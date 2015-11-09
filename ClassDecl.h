@@ -7,7 +7,8 @@
 
 class CClassDecl : public IClassDecl {
 public:
-	CClassDecl( std::string className, std::string extendedClassName, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList );
+	CClassDecl( const std::string &_classId, const std::string &_extendedClassId,
+		IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList );
 	
 	void Accept( IVisitor* visitor ) const;
 
@@ -15,13 +16,13 @@ public:
 
 	const IMethodDeclList* MethodDeclList() const;
 
-	const Symbols::CSymbol* ClassSymbol() const;
+	const std::string& ClassId() const;
 
-	const Symbols::CSymbol* ExtendedClassSymbol() const;
+	const std::string& ExtendedClassId() const;
 
 private:
-	const Symbols::CSymbol* classSymbol;
-	const Symbols::CSymbol*  extendedClassSymbol;
+	const std::string classId;
+	const std::string  extendedClassId;
 	IVarDeclList* varDeclList;
 	IMethodDeclList* methodDeclList;
 };

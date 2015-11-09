@@ -13,11 +13,11 @@ public:
 	const Symbols::CSymbol* ClassSymbol() const;
 	const Symbols::CSymbol* ExtendedClassSymbol() const;
 
-	bool AddVariable(const Symbols::CSymbol* variableSymbol, CType* type);
-	CVarInfo* GetVariable(const Symbols::CSymbol* variableSymbol);
+	bool AddVariable(const std::string& variableId, CType* type);
+	CVarInfo* GetVariable(const std::string& variableId);
 
-	bool AddMethod(const Symbols::CSymbol* methodSymbol, CType* type);
-	CMethodInfo* GetMethod(const Symbols::CSymbol* methodSymbol);
+	bool AddMethod(const std::string& methodId, CType* type);
+	CMethodInfo* GetMethod(const std::string& methodId);
 
 private:
 	const Symbols::CSymbol* classSymbol;

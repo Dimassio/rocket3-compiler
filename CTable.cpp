@@ -1,6 +1,16 @@
+#include "StaticVariables.h"
 #include "CTable.h"
 
-bool CTable::AddClass(const Symbols::CSymbol* classSymbol, const Symbols::CSymbol* extendedClassSymbol) {
+bool CTable::AddClass(const std::string &classId, const std::string &extendedClassId) {
+	const Symbols::CSymbol* classSymbol = symbolStorage.Get(classId);
+
+	const Symbols::CSymbol* extendedClassSymbol;
+	if (extendedClassId == "") {
+		extendedClassSymbol = nullptr;
+	} else {
+		extendedClassSymbol = symbolStorage.Get(extendedClassId);
+	}
+
 	if (classes.find(classSymbol) != classes.end()) {
 		return false;
 	}
@@ -10,7 +20,9 @@ bool CTable::AddClass(const Symbols::CSymbol* classSymbol, const Symbols::CSymbo
 
 }
 
-CClassInfo* CTable::GetClass(const Symbols::CSymbol * classSymbol) {
+CClassInfo* CTable::GetClass(const std::string &classId) {
+	const Symbols::CSymbol* classSymbol = symbolStorage.Get( classId );
+
 	if (classes.find(classSymbol) == classes.end()) {
 		return nullptr; 
 	}
@@ -19,12 +31,13 @@ CClassInfo* CTable::GetClass(const Symbols::CSymbol * classSymbol) {
 	}
 }
 
-const CClassInfo* CTable::GetClass(const Symbols::CSymbol * classSymbol) const
-{
+const CClassInfo* CTable::GetClass(const std::string &classId) const {
+	const Symbols::CSymbol* classSymbol = symbolStorage.Get( classId );
+
 	if (classes.find(classSymbol) == classes.end()) {
 		return nullptr;
 	}
 	else {
-		return &classes[classSymbol];
+		return &classes.find(classSymbol)->second;
 	}
 }

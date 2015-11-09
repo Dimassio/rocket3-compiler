@@ -7,13 +7,14 @@
 
 class CMethodDecl : public IMethodDecl {
 public:
-	CMethodDecl( IType* _type, std::string id, IFormalList* _formalList, IVarDeclList* _varDeclList, IStatementList* _statementList, IExp* _exp );
+	CMethodDecl( IType* _type, const std::string &_id, IFormalList* _formalList, 
+		IVarDeclList* _varDeclList, IStatementList* _statementList, IExp* _exp );
 
 	void Accept( IVisitor* visitor ) const;
 
 	const IType* Type() const;
 
-	const Symbols::CSymbol* Symbol() const;
+	const std::string& Id() const;
 
 	const IFormalList* FormalList() const;
 
@@ -24,7 +25,7 @@ public:
 	const IExp* Exp() const;
 
 private:
-	const Symbols::CSymbol* symbol;
+	const std::string id;
 
 	IType* type;
 	IFormalList* formalList;

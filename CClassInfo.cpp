@@ -1,3 +1,4 @@
+#include "StaticVariables.h"
 #include "CClassInfo.h"
 
 CClassInfo::CClassInfo() {
@@ -19,7 +20,9 @@ const Symbols::CSymbol * CClassInfo::ExtendedClassSymbol() const
 	return extendedClassSymbol;
 }
 
-bool CClassInfo::AddVariable(const Symbols::CSymbol* variableSymbol, CType* type) {
+bool CClassInfo::AddVariable(const std::string& variableId, CType* type) {
+	const Symbols::CSymbol* variableSymbol = symbolStorage.Get( variableId );
+
 	if (variables.find(variableSymbol) != variables.end()) {
 		return false;
 	} else {
@@ -29,7 +32,9 @@ bool CClassInfo::AddVariable(const Symbols::CSymbol* variableSymbol, CType* type
 	return true;
 }
 
-CVarInfo* CClassInfo::GetVariable(const Symbols::CSymbol* variableSymbol) {
+CVarInfo* CClassInfo::GetVariable(const std::string& variableId) {
+	const Symbols::CSymbol* variableSymbol = symbolStorage.Get( variableId );
+
 	if (variables.find(variableSymbol) == variables.end()) {
 		return nullptr;
 	} else {
@@ -37,7 +42,9 @@ CVarInfo* CClassInfo::GetVariable(const Symbols::CSymbol* variableSymbol) {
 	}
 }
 
-bool CClassInfo::AddMethod(const Symbols::CSymbol* methodSymbol, CType* type) {
+bool CClassInfo::AddMethod(const std::string& methodId, CType* type) {
+	const Symbols::CSymbol* methodSymbol = symbolStorage.Get( methodId );
+
 	if (methods.find(methodSymbol) != methods.end()) {
 		return false;
 	} else {
@@ -47,7 +54,9 @@ bool CClassInfo::AddMethod(const Symbols::CSymbol* methodSymbol, CType* type) {
 	return true;
 }
 
-CMethodInfo* CClassInfo::GetMethod(const Symbols::CSymbol* methodSymbol) {
+CMethodInfo* CClassInfo::GetMethod(const std::string& methodId) {
+	const Symbols::CSymbol* methodSymbol = symbolStorage.Get( methodId );
+
 	if (methods.find(methodSymbol) == methods.end()) {
 		return nullptr;
 	} else {

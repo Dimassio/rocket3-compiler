@@ -1,14 +1,13 @@
-#include "StaticVariables.h"
 #include "Statement.h"
 
 CStatement::CStatement(
-	std::string _statementType,
+	const std::string &_statementType,
 	IStatementList* _statements,
 	IStatement* _firstStatement,
 	IStatement* _secondStatement,
 	IExp* _firstExpression,
 	IExp* _secondExperssion,
-	std::string id
+	const std::string &_id
 )
 	: statementType(_statementType),
 	statements(_statements),
@@ -16,7 +15,7 @@ CStatement::CStatement(
 	secondStatement(_secondStatement),
 	firstExpression(_firstExpression),
 	secondExperssion(_secondExperssion),
-	symbol( symbolStorage.Get(id) )
+	id( _id )
 {
 }
 
@@ -50,11 +49,11 @@ const IExp* CStatement::SecondExpression() const
 	return secondExperssion;
 }
 
-const Symbols::CSymbol* CStatement::Symbol() const {
-	return symbol;
+const std::string& CStatement::Id() const {
+	return id;
 }
 
-const std::string CStatement::GetStatementType() const
+const std::string& CStatement::GetStatementType() const
 {
 	return statementType;
 }

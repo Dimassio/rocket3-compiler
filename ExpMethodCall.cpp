@@ -1,9 +1,8 @@
-#include "StaticVariables.h"
 #include "ExpMethodCall.h"
 
-CExpMethodCall::CExpMethodCall( IExp* _exp, std::string id, IExpList* _expList )
+CExpMethodCall::CExpMethodCall( IExp* _exp, const std::string &_id, IExpList* _expList )
 	: exp(_exp),
-	symbol( symbolStorage.Get(id) ),
+	id(_id),
 	expList(_expList)
 {
 }
@@ -23,6 +22,6 @@ const IExpList* CExpMethodCall::ExpList() const
 	return expList;
 }
 
-const Symbols::CSymbol* CExpMethodCall::Symbol() const {
-	return symbol;
+const std::string& CExpMethodCall::Id() const {
+	return id;
 }

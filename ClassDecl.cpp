@@ -1,9 +1,9 @@
 #include "StaticVariables.h"
 #include "ClassDecl.h"
 
-CClassDecl::CClassDecl( std::string className, std::string extendedClassName, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList ) :
-	classSymbol( symbolStorage.Get(className) ), 
-	extendedClassSymbol( symbolStorage.Get(extendedClassName) ),
+CClassDecl::CClassDecl( const std::string &_classId, const std::string &_extendedClassId, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList ) :
+	classId(_classId),
+	extendedClassId( _extendedClassId ),
 	varDeclList( _varDeclList ),
 	methodDeclList( _methodDeclList )
 {
@@ -24,12 +24,12 @@ const IMethodDeclList*  CClassDecl::MethodDeclList() const
 	return methodDeclList;
 }
 
-const Symbols::CSymbol* CClassDecl::ClassSymbol() const
+const std::string& CClassDecl::ClassId() const
 {
-	return classSymbol;
+	return classId;
 }
 
-const Symbols::CSymbol* CClassDecl::ExtendedClassSymbol() const
+const std::string& CClassDecl::ExtendedClassId() const
 {
-	return extendedClassSymbol;
+	return extendedClassId;
 }

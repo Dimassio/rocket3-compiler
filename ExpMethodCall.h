@@ -7,7 +7,7 @@
 
 class CExpMethodCall : public IExpMethodCall {
 public:
-	CExpMethodCall( IExp* _exp, std::string id, IExpList* _expList);
+	CExpMethodCall( IExp* _exp, const std::string &_id, IExpList* _expList);
 
 	void Accept(IVisitor* visitor) const;
 
@@ -15,10 +15,10 @@ public:
 
 	const IExpList* ExpList() const;
 
-	const Symbols::CSymbol* Symbol() const;
+	const std::string& Id() const;
 
 private:
 	IExp* exp;
 	IExpList* expList;
-	const Symbols::CSymbol* symbol;
+	const std::string id;
 };

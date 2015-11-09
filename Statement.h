@@ -8,13 +8,13 @@
 class CStatement : public IStatement {
 public:
 	CStatement(
-		std::string _statementType,
+		const std::string &_statementType,
 		IStatementList* _statements,
 		IStatement* _firstStatement,
 		IStatement* _secondStatement,
 		IExp* _firstExpression,
 		IExp* _secondExperssion,
-		std::string id
+		const std::string &_id
 	);
 
 	void Accept(IVisitor* visitor) const;
@@ -29,16 +29,16 @@ public:
 
 	const IExp* SecondExpression() const;
 
-	const Symbols::CSymbol* Symbol() const;
+	const std::string& Id() const;
 
-	const std::string GetStatementType() const;
+	const std::string& GetStatementType() const;
 
 private:
-	std::string statementType;
+	const std::string statementType;
 	IStatementList* statements;
 	IStatement* firstStatement;
 	IStatement* secondStatement;
 	IExp* firstExpression;
 	IExp* secondExperssion;
-	const Symbols::CSymbol* symbol;
+	const std::string id;
 };

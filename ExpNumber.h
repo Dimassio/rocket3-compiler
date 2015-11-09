@@ -6,7 +6,7 @@
 
 class CExpNumber : public IExpNumber {
 public:
-	CExpNumber( int _number);
+	CExpNumber( int _number );
 
 	void Accept(IVisitor* visitor) const;
 

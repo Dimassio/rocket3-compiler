@@ -6,12 +6,12 @@
 
 class CExpSingle : public IExpSingle {
 public:
-	CExpSingle( std::string _expName );
+	CExpSingle( const std::string &_expName );
 
 	void Accept(IVisitor* visitor) const;
 
-	const std::string ExpName() const;
+	const std::string& ExpName() const;
 
 private:
-	std::string expName;
+	const std::string expName;
 };

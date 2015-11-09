@@ -7,12 +7,12 @@
 
 class CExpId : public IExpId {
 public:
-	CExpId( std::string id );
+	CExpId( const std::string &_id );
 
 	void Accept(IVisitor* visitor) const;
 
-	const Symbols::CSymbol* Symbol() const;
+	const std::string& Id() const;
 
 private:
-	const Symbols::CSymbol* symbol;
+	const std::string id;
 };

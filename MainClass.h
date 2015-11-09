@@ -7,18 +7,18 @@
 
 class CMainClass : public IMainClass {
 public:
-	CMainClass( std::string className, std::string argName, IStatement* _statement );
+	CMainClass( const std::string &_classId, const std::string &_argId, IStatement* _statement );
 
 	void Accept( IVisitor* visitor ) const;
 
 	const IStatement* Statement() const;
 
-	const Symbols::CSymbol* ClassSymbol() const;
+	const std::string& ClassId() const;
 
-	const Symbols::CSymbol* ArgSymbol() const;
+	const std::string& ArgId() const;
 
 private:
-	const Symbols::CSymbol* classSymbol;
-	const Symbols::CSymbol* argSymbol;
+	const std::string classId;
+	const std::string argId;
 	IStatement* statement;
 };
