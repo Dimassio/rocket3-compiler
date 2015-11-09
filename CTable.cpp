@@ -18,3 +18,13 @@ CClassInfo* CTable::GetClass(const Symbols::CSymbol * classSymbol) {
 		return &classes[classSymbol];
 	}
 }
+
+const CClassInfo* CTable::GetClass(const Symbols::CSymbol * classSymbol) const
+{
+	if (classes.find(classSymbol) == classes.end()) {
+		return nullptr;
+	}
+	else {
+		return &classes[classSymbol];
+	}
+}

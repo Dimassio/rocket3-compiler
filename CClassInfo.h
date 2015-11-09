@@ -10,7 +10,8 @@ public:
 
 	CClassInfo(const Symbols::CSymbol* _classSymbol, const Symbols::CSymbol* _extendedClassSymbol);
 
-	const Symbols::CSymbol* ClassSymbol();
+	const Symbols::CSymbol* ClassSymbol() const;
+	const Symbols::CSymbol* ExtendedClassSymbol() const;
 
 	bool AddVariable(const Symbols::CSymbol* variableSymbol, CType* type);
 	CVarInfo* GetVariable(const Symbols::CSymbol* variableSymbol);

@@ -102,6 +102,7 @@ void CSymbTableBuilder::visit(const CExpNewIntArray* expNewIntArray) {
 }
 
 void CSymbTableBuilder::visit(const CExpNewCustomType* expNewCustomType) {
+	expNewCustomType->Type()->Accept(this);
 }
 
 void CSymbTableBuilder::visit(const CExpSquareBrackets* expSquareBrackets) {
