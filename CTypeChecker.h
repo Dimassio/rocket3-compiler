@@ -5,6 +5,7 @@
 #include <string>
 #include "Visitor.h"
 #include "Common.h"
+#include "CTable.h"
 
 class CTypeChecker: public IVisitor {
 public:
@@ -67,6 +68,12 @@ public:
 	void visit( const CExpRestList* expRestList );
 
 	void visit( const CExpRest* expRest );
+
+private:
+	const CTable* symbolTable;	
+	CClassInfo* currClass;
+	CMethodInfo* currMethod;
+	CType* lastTypeValue;
 };
 
 #endif

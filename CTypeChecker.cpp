@@ -1,4 +1,5 @@
 #include "CTypeChecker.h"
+#include "StaticVariables.h"
 
 #ifndef CTYPECHECKER_CPP_INCLUDED
 #define CTYPECHECKER_CPP_INCLUDED
@@ -70,31 +71,58 @@ void CTypeChecker::visit( const CExp* exp )
 void CTypeChecker::visit( const CExpMethodCall* expMethodCall ) // +
 {
 	expMethodCall->Exp()->Accept( this );
-
+	std::string expName = lastTypeValue->GetTypeName();
 	expMethodCall->ExpList()->Accept( this );
+	std::string methodName = expMethodCall->GetId(); // todo: methods name
+	const CClassInfo* expInfo = symbolTable->GetClass( expName );
+	if( expInfo->GetMethod( expName ) == nullptr ) {
+		// no method with such name
+	}
+	currMethod = expInfo->GetMethod( expName );
 }
 
 void CTypeChecker::visit( const CExpBinOperation* expBinOperation ) // +
 {
+	std::string operation = expBinOperation->ExpName();
 	expBinOperation->FirstExp()->Accept( this );
+	std::string firstExpType = lastTypeValue->GetTypeName();
 	expBinOperation->SecondExp()->Accept( this );
+	std::string secondExpType = lastTypeValue->GetTypeName();
+	if( operation == "&&" ) {
+		if( !( firstExpType == "boolean" && secondExpType == "boolean" ) ) {
+			// bad type
+		}
+	}
+	if( operation == "-" || operation == "+" || operation == "*" || operation == "/" || operation == "<" ) {
+		if( !( firstExpType == "int" && secondExpType == "int" ) ) {
+			// bad type
+		}
+	}
 }
 
-void CTypeChecker::visit( const CExpNewIntArray* expNewIntArray ) // + new int[]
+void CTypeChecker::visit( const CExpNewIntArray* expNewIntArray ) // +
 {
 	expNewIntArray->Exp()->Accept( this );
+	if( lastTypeValue->GetTypeName() != "int" ) {
+		// bad type
+	}
 }
 
 void CTypeChecker::visit( const CExpNewCustomType* expNewCustomType ) // + new Type()
 {
-	
+
 }
 
-void CTypeChecker::visit( const CExpSquareBrackets* expSquareBrackets ) // + first[]
+void CTypeChecker::visit( const CExpSquareBrackets* expSquareBrackets ) // + first[secondexp]
 {
 	expSquareBrackets->FirstExp()->Accept( this );
-
+	if( lastTypeValue->GetTypeName() != "int []" ) {
+		// bad type
+	}
 	expSquareBrackets->SecondExp()->Accept( this );
+	if( lastTypeValue->GetTypeName() != "int" ) {
+		// bad type
+	}
 }
 
 void CTypeChecker::visit( const CExpRoundBrackets* expRoundBrackets )
@@ -105,21 +133,24 @@ void CTypeChecker::visit( const CExpRoundBrackets* expRoundBrackets )
 void CTypeChecker::visit( const CExpNot* expNot ) // +
 {
 	expNot->Exp()->Accept( this );
+	if( lastTypeValue->GetTypeName() != "boolean" ) {
+		// bad type
+	}
 }
 
-void CTypeChecker::visit( const CExpNumber* expNumber ) // +
+void CTypeChecker::visit( const CExpNumber* expNumber )
 {
-	
+
 }
 
 void CTypeChecker::visit( const CExpId* expId ) //+
 {
-	
+
 }
 
 void CTypeChecker::visit( const CExpSingle* expSingle ) //+
 {
-	
+
 }
 
 void CTypeChecker::visit( const CExpLength* expLength ) // +
@@ -128,10 +159,14 @@ void CTypeChecker::visit( const CExpLength* expLength ) // +
 
 }
 
-void CTypeChecker::visit( const CExpList* expList )
+void CTypeChecker::visit( const CExpList* expList )  // +
 {
 	if( expList->Exp() ) {
 		expList->Exp()->Accept( this );
+		std::string expType = lastTypeValue->GetTypeName();
+		if( currMethod->GetArgument( expType ) == nullptr ) {
+			// no such argument
+		}
 	}
 	if( expList->ExpRestList() ) {
 		expList->ExpRestList()->Accept( this );
@@ -140,6 +175,7 @@ void CTypeChecker::visit( const CExpList* expList )
 
 void CTypeChecker::visit( const CFormalList* formalList )
 {
+	std::string id = formalList->Symbol()->String();
 	if( !formalList->Type() && id == "" && !formalList->FormalRestList() ) {
 		return;
 	}
@@ -162,7 +198,7 @@ void CTypeChecker::visit( const CMethodDecl* methodDecl )
 	( methodDecl->Exp() )->Accept( this );
 }
 
-void CTypeChecker::visit( const CMethodDeclList* methodDeclList ) 
+void CTypeChecker::visit( const CMethodDeclList* methodDeclList )
 {
 	if( methodDeclList->MethodDeclList() ) {
 		methodDeclList->MethodDeclList()->Accept( this );
@@ -182,11 +218,11 @@ void CTypeChecker::visit( const CStatement* statement )
 
 		statement->FirstStatement()->Accept( this );
 
-	
+
 		statement->SecondStatement()->Accept( this );
 
 	} else if( statement->GetStatementType() == "WhileStatement" ) { // +
-	
+
 
 		statement->FirstExpression()->Accept( this );
 
@@ -204,7 +240,7 @@ void CTypeChecker::visit( const CStatement* statement )
 	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) { // +
 
 		statement->FirstExpression()->Accept( this );
-		
+
 		statement->SecondExpression()->Accept( this );
 	}
 }
