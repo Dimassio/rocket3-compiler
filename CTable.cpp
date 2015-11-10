@@ -16,8 +16,8 @@ bool CTable::AddClass(const std::string &classId, const std::string &extendedCla
 	}
 	else {
 		classes[classSymbol] = CClassInfo(classSymbol, extendedClassSymbol);
+		return true;
 	}
-
 }
 
 CClassInfo* CTable::GetClass(const std::string &classId) {

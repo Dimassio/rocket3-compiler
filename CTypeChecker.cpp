@@ -45,7 +45,7 @@ void CTypeChecker::visit( const CClassDecl* classDecl )
 				errorOccured = true;
 				break;
 			}
-			currentPredecessor = symbolTable->GetClass( currentPredecessor->ExtendedClassName );
+			currentPredecessor = symbolTable->GetClass( currentPredecessor->ExtendedClassName() );
 		}
 	}
 
@@ -164,7 +164,7 @@ void CTypeChecker::visit( const CExpNewCustomType* expNewCustomType )
 {
 	expNewCustomType->Type()->Accept( this );
 
-	if( symbolTable->GetClass( lastTypeValue ) == nullptr ) { // todo: изменения Сани
+	if( symbolTable->GetClass( lastTypeValue ) == nullptr ) { 
 		std::cout << "Bad type" << std::endl;
 		errorOccured = true;
 	}
@@ -237,13 +237,15 @@ void CTypeChecker::visit( const CExpLength* expLength )
 	lastTypeValue = "int";
 }
 
-void CTypeChecker::visit( const CExpList* expList )  // TODO
+void CTypeChecker::visit( const CExpList* expList ) // Аргументы метода
 {
 	if( expList->Exp() ) {
-		++numOfArgument;
 		expList->Exp()->Accept( this );
-		std::string expType = lastTypeValue;
-		// using currMethodCall проверить что он на позиции numOfArgument - получив вектор аргументов от Сани
+		if( lastTypeValue != currMethodCall->GetArgument( numOfArgument )->Type()->GetTypeName() ) {
+			std::cout <<  "Type mismatch: " << numOfArgument << " argument of " << currMethodCall->MethodSymbol()->String() << std::endl;
+			errorOccured = true;
+		}
+		++numOfArgument;
 	}
 	if( expList->ExpRestList() ) {
 		expList->ExpRestList()->Accept( this );
@@ -323,6 +325,7 @@ void CTypeChecker::visit( const CStatement* statement )
 		else {
 			std::cout << "Undeclared variable" << std::endl;
 			errorOccured = true;
+			return; // instead of exception - just for now
 		}
 
 		statement->FirstExpression()->Accept(this);
@@ -343,8 +346,8 @@ void CTypeChecker::visit( const CStatement* statement )
 		else {
 			std::cout << "Undeclared variable" << std::endl;
 			errorOccured = true;
+			return; // instead of exception - just for now
 		}
-
 
 		if (idType->GetTypeName() != "int []") {
 			std::cout << "The variable isn't an array" << std::endl;
