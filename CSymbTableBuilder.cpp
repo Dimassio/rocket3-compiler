@@ -1,6 +1,7 @@
 #include "StaticVariables.h"
 #include "CSymbTableBuilder.h"
 #include "Symbols.h"
+#include <iostream>
 
 CSymbTableBuilder::CSymbTableBuilder() :
 	symbTable(new CTable()) 
@@ -21,7 +22,7 @@ void CSymbTableBuilder::visit(const CMainClass* mainClass) {
 	} else {
 		currClass = symbTable->GetClass(mainClass->ClassId());
 
-		CType* type = new CType(std::string("void"), 0); // todo: AAAAAAA
+		CType* type = new CType(std::string("void"), 0); 
 
 		if (!currClass->AddMethod(std::string("main"), type)) {
 			//duplicate main definition
@@ -153,10 +154,10 @@ void CSymbTableBuilder::visit(const CFormalList* formalList) {
 	CType* type = lastTypeValue;
 
 	if (!currMethod) {
-		//no method
+		std::cout << "table builder: no such method in " << formalList->yylineno << std::endl;
 	} else {
 		if (!currMethod->AddArgument(formalList->Id(), type)) {
-			//duplicated definition
+			std::cout << "table builder: duplicated definition in " << formalList->yylineno << std::endl;
 		}
 	}
 
@@ -169,7 +170,7 @@ void CSymbTableBuilder::visit(const CMethodDecl* methodDecl) {
 	(methodDecl->Type())->Accept(this);
 	CType* type = lastTypeValue;
 	if (!currClass->AddMethod(methodDecl->Id(), type)) {
-		//duplicate method definition
+		std::cout << "table builder: duplicated definition in " << methodDecl->yylineno << std::endl;
 	} else {
 		currMethod = currClass->GetMethod(methodDecl->Id());
 		if (methodDecl->FormalList()) {
@@ -229,11 +230,11 @@ void CSymbTableBuilder::visit(const CVarDecl* varDecl) {
 	const std::string id = varDecl->Id();
 	if (currMethod == NULL) {
 		if (!currClass->AddVariable(id, type)) {
-			//duplicated definition
+			std::cout << "table builder: duplicated definition in class in " << varDecl->yylineno << std::endl;
 		}
 	}
 	else if (!currMethod->AddLocalVariable(id, type)) {
-		//duplicated definition
+		std::cout << "table builder: duplicated definition in method in " << varDecl->yylineno << std::endl;
 	}
 }
 
@@ -256,10 +257,10 @@ void CSymbTableBuilder::visit(const CFormalRest* formalRest) {
 	CType* type = lastTypeValue;
 
 	if( !currMethod ) {
-		//no method
+		std::cout << "table builder: no such method " << formalRest->yylineno << std::endl;
 	} else {
 		if( !currMethod->AddArgument( formalRest->Id(), type ) ) {
-			//duplicated definition
+			std::cout << "table builder: duplicated definition " << formalRest->yylineno << std::endl;
 		}
 	}
 }

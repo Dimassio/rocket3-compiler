@@ -50,13 +50,14 @@ void yyerror( CProgram*& root, const char* );
 
 /* Определение ассоцитивности.
 Порядок объявление важен - чем позже объявлен оператор, тем больше его приоритет. */
-%right '='
-%left '+''-' 
-%left '*''/' 
-%left '['']' 
-%left '('')' 
-%left '.' 
-%left '!''&''<''|'AND
+%right '<''='
+%left '+''-'
+%left '*''/'AND
+
+%nonassoc '!'
+%left '.'  
+%nonassoc '['']' 
+%nonassoc '('')' 
 
 /* Определение токенов. Можно задать ассоциируемый с токеном тип из Union. */
 %token <ival> NUMBER
@@ -226,7 +227,7 @@ ExpNewIntArray:
 	;
 
 ExpNewCustomType:
-	NEW ID '(' ')' { $$ = new CExpNewCustomType( new CType( $2, yylineno ), yylineno ) }
+	NEW ID '(' ')' { $$ = new CExpNewCustomType( new CType( $2, yylineno ), yylineno ); }
 	;
 
 ExpSquareBrackets:

@@ -6,6 +6,7 @@
 #include "Visitor.h"
 #include "Common.h"
 #include "CTable.h"
+#include <stack>
 
 class CTypeChecker: public IVisitor {
 public:
@@ -73,9 +74,10 @@ private:
 	const CTable* symbolTable;	
 	const CClassInfo* currClass;
 	const CMethodInfo* currMethod;
-	const CMethodInfo* currMethodCall;
+	std::stack<const CMethodInfo*> currMethodCall; // может быть foo = obj.Method(obj2.doo())
+	std::stack<int> numOfArgument;
 	std::string lastTypeValue;
-	int numOfArgument;
+	
 	bool errorOccured;
 
 	bool isPODName(std::string name);

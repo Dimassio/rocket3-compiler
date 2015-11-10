@@ -102,9 +102,9 @@ bool CTypeChecker::isPODName( std::string name )
 	return name == "int" || name == "void" || name == "boolean" || name == "string" || name == "int []";
 }
 
-void CTypeChecker::visit( const CExpMethodCall* expMethodCall )
+void CTypeChecker::visit( const CExpMethodCall* expMethodCall ) // TODO
 {
-	expMethodCall->Exp()->Accept( this );
+	expMethodCall->Exp()->Accept( this ); // exp - for object
 	std::string expName = lastTypeValue;
 	if( isPODName( expName ) ) {
 		std::cout << expMethodCall->yylineno << "Can't call method with pod type" << std::endl;
@@ -116,11 +116,12 @@ void CTypeChecker::visit( const CExpMethodCall* expMethodCall )
 		std::cout << expMethodCall->yylineno << "No method with such name" << std::endl;
 		errorOccured = true;
 	}
-	currMethodCall = expInfo->GetMethod( methodName );
-	numOfArgument = 0;
+	currMethodCall.push( expInfo->GetMethod( methodName ) );
+	numOfArgument.push( 0 );
 	expMethodCall->ExpList()->Accept( this ); // Разбор аргументов метода
-	lastTypeValue = currMethodCall->Type()->GetTypeName(); // Запомнием последний тип
-	currMethodCall = nullptr;
+	lastTypeValue = currMethodCall.top()->Type()->GetTypeName(); // Запомнием последний тип
+	currMethodCall.pop();
+	numOfArgument.pop();
 }
 
 void CTypeChecker::visit( const CExpBinOperation* expBinOperation )
@@ -209,7 +210,7 @@ void CTypeChecker::visit( const CExpId* expId )
 {
 	if( currMethod->GetLocalVariable( expId->Id() ) != nullptr ) {
 		lastTypeValue = currMethod->GetLocalVariable( expId->Id() )->Type()->GetTypeName();
-	} else if (currMethod->GetArgument(expId->Id()) != nullptr) {
+	} else if( currMethod->GetArgument( expId->Id() ) != nullptr ) {
 		lastTypeValue = currMethod->GetArgument( expId->Id() )->Type()->GetTypeName();
 	} else if( currClass->GetVariable( expId->Id() ) != nullptr ) {
 		lastTypeValue = currClass->GetVariable( expId->Id() )->Type()->GetTypeName();
@@ -242,11 +243,13 @@ void CTypeChecker::visit( const CExpList* expList ) // Аргументы метода todo
 {
 	if( expList->Exp() ) {
 		expList->Exp()->Accept( this );
-		if( lastTypeValue != currMethodCall->GetArgument( numOfArgument )->Type()->GetTypeName() ) {
-			std::cout << expList->yylineno << "Type mismatch: " << numOfArgument + 1 << " argument of " << currMethodCall->MethodSymbol()->String() << std::endl;
+		if( lastTypeValue != currMethodCall.top()->GetArgument( numOfArgument.top() )->Type()->GetTypeName() ) {
+			std::cout << expList->yylineno << "Type mismatch: " << numOfArgument.top() + 1 << " argument of " << currMethodCall.top()->MethodSymbol()->String() << std::endl;
 			errorOccured = true;
 		}
-		++numOfArgument;
+		int num = numOfArgument.top() + 1;
+		numOfArgument.pop();
+		numOfArgument.push( num );
 	}
 	if( expList->ExpRestList() ) {
 		expList->ExpRestList()->Accept( this );
