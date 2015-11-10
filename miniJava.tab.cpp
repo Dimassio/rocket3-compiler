@@ -1606,463 +1606,463 @@ yyreduce:
         case 2:
 /* Line 1792 of yacc.c  */
 #line 119 "miniJava.y"
-    { root = new CProgram( (yyvsp[(1) - (1)].mainClass), 0 ); }
+    { root = new CProgram( (yyvsp[(1) - (1)].mainClass), 0, yylineno ); }
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
 #line 120 "miniJava.y"
-    { root = new CProgram( (yyvsp[(1) - (2)].mainClass), (yyvsp[(2) - (2)].classDeclList) ); }
+    { root = new CProgram( (yyvsp[(1) - (2)].mainClass), (yyvsp[(2) - (2)].classDeclList), yylineno ); }
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
 #line 124 "miniJava.y"
-    { (yyval.classDeclList) = new CClassDeclList( (yyvsp[(1) - (1)].classDecl), 0 ); }
+    { (yyval.classDeclList) = new CClassDeclList( (yyvsp[(1) - (1)].classDecl), 0, yylineno ); }
     break;
 
   case 5:
 /* Line 1792 of yacc.c  */
 #line 125 "miniJava.y"
-    { (yyval.classDeclList) = new CClassDeclList((yyvsp[(2) - (2)].classDecl), (yyvsp[(1) - (2)].classDeclList)); }
+    { (yyval.classDeclList) = new CClassDeclList((yyvsp[(2) - (2)].classDecl), (yyvsp[(1) - (2)].classDeclList), yylineno); }
     break;
 
   case 6:
 /* Line 1792 of yacc.c  */
 #line 129 "miniJava.y"
-    { (yyval.mainClass) = new CMainClass( (yyvsp[(2) - (17)].sval), (yyvsp[(12) - (17)].sval), (yyvsp[(15) - (17)].statement) ); }
+    { (yyval.mainClass) = new CMainClass( (yyvsp[(2) - (17)].sval), (yyvsp[(12) - (17)].sval), (yyvsp[(15) - (17)].statement), yylineno ); }
     break;
 
   case 7:
 /* Line 1792 of yacc.c  */
 #line 133 "miniJava.y"
-    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (6)].sval), "", (yyvsp[(4) - (6)].varDeclList), (yyvsp[(5) - (6)].methodDeclList) ); }
+    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (6)].sval), "", (yyvsp[(4) - (6)].varDeclList), (yyvsp[(5) - (6)].methodDeclList), yylineno ); }
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
 #line 134 "miniJava.y"
-    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (5)].sval), "", 0, (yyvsp[(4) - (5)].methodDeclList)); }
+    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (5)].sval), "", 0, (yyvsp[(4) - (5)].methodDeclList), yylineno); }
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
 #line 135 "miniJava.y"
-    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (5)].sval), "", (yyvsp[(4) - (5)].varDeclList), 0 ); }
+    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (5)].sval), "", (yyvsp[(4) - (5)].varDeclList), 0, yylineno ); }
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
 #line 136 "miniJava.y"
-    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (4)].sval), "", 0, 0 ); }
+    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (4)].sval), "", 0, 0, yylineno ); }
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
 #line 137 "miniJava.y"
-    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (8)].sval), (yyvsp[(4) - (8)].sval), (yyvsp[(6) - (8)].varDeclList), (yyvsp[(7) - (8)].methodDeclList) ); }
+    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (8)].sval), (yyvsp[(4) - (8)].sval), (yyvsp[(6) - (8)].varDeclList), (yyvsp[(7) - (8)].methodDeclList), yylineno ); }
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
 #line 138 "miniJava.y"
-    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (7)].sval), (yyvsp[(4) - (7)].sval), 0, (yyvsp[(6) - (7)].methodDeclList) ); }
+    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (7)].sval), (yyvsp[(4) - (7)].sval), 0, (yyvsp[(6) - (7)].methodDeclList), yylineno ); }
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
 #line 139 "miniJava.y"
-    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (7)].sval), (yyvsp[(4) - (7)].sval), (yyvsp[(6) - (7)].varDeclList), 0 ); }
+    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (7)].sval), (yyvsp[(4) - (7)].sval), (yyvsp[(6) - (7)].varDeclList), 0, yylineno ); }
     break;
 
   case 14:
 /* Line 1792 of yacc.c  */
 #line 140 "miniJava.y"
-    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (6)].sval), (yyvsp[(4) - (6)].sval), 0, 0 ); }
+    { (yyval.classDecl) = new CClassDecl( (yyvsp[(2) - (6)].sval), (yyvsp[(4) - (6)].sval), 0, 0, yylineno ); }
     break;
 
   case 15:
 /* Line 1792 of yacc.c  */
 #line 144 "miniJava.y"
-    { (yyval.varDeclList) = new CVarDeclList( (yyvsp[(1) - (1)].varDecl), 0 ); }
+    { (yyval.varDeclList) = new CVarDeclList( (yyvsp[(1) - (1)].varDecl), 0, yylineno ); }
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
 #line 145 "miniJava.y"
-    { (yyval.varDeclList) = new CVarDeclList( (yyvsp[(2) - (2)].varDecl), (yyvsp[(1) - (2)].varDeclList) ); }
+    { (yyval.varDeclList) = new CVarDeclList( (yyvsp[(2) - (2)].varDecl), (yyvsp[(1) - (2)].varDeclList), yylineno ); }
     break;
 
   case 17:
 /* Line 1792 of yacc.c  */
 #line 149 "miniJava.y"
-    { (yyval.methodDeclList) = new CMethodDeclList( (yyvsp[(1) - (1)].methodDecl), 0 ); }
+    { (yyval.methodDeclList) = new CMethodDeclList( (yyvsp[(1) - (1)].methodDecl), 0, yylineno ); }
     break;
 
   case 18:
 /* Line 1792 of yacc.c  */
 #line 150 "miniJava.y"
-    { (yyval.methodDeclList) = new CMethodDeclList( (yyvsp[(2) - (2)].methodDecl), (yyvsp[(1) - (2)].methodDeclList) ); }
+    { (yyval.methodDeclList) = new CMethodDeclList( (yyvsp[(2) - (2)].methodDecl), (yyvsp[(1) - (2)].methodDeclList), yylineno ); }
     break;
 
   case 19:
 /* Line 1792 of yacc.c  */
 #line 154 "miniJava.y"
-    { (yyval.varDecl) = new CVarDecl( (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval) ); }
+    { (yyval.varDecl) = new CVarDecl( (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval), yylineno ); }
     break;
 
   case 20:
 /* Line 1792 of yacc.c  */
 #line 158 "miniJava.y"
-    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (13)].type), (yyvsp[(3) - (13)].sval), (yyvsp[(5) - (13)].formalList), (yyvsp[(8) - (13)].varDeclList), (yyvsp[(9) - (13)].statementList), (yyvsp[(11) - (13)].exp)); }
+    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (13)].type), (yyvsp[(3) - (13)].sval), (yyvsp[(5) - (13)].formalList), (yyvsp[(8) - (13)].varDeclList), (yyvsp[(9) - (13)].statementList), (yyvsp[(11) - (13)].exp), yylineno); }
     break;
 
   case 21:
 /* Line 1792 of yacc.c  */
 #line 159 "miniJava.y"
-    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (12)].type), (yyvsp[(3) - (12)].sval), (yyvsp[(5) - (12)].formalList), 0, (yyvsp[(8) - (12)].statementList), (yyvsp[(10) - (12)].exp)); }
+    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (12)].type), (yyvsp[(3) - (12)].sval), (yyvsp[(5) - (12)].formalList), 0, (yyvsp[(8) - (12)].statementList), (yyvsp[(10) - (12)].exp), yylineno); }
     break;
 
   case 22:
 /* Line 1792 of yacc.c  */
 #line 160 "miniJava.y"
-    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (12)].type), (yyvsp[(3) - (12)].sval), (yyvsp[(5) - (12)].formalList), (yyvsp[(8) - (12)].varDeclList), 0, (yyvsp[(10) - (12)].exp) ); }
+    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (12)].type), (yyvsp[(3) - (12)].sval), (yyvsp[(5) - (12)].formalList), (yyvsp[(8) - (12)].varDeclList), 0, (yyvsp[(10) - (12)].exp), yylineno ); }
     break;
 
   case 23:
 /* Line 1792 of yacc.c  */
 #line 161 "miniJava.y"
-    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (11)].type), (yyvsp[(3) - (11)].sval), (yyvsp[(5) - (11)].formalList), 0, 0, (yyvsp[(9) - (11)].exp) ); }
+    { (yyval.methodDecl) = new CMethodDecl( (yyvsp[(2) - (11)].type), (yyvsp[(3) - (11)].sval), (yyvsp[(5) - (11)].formalList), 0, 0, (yyvsp[(9) - (11)].exp), yylineno ); }
     break;
 
   case 24:
 /* Line 1792 of yacc.c  */
 #line 165 "miniJava.y"
-    { (yyval.formalList) = new CFormalList( (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval), (yyvsp[(3) - (3)].formalRestList) ); }
+    { (yyval.formalList) = new CFormalList( (yyvsp[(1) - (3)].type), (yyvsp[(2) - (3)].sval), (yyvsp[(3) - (3)].formalRestList), yylineno ); }
     break;
 
   case 25:
 /* Line 1792 of yacc.c  */
 #line 166 "miniJava.y"
-    { (yyval.formalList) = new CFormalList( (yyvsp[(1) - (2)].type), (yyvsp[(2) - (2)].sval), 0 ); }
+    { (yyval.formalList) = new CFormalList( (yyvsp[(1) - (2)].type), (yyvsp[(2) - (2)].sval), 0, yylineno ); }
     break;
 
   case 26:
 /* Line 1792 of yacc.c  */
 #line 167 "miniJava.y"
-    { (yyval.formalList) = new CFormalList( 0, "", 0 ); }
+    { (yyval.formalList) = new CFormalList( 0, "", 0, yylineno ); }
     break;
 
   case 27:
 /* Line 1792 of yacc.c  */
 #line 171 "miniJava.y"
-    { (yyval.formalRestList) = new CFormalRestList( (yyvsp[(1) - (1)].formalRest), 0 ); }
+    { (yyval.formalRestList) = new CFormalRestList( (yyvsp[(1) - (1)].formalRest), 0, yylineno ); }
     break;
 
   case 28:
 /* Line 1792 of yacc.c  */
 #line 172 "miniJava.y"
-    { (yyval.formalRestList) = new CFormalRestList( (yyvsp[(2) - (2)].formalRest), (yyvsp[(1) - (2)].formalRestList) ); }
+    { (yyval.formalRestList) = new CFormalRestList( (yyvsp[(2) - (2)].formalRest), (yyvsp[(1) - (2)].formalRestList), yylineno ); }
     break;
 
   case 29:
 /* Line 1792 of yacc.c  */
 #line 176 "miniJava.y"
-    { (yyval.formalRest) = new CFormalRest( (yyvsp[(2) - (3)].type), (yyvsp[(3) - (3)].sval) ); }
+    { (yyval.formalRest) = new CFormalRest( (yyvsp[(2) - (3)].type), (yyvsp[(3) - (3)].sval), yylineno ); }
     break;
 
   case 30:
 /* Line 1792 of yacc.c  */
 #line 180 "miniJava.y"
-    { (yyval.statementList) = new CStatementList( (yyvsp[(1) - (1)].statement), 0 ); }
+    { (yyval.statementList) = new CStatementList( (yyvsp[(1) - (1)].statement), 0, yylineno ); }
     break;
 
   case 31:
 /* Line 1792 of yacc.c  */
 #line 181 "miniJava.y"
-    { (yyval.statementList) = new CStatementList( (yyvsp[(2) - (2)].statement), (yyvsp[(1) - (2)].statementList) ); }
+    { (yyval.statementList) = new CStatementList( (yyvsp[(2) - (2)].statement), (yyvsp[(1) - (2)].statementList), yylineno ); }
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
 #line 185 "miniJava.y"
-    { (yyval.type) = new CType("int []"); }
+    { (yyval.type) = new CType("int []", yylineno); }
     break;
 
   case 33:
 /* Line 1792 of yacc.c  */
 #line 186 "miniJava.y"
-    { (yyval.type) = new CType("int"); }
+    { (yyval.type) = new CType("int", yylineno); }
     break;
 
   case 34:
 /* Line 1792 of yacc.c  */
 #line 187 "miniJava.y"
-    { (yyval.type) = new CType("boolean"); }
+    { (yyval.type) = new CType("boolean", yylineno); }
     break;
 
   case 35:
 /* Line 1792 of yacc.c  */
 #line 188 "miniJava.y"
-    { (yyval.type) = new CType("string"); }
+    { (yyval.type) = new CType("string", yylineno); }
     break;
 
   case 36:
 /* Line 1792 of yacc.c  */
 #line 189 "miniJava.y"
-    { (yyval.type) = new CType("void"); }
+    { (yyval.type) = new CType("void", yylineno); }
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
 #line 190 "miniJava.y"
-    { (yyval.type) = new CType((yyvsp[(1) - (1)].sval)); }
+    { (yyval.type) = new CType((yyvsp[(1) - (1)].sval), yylineno); }
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
 #line 194 "miniJava.y"
-    { (yyval.statement) = new CStatement( "BlockStatement", (yyvsp[(2) - (3)].statementList), 0, 0, 0, 0, "" ); }
+    { (yyval.statement) = new CStatement( "BlockStatement", (yyvsp[(2) - (3)].statementList), 0, 0, 0, 0, "", yylineno ); }
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
 #line 195 "miniJava.y"
-    { (yyval.statement) = new CStatement( "IfStatement", 0, (yyvsp[(5) - (7)].statement), (yyvsp[(7) - (7)].statement), (yyvsp[(3) - (7)].exp), 0, "" ); }
+    { (yyval.statement) = new CStatement( "IfStatement", 0, (yyvsp[(5) - (7)].statement), (yyvsp[(7) - (7)].statement), (yyvsp[(3) - (7)].exp), 0, "", yylineno ); }
     break;
 
   case 40:
 /* Line 1792 of yacc.c  */
 #line 196 "miniJava.y"
-    { (yyval.statement) = new CStatement( "WhileStatement", 0, (yyvsp[(5) - (5)].statement), 0, (yyvsp[(3) - (5)].exp), 0, "" ); }
+    { (yyval.statement) = new CStatement( "WhileStatement", 0, (yyvsp[(5) - (5)].statement), 0, (yyvsp[(3) - (5)].exp), 0, "", yylineno ); }
     break;
 
   case 41:
 /* Line 1792 of yacc.c  */
 #line 197 "miniJava.y"
-    { (yyval.statement) = new CStatement( "PrintlnStatement", 0, 0, 0, (yyvsp[(3) - (5)].exp), 0, "" ); }
+    { (yyval.statement) = new CStatement( "PrintlnStatement", 0, 0, 0, (yyvsp[(3) - (5)].exp), 0, "", yylineno ); }
     break;
 
   case 42:
 /* Line 1792 of yacc.c  */
 #line 198 "miniJava.y"
-    { (yyval.statement) = new CStatement( "AssignStatement", 0, 0, 0, (yyvsp[(3) - (4)].exp), 0, (yyvsp[(1) - (4)].sval) ); }
+    { (yyval.statement) = new CStatement( "AssignStatement", 0, 0, 0, (yyvsp[(3) - (4)].exp), 0, (yyvsp[(1) - (4)].sval), yylineno ); }
     break;
 
   case 43:
 /* Line 1792 of yacc.c  */
 #line 199 "miniJava.y"
-    { (yyval.statement) = new CStatement( "ArrayAssignStatement", 0, 0, 0, (yyvsp[(3) - (7)].exp), (yyvsp[(6) - (7)].exp), (yyvsp[(1) - (7)].sval) ); }
+    { (yyval.statement) = new CStatement( "ArrayAssignStatement", 0, 0, 0, (yyvsp[(3) - (7)].exp), (yyvsp[(6) - (7)].exp), (yyvsp[(1) - (7)].sval), yylineno ); }
     break;
 
   case 44:
 /* Line 1792 of yacc.c  */
 #line 203 "miniJava.y"
-    { (yyval.exp) = new CExp( (yyvsp[(1) - (1)].expLength), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ); }
+    { (yyval.exp) = new CExp( (yyvsp[(1) - (1)].expLength), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, yylineno ); }
     break;
 
   case 45:
 /* Line 1792 of yacc.c  */
 #line 204 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, (yyvsp[(1) - (1)].expMethodCall), 0, 0, 0, 0, 0, 0, 0, 0, 0 ); }
+    { (yyval.exp) = new CExp( 0, (yyvsp[(1) - (1)].expMethodCall), 0, 0, 0, 0, 0, 0, 0, 0, 0, yylineno ); }
     break;
 
   case 46:
 /* Line 1792 of yacc.c  */
 #line 205 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, 0, (yyvsp[(1) - (1)].expNewIntArray), 0, 0, 0, 0, 0, 0, 0, 0 ); }
+    { (yyval.exp) = new CExp( 0, 0, (yyvsp[(1) - (1)].expNewIntArray), 0, 0, 0, 0, 0, 0, 0, 0, yylineno ); }
     break;
 
   case 47:
 /* Line 1792 of yacc.c  */
 #line 206 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, 0, 0, (yyvsp[(1) - (1)].expNewCustomType), 0, 0, 0, 0, 0, 0, 0 ); }
+    { (yyval.exp) = new CExp( 0, 0, 0, (yyvsp[(1) - (1)].expNewCustomType), 0, 0, 0, 0, 0, 0, 0, yylineno ); }
     break;
 
   case 48:
 /* Line 1792 of yacc.c  */
 #line 207 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, 0, 0, 0, (yyvsp[(1) - (1)].expSquareBrackets), 0, 0, 0, 0, 0, 0 ); }
+    { (yyval.exp) = new CExp( 0, 0, 0, 0, (yyvsp[(1) - (1)].expSquareBrackets), 0, 0, 0, 0, 0, 0, yylineno ); }
     break;
 
   case 49:
 /* Line 1792 of yacc.c  */
 #line 208 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expRoundBrackets), 0, 0, 0, 0, 0 ); }
+    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expRoundBrackets), 0, 0, 0, 0, 0, yylineno ); }
     break;
 
   case 50:
 /* Line 1792 of yacc.c  */
 #line 209 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expNot), 0, 0, 0, 0 ); }
+    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expNot), 0, 0, 0, 0, yylineno ); }
     break;
 
   case 51:
 /* Line 1792 of yacc.c  */
 #line 210 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expNumber), 0, 0, 0 ); }
+    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expNumber), 0, 0, 0, yylineno ); }
     break;
 
   case 52:
 /* Line 1792 of yacc.c  */
 #line 211 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expId), 0, 0 ); }
+    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expId), 0, 0, yylineno ); }
     break;
 
   case 53:
 /* Line 1792 of yacc.c  */
 #line 212 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expSingle), 0 ); }
+    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expSingle), 0, yylineno ); }
     break;
 
   case 54:
 /* Line 1792 of yacc.c  */
 #line 213 "miniJava.y"
-    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expBinOperation) ); }
+    { (yyval.exp) = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (yyvsp[(1) - (1)].expBinOperation), yylineno ); }
     break;
 
   case 55:
 /* Line 1792 of yacc.c  */
 #line 217 "miniJava.y"
-    { (yyval.expLength) = new CExpLength( (yyvsp[(1) - (3)].exp) ); }
+    { (yyval.expLength) = new CExpLength( (yyvsp[(1) - (3)].exp), yylineno ); }
     break;
 
   case 56:
 /* Line 1792 of yacc.c  */
 #line 221 "miniJava.y"
-    { (yyval.expMethodCall) = new CExpMethodCall( (yyvsp[(1) - (6)].exp), (yyvsp[(3) - (6)].sval), (yyvsp[(5) - (6)].expList) ); }
+    { (yyval.expMethodCall) = new CExpMethodCall( (yyvsp[(1) - (6)].exp), (yyvsp[(3) - (6)].sval), (yyvsp[(5) - (6)].expList), yylineno ); }
     break;
 
   case 57:
 /* Line 1792 of yacc.c  */
 #line 225 "miniJava.y"
-    { (yyval.expNewIntArray) = new CExpNewIntArray( (yyvsp[(4) - (5)].exp) ); }
+    { (yyval.expNewIntArray) = new CExpNewIntArray( (yyvsp[(4) - (5)].exp), yylineno ); }
     break;
 
   case 58:
 /* Line 1792 of yacc.c  */
 #line 229 "miniJava.y"
-    { (yyval.expNewCustomType) = new CExpNewCustomType( new CType( (yyvsp[(2) - (4)].sval) ) ) ;}
+    { (yyval.expNewCustomType) = new CExpNewCustomType( new CType( (yyvsp[(2) - (4)].sval), yylineno ), yylineno ) ;}
     break;
 
   case 59:
 /* Line 1792 of yacc.c  */
 #line 233 "miniJava.y"
-    { (yyval.expSquareBrackets) = new CExpSquareBrackets( (yyvsp[(1) - (4)].exp), (yyvsp[(3) - (4)].exp) ); }
+    { (yyval.expSquareBrackets) = new CExpSquareBrackets( (yyvsp[(1) - (4)].exp), (yyvsp[(3) - (4)].exp), yylineno ); }
     break;
 
   case 60:
 /* Line 1792 of yacc.c  */
 #line 237 "miniJava.y"
-    { (yyval.expRoundBrackets) = new CExpRoundBrackets( (yyvsp[(2) - (3)].exp) ); }
+    { (yyval.expRoundBrackets) = new CExpRoundBrackets( (yyvsp[(2) - (3)].exp), yylineno ); }
     break;
 
   case 61:
 /* Line 1792 of yacc.c  */
 #line 241 "miniJava.y"
-    { (yyval.expNot) = new CExpNot( (yyvsp[(2) - (2)].exp) ); }
+    { (yyval.expNot) = new CExpNot( (yyvsp[(2) - (2)].exp), yylineno ); }
     break;
 
   case 62:
 /* Line 1792 of yacc.c  */
 #line 245 "miniJava.y"
-    { (yyval.expBinOperation) = new CExpBinOperation( "<", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp) ); }
+    { (yyval.expBinOperation) = new CExpBinOperation( "<", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), yylineno ); }
     break;
 
   case 63:
 /* Line 1792 of yacc.c  */
 #line 246 "miniJava.y"
-    { (yyval.expBinOperation) = new CExpBinOperation( "&&", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp) ); }
+    { (yyval.expBinOperation) = new CExpBinOperation( "&&", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), yylineno ); }
     break;
 
   case 64:
 /* Line 1792 of yacc.c  */
 #line 247 "miniJava.y"
-    { (yyval.expBinOperation) = new CExpBinOperation( "-", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp) ); }
+    { (yyval.expBinOperation) = new CExpBinOperation( "-", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), yylineno ); }
     break;
 
   case 65:
 /* Line 1792 of yacc.c  */
 #line 248 "miniJava.y"
-    { (yyval.expBinOperation) = new CExpBinOperation( "+", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp) ); }
+    { (yyval.expBinOperation) = new CExpBinOperation( "+", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), yylineno ); }
     break;
 
   case 66:
 /* Line 1792 of yacc.c  */
 #line 249 "miniJava.y"
-    { (yyval.expBinOperation) = new CExpBinOperation( "/", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp) ); }
+    { (yyval.expBinOperation) = new CExpBinOperation( "/", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), yylineno ); }
     break;
 
   case 67:
 /* Line 1792 of yacc.c  */
 #line 250 "miniJava.y"
-    { (yyval.expBinOperation) = new CExpBinOperation( "*", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp) ); }
+    { (yyval.expBinOperation) = new CExpBinOperation( "*", (yyvsp[(1) - (3)].exp), (yyvsp[(3) - (3)].exp), yylineno ); }
     break;
 
   case 68:
 /* Line 1792 of yacc.c  */
 #line 254 "miniJava.y"
-    { (yyval.expNumber) = new CExpNumber( (yyvsp[(1) - (1)].ival) ); }
+    { (yyval.expNumber) = new CExpNumber( (yyvsp[(1) - (1)].ival), yylineno ); }
     break;
 
   case 69:
 /* Line 1792 of yacc.c  */
 #line 258 "miniJava.y"
-    { (yyval.expId) = new CExpId( (yyvsp[(1) - (1)].sval) ); }
+    { (yyval.expId) = new CExpId( (yyvsp[(1) - (1)].sval), yylineno ); }
     break;
 
   case 70:
 /* Line 1792 of yacc.c  */
 #line 262 "miniJava.y"
-    { (yyval.expSingle) = new CExpSingle( "True" ); }
+    { (yyval.expSingle) = new CExpSingle( "True", yylineno ); }
     break;
 
   case 71:
 /* Line 1792 of yacc.c  */
 #line 263 "miniJava.y"
-    { (yyval.expSingle) = new CExpSingle( "False" ); }
+    { (yyval.expSingle) = new CExpSingle( "False", yylineno ); }
     break;
 
   case 72:
 /* Line 1792 of yacc.c  */
 #line 264 "miniJava.y"
-    { (yyval.expSingle) = new CExpSingle( "this" ); }
+    { (yyval.expSingle) = new CExpSingle( "this", yylineno ); }
     break;
 
   case 73:
 /* Line 1792 of yacc.c  */
 #line 268 "miniJava.y"
-    { (yyval.expList) = new CExpList( (yyvsp[(1) - (2)].exp), (yyvsp[(2) - (2)].expRestList) ); }
+    { (yyval.expList) = new CExpList( (yyvsp[(1) - (2)].exp), (yyvsp[(2) - (2)].expRestList), yylineno ); }
     break;
 
   case 74:
 /* Line 1792 of yacc.c  */
 #line 269 "miniJava.y"
-    { (yyval.expList) = new CExpList( (yyvsp[(1) - (1)].exp), 0 ); }
+    { (yyval.expList) = new CExpList( (yyvsp[(1) - (1)].exp), 0, yylineno ); }
     break;
 
   case 75:
 /* Line 1792 of yacc.c  */
 #line 270 "miniJava.y"
-    { (yyval.expList) = new CExpList( 0, 0 ); }
+    { (yyval.expList) = new CExpList( 0, 0, yylineno ); }
     break;
 
   case 76:
 /* Line 1792 of yacc.c  */
 #line 274 "miniJava.y"
-    { (yyval.expRestList) = new CExpRestList( (yyvsp[(1) - (1)].expRest), 0 ); }
+    { (yyval.expRestList) = new CExpRestList( (yyvsp[(1) - (1)].expRest), 0, yylineno ); }
     break;
 
   case 77:
 /* Line 1792 of yacc.c  */
 #line 275 "miniJava.y"
-    { (yyval.expRestList) = new CExpRestList( (yyvsp[(2) - (2)].expRest), (yyvsp[(1) - (2)].expRestList) ); }
+    { (yyval.expRestList) = new CExpRestList( (yyvsp[(2) - (2)].expRest), (yyvsp[(1) - (2)].expRestList), yylineno ); }
     break;
 
   case 78:
 /* Line 1792 of yacc.c  */
 #line 279 "miniJava.y"
-    { (yyval.expRest) = new CExpRest((yyvsp[(2) - (2)].exp)); }
+    { (yyval.expRest) = new CExpRest((yyvsp[(2) - (2)].exp), yylineno); }
     break;
 
 

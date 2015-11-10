@@ -7,7 +7,7 @@
 
 class CVarDecl : public  IVarDecl {
 public:
-	CVarDecl( IType* _type, const std::string &_id );
+	CVarDecl( IType* _type, const std::string &_id, int yylineno );
 
 	void Accept( IVisitor* visitor ) const;
 
@@ -15,7 +15,9 @@ public:
 
 	const std::string& Id() const;
 
+	int yylineno;
 private:
 	IType* type;
 	const std::string id;
+	
 };

@@ -7,7 +7,8 @@ CStatement::CStatement(
 	IStatement* _secondStatement,
 	IExp* _firstExpression,
 	IExp* _secondExperssion,
-	const std::string &_id
+	const std::string &_id,
+	int _yylineno
 )
 	: statementType(_statementType),
 	statements(_statements),
@@ -15,7 +16,8 @@ CStatement::CStatement(
 	secondStatement(_secondStatement),
 	firstExpression(_firstExpression),
 	secondExperssion(_secondExperssion),
-	id( _id )
+	id( _id ),
+	yylineno(_yylineno )
 {
 }
 

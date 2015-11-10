@@ -7,7 +7,7 @@
 
 class CFormalList : public  IFormalList {
 public:
-	CFormalList( IType* _type, const std::string &_id, IFormalRestList* _formalRestList );
+	CFormalList( IType* _type, const std::string &_id, IFormalRestList* _formalRestList, int yylineno );
 
 	void Accept( IVisitor* visitor ) const;
 
@@ -17,8 +17,10 @@ public:
 
 	const std::string& Id() const;
 
+	int yylineno;
 private:
 	IType* type;
 	IFormalRestList* formalRestList;
 	const std::string id;
+
 };

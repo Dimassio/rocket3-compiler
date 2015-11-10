@@ -1,7 +1,7 @@
 #include "ExpNot.h"
 
-CExpNot::CExpNot( IExp* _exp )
-	: exp(_exp)
+CExpNot::CExpNot( IExp* _exp, int _yylineno )
+	: exp(_exp), yylineno(_yylineno )
 {
 }
 

@@ -1,7 +1,7 @@
 #include "Type.h"
 
-CType::CType(const std::string &_typeName) :
-		typeName(_typeName)
+CType::CType(const std::string &_typeName, int _yylineno ) :
+		typeName(_typeName), yylineno(_yylineno )
 {
 }
 

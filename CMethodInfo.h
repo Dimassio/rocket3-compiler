@@ -13,9 +13,11 @@ public:
 
 	const Symbols::CSymbol* MethodSymbol() const;
 	CType* Type();
+	const CType* Type() const;
 
 	bool AddArgument(const std::string &argumentId, CType* type);
 	CVarInfo* GetArgument(const std::string &argumentId);
+	const CVarInfo* GetArgument( const std::string &argumentId ) const;
 	const CVarInfo* GetArgument( int number ) const;
 
 	bool AddLocalVariable(const std::string &variableId, CType* type);

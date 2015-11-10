@@ -7,7 +7,7 @@
 
 class CMainClass : public IMainClass {
 public:
-	CMainClass( const std::string &_classId, const std::string &_argId, IStatement* _statement );
+	CMainClass( const std::string &_classId, const std::string &_argId, IStatement* _statement, int yylineno );
 
 	void Accept( IVisitor* visitor ) const;
 
@@ -17,8 +17,10 @@ public:
 
 	const std::string& ArgId() const;
 
+	int yylineno;
 private:
 	const std::string classId;
 	const std::string argId;
 	IStatement* statement;
+	
 };

@@ -1,7 +1,7 @@
 #include "ExpId.h"
 
-CExpId::CExpId( const std::string &_id )
-	: id(_id)
+CExpId::CExpId( const std::string &_id, int _yylineno )
+	: id(_id), yylineno(_yylineno )
 {
 }
 

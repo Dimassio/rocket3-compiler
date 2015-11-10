@@ -5,7 +5,7 @@
 
 class CProgram : public IProgram { 
 public:
-	CProgram( IMainClass* _mainClass, IClassDeclList* _classDeclList );
+	CProgram( IMainClass* _mainClass, IClassDeclList* _classDeclList, int yylineno );
 
 	void Accept( IVisitor* visitor ) const;
 
@@ -13,7 +13,9 @@ public:
 
 	const IClassDeclList* ClassDeclList() const;
 
+	int yylineno;
 private:
 	IMainClass* mainClass;
 	IClassDeclList* classDeclList;
+	
 };

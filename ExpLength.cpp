@@ -1,7 +1,7 @@
 #include "ExpLength.h"
 
-CExpLength::CExpLength( IExp* _exp)
-	: exp(_exp)
+CExpLength::CExpLength( IExp* _exp, int _yylineno )
+	: exp(_exp), yylineno(_yylineno )
 {
 }
 

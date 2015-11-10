@@ -9,7 +9,7 @@
 
 class CTypeChecker: public IVisitor {
 public:
-	CTypeChecker();
+	CTypeChecker(const CTable* _symbTable);
 
 	void visit( const CProgram* program );
 
@@ -77,6 +77,8 @@ private:
 	std::string lastTypeValue;
 	int numOfArgument;
 	bool errorOccured;
+
+	bool isPODName(std::string name);
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "MethodDeclList.h"
 
-CMethodDeclList::CMethodDeclList( IMethodDecl* _methodDecl, IMethodDeclList* _methodDeclList ) :
-	methodDecl( _methodDecl ), methodDeclList( _methodDeclList )
+CMethodDeclList::CMethodDeclList( IMethodDecl* _methodDecl, IMethodDeclList* _methodDeclList, int _yylineno ) :
+	methodDecl( _methodDecl ), methodDeclList( _methodDeclList ), yylineno(_yylineno )
 {
 }
 

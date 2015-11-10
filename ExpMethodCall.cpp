@@ -1,9 +1,10 @@
 #include "ExpMethodCall.h"
 
-CExpMethodCall::CExpMethodCall( IExp* _exp, const std::string &_id, IExpList* _expList )
+CExpMethodCall::CExpMethodCall( IExp* _exp, const std::string &_id, IExpList* _expList, int _yylineno )
 	: exp(_exp),
 	id(_id),
-	expList(_expList)
+	expList(_expList),
+	yylineno(_yylineno )
 {
 }
 

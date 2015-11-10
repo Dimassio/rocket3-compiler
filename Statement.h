@@ -14,7 +14,8 @@ public:
 		IStatement* _secondStatement,
 		IExp* _firstExpression,
 		IExp* _secondExperssion,
-		const std::string &_id
+		const std::string &_id,
+		int yylineno
 	);
 
 	void Accept(IVisitor* visitor) const;
@@ -33,6 +34,7 @@ public:
 
 	const std::string& GetStatementType() const;
 
+	int yylineno;
 private:
 	const std::string statementType;
 	IStatementList* statements;
@@ -41,4 +43,5 @@ private:
 	IExp* firstExpression;
 	IExp* secondExperssion;
 	const std::string id;
+
 };

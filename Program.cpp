@@ -1,7 +1,7 @@
 #include "Program.h"
 
-CProgram::CProgram( IMainClass* _mainClass, IClassDeclList* _classDeclList ) :
-	mainClass( _mainClass ), classDeclList( _classDeclList )
+CProgram::CProgram( IMainClass* _mainClass, IClassDeclList* _classDeclList, int _yylineno ) :
+	mainClass( _mainClass ), classDeclList( _classDeclList ), yylineno(_yylineno )
 {
 }
 

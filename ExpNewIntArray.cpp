@@ -1,7 +1,7 @@
 #include "ExpNewIntArray.h"
 
-CExpNewIntArray::CExpNewIntArray(IExp* _exp)
-	: exp(_exp)
+CExpNewIntArray::CExpNewIntArray(IExp* _exp, int _yylineno )
+	: exp(_exp), yylineno(_yylineno )
 {
 }
 

@@ -7,7 +7,7 @@
 
 class CFormalRest : public IFormalRest {
 public:
-	CFormalRest( IType* _type, const std::string &_id );
+	CFormalRest( IType* _type, const std::string &_id, int yylineno );
 
 	void Accept( IVisitor* visitor ) const;
 
@@ -15,8 +15,10 @@ public:
 
 	const std::string& Id() const;
 
+	int yylineno;
 private:
 	IType* type;
 	const std::string id;
+	
 };
 

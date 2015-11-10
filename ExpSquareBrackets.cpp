@@ -1,8 +1,9 @@
 #include "ExpSquareBrackets.h"
 
-CExpSquareBrackets::CExpSquareBrackets(IExp* _firstExp, IExp* _secondExp)
+CExpSquareBrackets::CExpSquareBrackets(IExp* _firstExp, IExp* _secondExp, int _yylineno )
 	: firstExp(_firstExp),
-	secondExp(_secondExp)
+	secondExp(_secondExp),
+	yylineno(_yylineno )
 {
 }
 

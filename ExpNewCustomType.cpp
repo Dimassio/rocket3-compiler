@@ -1,8 +1,9 @@
 #include "ExpNewCustomType.h"
 
-CExpNewCustomType::CExpNewCustomType( IType* _type )
+CExpNewCustomType::CExpNewCustomType( IType* _type, int _yylineno )
 	: 
-	type( _type )
+	type( _type ),
+	yylineno(_yylineno )
 {
 }
 

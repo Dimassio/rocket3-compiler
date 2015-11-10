@@ -6,12 +6,14 @@
 
 class CExpNewIntArray : public IExpNewIntArray {
 public:
-	CExpNewIntArray( IExp* _exp );
+	CExpNewIntArray( IExp* _exp, int _yylineno );
 
 	void Accept(IVisitor* visitor) const;
 
 	const IExp* Exp() const;
 
+	int yylineno;
 private:
 	IExp* exp;
+	
 };

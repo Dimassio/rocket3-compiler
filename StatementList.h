@@ -5,7 +5,7 @@
 
 class CStatementList : public  IStatementList {
 public:
-	CStatementList( IStatement* _statement, CStatementList* _statementList );
+	CStatementList( IStatement* _statement, CStatementList* _statementList, int yylineno );
 
 	void Accept( IVisitor* visitor ) const;
 
@@ -16,4 +16,5 @@ public:
 private:
 	IStatement* statement;
 	CStatementList* statementList;
+	int yylineno;
 };

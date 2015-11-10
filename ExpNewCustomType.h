@@ -6,12 +6,14 @@
 
 class CExpNewCustomType : public IExpNewCustomType {
 public:
-	CExpNewCustomType( IType* _type );
+	CExpNewCustomType( IType* _type, int _yylineno );
 
 	void Accept( IVisitor* visitor ) const;
 
 	const IType* Type() const;
 
+	int yylineno;
 private:
 	IType* type;
+	
 };

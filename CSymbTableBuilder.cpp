@@ -21,7 +21,7 @@ void CSymbTableBuilder::visit(const CMainClass* mainClass) {
 	} else {
 		currClass = symbTable->GetClass(mainClass->ClassId());
 
-		CType* type = new CType(std::string("void"));
+		CType* type = new CType(std::string("void"), 0); // todo: AAAAAAA
 
 		if (!currClass->AddMethod(std::string("main"), type)) {
 			//duplicate main definition
@@ -266,4 +266,9 @@ void CSymbTableBuilder::visit(const CExpRestList* expRestList) {
 
 void CSymbTableBuilder::visit(const CExpRest* expRest) {
 	(expRest->Exp())->Accept(this);
+}
+
+const CTable * CSymbTableBuilder::GetSymbolTable() const
+{
+	return symbTable;
 }

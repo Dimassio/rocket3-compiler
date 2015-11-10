@@ -10,7 +10,8 @@ CExp::CExp(IExpLength* _expLength,
 	IExpNumber* _expNumber,
 	IExpId* _expId,
 	IExpSingle* _expSingle,
-	IExpBinOperation* _expBinOperation
+	IExpBinOperation* _expBinOperation,
+	int _yylineno
 	)
 	: expLength(_expLength),
 	expMethodCall(_expMethodCall),
@@ -22,7 +23,8 @@ CExp::CExp(IExpLength* _expLength,
 	expNot(_expNot),
 	expNumber(_expNumber),
 	expId(_expId),
-	expSingle(_expSingle)
+	expSingle(_expSingle),
+	yylineno(_yylineno )
 {
 }
 

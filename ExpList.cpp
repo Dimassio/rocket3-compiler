@@ -1,7 +1,7 @@
 #include "ExpList.h"
 
-CExpList::CExpList( IExp* _exp, IExpRestList* _expRestList ) :
-	exp(_exp), expRestList(_expRestList)
+CExpList::CExpList( IExp* _exp, IExpRestList* _expRestList, int _yylineno ) :
+	exp(_exp), expRestList(_expRestList), yylineno(_yylineno )
 {
 }
 

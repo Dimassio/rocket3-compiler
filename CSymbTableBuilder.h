@@ -68,6 +68,8 @@ public:
 
 	void visit(const CExpRest* expRest);
 
+	const CTable* GetSymbolTable() const;
+
 private:
 	CClassInfo* currClass;
 	CMethodInfo* currMethod;

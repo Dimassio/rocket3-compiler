@@ -16,7 +16,7 @@ public:
 		IExpNumber* _expNumber,
 		IExpId* _expId,
 		IExpSingle* _expSingle,
-		IExpBinOperation* _expBinOperation
+		IExpBinOperation* _expBinOperation, int yylineno
 	);
 
 	void Accept(IVisitor* visitor) const;
@@ -32,7 +32,7 @@ public:
 	const IExpNumber* ExpNumber() const;
 	const IExpId* ExpId() const;
 	const IExpSingle* ExpSingle() const;
-
+	int yylineno;
 private:
 	IExpLength* expLength;
 	IExpMethodCall* expMethodCall;

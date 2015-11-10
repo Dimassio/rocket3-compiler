@@ -1,11 +1,12 @@
 #include "StaticVariables.h"
 #include "ClassDecl.h"
 
-CClassDecl::CClassDecl( const std::string &_classId, const std::string &_extendedClassId, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList ) :
+CClassDecl::CClassDecl( const std::string &_classId, const std::string &_extendedClassId, IVarDeclList* _varDeclList, IMethodDeclList* _methodDeclList, int _yylineno ) :
 	classId(_classId),
 	extendedClassId( _extendedClassId ),
 	varDeclList( _varDeclList ),
-	methodDeclList( _methodDeclList )
+	methodDeclList( _methodDeclList ),
+	yylineno(_yylineno )
 {
 }
 

@@ -1,7 +1,7 @@
 #include "ClassDeclList.h"
 
-CClassDeclList::CClassDeclList( IClassDecl* _classDecl, IClassDeclList* _classDeclList ) :
-	classDecl( _classDecl ), classDeclList( _classDeclList )
+CClassDeclList::CClassDeclList( IClassDecl* _classDecl, IClassDeclList* _classDeclList, int _yylineno ) :
+	classDecl( _classDecl ), classDeclList( _classDeclList ), yylineno(_yylineno )
 {
 }
 

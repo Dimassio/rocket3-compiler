@@ -116,167 +116,167 @@ void yyerror( CProgram*& root, const char* );
 /* Секция с описанием правил парсера. */
 %%
 Program:
-	MainClass { root = new CProgram( $1, 0 ); }
-	| MainClass ClassDecls { root = new CProgram( $1, $2 ); }
+	MainClass { root = new CProgram( $1, 0, yylineno ); }
+	| MainClass ClassDecls { root = new CProgram( $1, $2, yylineno ); }
 	;
 
 ClassDecls:
-	ClassDecl { $$ = new CClassDeclList( $1, 0 ); }
-	| ClassDecls ClassDecl { $$ = new CClassDeclList($2, $1); }
+	ClassDecl { $$ = new CClassDeclList( $1, 0, yylineno ); }
+	| ClassDecls ClassDecl { $$ = new CClassDeclList($2, $1, yylineno); }
 	;
 
 MainClass:
-	CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' Statement '}' '}' { $$ = new CMainClass( $2, $12, $15 ); }
+	CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' Statement '}' '}' { $$ = new CMainClass( $2, $12, $15, yylineno ); }
 	;
 
 ClassDecl:
-	CLASS ID '{' VarDecls MethodDecls '}' { $$ = new CClassDecl( $2, "", $4, $5 ); }
-	| CLASS ID '{' MethodDecls '}' { $$ = new CClassDecl( $2, "", 0, $4); }
-	| CLASS ID '{' VarDecls '}' { $$ = new CClassDecl( $2, "", $4, 0 ); }
-	| CLASS ID '{'  '}' { $$ = new CClassDecl( $2, "", 0, 0 ); }
-	| CLASS ID EXTENDS ID '{' VarDecls MethodDecls '}' { $$ = new CClassDecl( $2, $4, $6, $7 ); }
-	| CLASS ID EXTENDS ID '{' MethodDecls '}' { $$ = new CClassDecl( $2, $4, 0, $6 ); }
-	| CLASS ID EXTENDS ID '{' VarDecls '}' { $$ = new CClassDecl( $2, $4, $6, 0 ); }
-	| CLASS ID EXTENDS ID '{' '}' { $$ = new CClassDecl( $2, $4, 0, 0 ); }
+	CLASS ID '{' VarDecls MethodDecls '}' { $$ = new CClassDecl( $2, "", $4, $5, yylineno ); }
+	| CLASS ID '{' MethodDecls '}' { $$ = new CClassDecl( $2, "", 0, $4, yylineno); }
+	| CLASS ID '{' VarDecls '}' { $$ = new CClassDecl( $2, "", $4, 0, yylineno ); }
+	| CLASS ID '{'  '}' { $$ = new CClassDecl( $2, "", 0, 0, yylineno ); }
+	| CLASS ID EXTENDS ID '{' VarDecls MethodDecls '}' { $$ = new CClassDecl( $2, $4, $6, $7, yylineno ); }
+	| CLASS ID EXTENDS ID '{' MethodDecls '}' { $$ = new CClassDecl( $2, $4, 0, $6, yylineno ); }
+	| CLASS ID EXTENDS ID '{' VarDecls '}' { $$ = new CClassDecl( $2, $4, $6, 0, yylineno ); }
+	| CLASS ID EXTENDS ID '{' '}' { $$ = new CClassDecl( $2, $4, 0, 0, yylineno ); }
 	;
 
 VarDecls:
-	VarDecl { $$ = new CVarDeclList( $1, 0 ); }
-	| VarDecls VarDecl { $$ = new CVarDeclList( $2, $1 ); }
+	VarDecl { $$ = new CVarDeclList( $1, 0, yylineno ); }
+	| VarDecls VarDecl { $$ = new CVarDeclList( $2, $1, yylineno ); }
 	;
 
 MethodDecls:
-	MethodDecl { $$ = new CMethodDeclList( $1, 0 ); }
-	| MethodDecls MethodDecl { $$ = new CMethodDeclList( $2, $1 ); }
+	MethodDecl { $$ = new CMethodDeclList( $1, 0, yylineno ); }
+	| MethodDecls MethodDecl { $$ = new CMethodDeclList( $2, $1, yylineno ); }
 	;
 
 VarDecl:
-	Type ID ';' { $$ = new CVarDecl( $1, $2 ); }  
+	Type ID ';' { $$ = new CVarDecl( $1, $2, yylineno ); }  
 	;
 
 MethodDecl:
-	PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, $8, $9, $11); }
-	| PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, 0, $8, $10); }
-	| PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, $8, 0, $10 ); }
-	| PUBLIC Type ID '(' FormalList ')' '{' RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, 0, 0, $9 ); }
+	PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, $8, $9, $11, yylineno); }
+	| PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, 0, $8, $10, yylineno); }
+	| PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, $8, 0, $10, yylineno ); }
+	| PUBLIC Type ID '(' FormalList ')' '{' RETURN Exp ';' '}' { $$ = new CMethodDecl( $2, $3, $5, 0, 0, $9, yylineno ); }
 	;
 
 FormalList:
-	Type ID FormalRests { $$ = new CFormalList( $1, $2, $3 ); }
-	| Type ID { $$ = new CFormalList( $1, $2, 0 ); }
-	| { $$ = new CFormalList( 0, "", 0 ); }
+	Type ID FormalRests { $$ = new CFormalList( $1, $2, $3, yylineno ); }
+	| Type ID { $$ = new CFormalList( $1, $2, 0, yylineno ); }
+	| { $$ = new CFormalList( 0, "", 0, yylineno ); }
 	;
 
 FormalRests:
-	FormalRest { $$ = new CFormalRestList( $1, 0 ); }
-	| FormalRests FormalRest { $$ = new CFormalRestList( $2, $1 ); }
+	FormalRest { $$ = new CFormalRestList( $1, 0, yylineno ); }
+	| FormalRests FormalRest { $$ = new CFormalRestList( $2, $1, yylineno ); }
 	;
 
 FormalRest:
-	',' Type ID { $$ = new CFormalRest( $2, $3 ); }
+	',' Type ID { $$ = new CFormalRest( $2, $3, yylineno ); }
 	;
 
 Statements:
-	Statement { $$ = new CStatementList( $1, 0 ); }
-	| Statements Statement { $$ = new CStatementList( $2, $1 ); }
+	Statement { $$ = new CStatementList( $1, 0, yylineno ); }
+	| Statements Statement { $$ = new CStatementList( $2, $1, yylineno ); }
 	;
 
 Type:
-	INT '['']' { $$ = new CType("int []"); }
-	| INT { $$ = new CType("int"); }
-	| BOOLEAN { $$ = new CType("boolean"); }
-	| STRING { $$ = new CType("string"); }
-	| VOID { $$ = new CType("void"); }
-	| ID { $$ = new CType($1); }
+	INT '['']' { $$ = new CType("int []", yylineno); }
+	| INT { $$ = new CType("int", yylineno); }
+	| BOOLEAN { $$ = new CType("boolean", yylineno); }
+	| STRING { $$ = new CType("string", yylineno); }
+	| VOID { $$ = new CType("void", yylineno); }
+	| ID { $$ = new CType($1, yylineno); }
 	;
 
 Statement:
-	'{' Statements '}' { $$ = new CStatement( "BlockStatement", $2, 0, 0, 0, 0, "" ); }
-	| IF '(' Exp ')' Statement ELSE Statement { $$ = new CStatement( "IfStatement", 0, $5, $7, $3, 0, "" ); }
-	| WHILE '(' Exp ')' Statement { $$ = new CStatement( "WhileStatement", 0, $5, 0, $3, 0, "" ); }
-	| SYSTEMOUTPRINTLN '(' Exp ')' ';' { $$ = new CStatement( "PrintlnStatement", 0, 0, 0, $3, 0, "" ); }
-	| ID '=' Exp ';' { $$ = new CStatement( "AssignStatement", 0, 0, 0, $3, 0, $1 ); }
-	| ID '[' Exp ']' '=' Exp ';' { $$ = new CStatement( "ArrayAssignStatement", 0, 0, 0, $3, $6, $1 ); }
+	'{' Statements '}' { $$ = new CStatement( "BlockStatement", $2, 0, 0, 0, 0, "", yylineno ); }
+	| IF '(' Exp ')' Statement ELSE Statement { $$ = new CStatement( "IfStatement", 0, $5, $7, $3, 0, "", yylineno ); }
+	| WHILE '(' Exp ')' Statement { $$ = new CStatement( "WhileStatement", 0, $5, 0, $3, 0, "", yylineno ); }
+	| SYSTEMOUTPRINTLN '(' Exp ')' ';' { $$ = new CStatement( "PrintlnStatement", 0, 0, 0, $3, 0, "", yylineno ); }
+	| ID '=' Exp ';' { $$ = new CStatement( "AssignStatement", 0, 0, 0, $3, 0, $1, yylineno ); }
+	| ID '[' Exp ']' '=' Exp ';' { $$ = new CStatement( "ArrayAssignStatement", 0, 0, 0, $3, $6, $1, yylineno ); }
 	;
 
 Exp:
-	ExpLength { $$ = new CExp( $1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ); }
-	| ExpMethodCall { $$ = new CExp( 0, $1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ); }
-	| ExpNewIntArray { $$ = new CExp( 0, 0, $1, 0, 0, 0, 0, 0, 0, 0, 0 ); }
-	| ExpNewCustomType { $$ = new CExp( 0, 0, 0, $1, 0, 0, 0, 0, 0, 0, 0 ); }
-	| ExpSquareBrackets { $$ = new CExp( 0, 0, 0, 0, $1, 0, 0, 0, 0, 0, 0 ); }
-	| ExpRoundBrackets { $$ = new CExp( 0, 0, 0, 0, 0, $1, 0, 0, 0, 0, 0 ); }
-	| ExpNot { $$ = new CExp( 0, 0, 0, 0, 0, 0, $1, 0, 0, 0, 0 ); }
-	| ExpNumber { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, $1, 0, 0, 0 ); }
-	| ExpId { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, $1, 0, 0 ); }
-	| ExpSingle { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, $1, 0 ); }
-	| ExpBinOperation { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $1 ); }
+	ExpLength { $$ = new CExp( $1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, yylineno ); }
+	| ExpMethodCall { $$ = new CExp( 0, $1, 0, 0, 0, 0, 0, 0, 0, 0, 0, yylineno ); }
+	| ExpNewIntArray { $$ = new CExp( 0, 0, $1, 0, 0, 0, 0, 0, 0, 0, 0, yylineno ); }
+	| ExpNewCustomType { $$ = new CExp( 0, 0, 0, $1, 0, 0, 0, 0, 0, 0, 0, yylineno ); }
+	| ExpSquareBrackets { $$ = new CExp( 0, 0, 0, 0, $1, 0, 0, 0, 0, 0, 0, yylineno ); }
+	| ExpRoundBrackets { $$ = new CExp( 0, 0, 0, 0, 0, $1, 0, 0, 0, 0, 0, yylineno ); }
+	| ExpNot { $$ = new CExp( 0, 0, 0, 0, 0, 0, $1, 0, 0, 0, 0, yylineno ); }
+	| ExpNumber { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, $1, 0, 0, 0, yylineno ); }
+	| ExpId { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, $1, 0, 0, yylineno ); }
+	| ExpSingle { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, $1, 0, yylineno ); }
+	| ExpBinOperation { $$ = new CExp( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $1, yylineno ); }
 	;
 
 ExpLength:
-	Exp '.' LENGTH { $$ = new CExpLength( $1 ); }
+	Exp '.' LENGTH { $$ = new CExpLength( $1, yylineno ); }
 	;
 
 ExpMethodCall:
-	Exp '.' ID '(' ExpList ')' { $$ = new CExpMethodCall( $1, $3, $5 ); }
+	Exp '.' ID '(' ExpList ')' { $$ = new CExpMethodCall( $1, $3, $5, yylineno ); }
 	;
 
 ExpNewIntArray:
-	NEW INT '[' Exp ']' { $$ = new CExpNewIntArray( $4 ); }
+	NEW INT '[' Exp ']' { $$ = new CExpNewIntArray( $4, yylineno ); }
 	;
 
 ExpNewCustomType:
-	NEW ID '(' ')' { $$ = new CExpNewCustomType( new CType( $2 ) ) }
+	NEW ID '(' ')' { $$ = new CExpNewCustomType( new CType( $2, yylineno ), yylineno ) }
 	;
 
 ExpSquareBrackets:
-	Exp '[' Exp ']' { $$ = new CExpSquareBrackets( $1, $3 ); }
+	Exp '[' Exp ']' { $$ = new CExpSquareBrackets( $1, $3, yylineno ); }
 	;
 
 ExpRoundBrackets:
-	'(' Exp ')' { $$ = new CExpRoundBrackets( $2 ); }
+	'(' Exp ')' { $$ = new CExpRoundBrackets( $2, yylineno ); }
 	;
 
 ExpNot:
-	'!' Exp { $$ = new CExpNot( $2 ); }
+	'!' Exp { $$ = new CExpNot( $2, yylineno ); }
 	;
 
 ExpBinOperation:
-	Exp '<' Exp { $$ = new CExpBinOperation( "<", $1, $3 ); }
-	| Exp AND Exp { $$ = new CExpBinOperation( "&&", $1, $3 ); }
-	| Exp '-' Exp { $$ = new CExpBinOperation( "-", $1, $3 ); }
-	| Exp '+' Exp { $$ = new CExpBinOperation( "+", $1, $3 ); }
-	| Exp '/' Exp { $$ = new CExpBinOperation( "/", $1, $3 ); }
-	| Exp '*' Exp { $$ = new CExpBinOperation( "*", $1, $3 ); }
+	Exp '<' Exp { $$ = new CExpBinOperation( "<", $1, $3, yylineno ); }
+	| Exp AND Exp { $$ = new CExpBinOperation( "&&", $1, $3, yylineno ); }
+	| Exp '-' Exp { $$ = new CExpBinOperation( "-", $1, $3, yylineno ); }
+	| Exp '+' Exp { $$ = new CExpBinOperation( "+", $1, $3, yylineno ); }
+	| Exp '/' Exp { $$ = new CExpBinOperation( "/", $1, $3, yylineno ); }
+	| Exp '*' Exp { $$ = new CExpBinOperation( "*", $1, $3, yylineno ); }
 	;
 
 ExpNumber:
-	NUMBER { $$ = new CExpNumber( $1 ); }
+	NUMBER { $$ = new CExpNumber( $1, yylineno ); }
 	;
 
 ExpId:	
-	ID { $$ = new CExpId( $1 ); }
+	ID { $$ = new CExpId( $1, yylineno ); }
 	;
 
 ExpSingle:
-	TRUE { $$ = new CExpSingle( "True" ); }
-	| FALSE { $$ = new CExpSingle( "False" ); }
-	| THIS { $$ = new CExpSingle( "this" ); }
+	TRUE { $$ = new CExpSingle( "True", yylineno ); }
+	| FALSE { $$ = new CExpSingle( "False", yylineno ); }
+	| THIS { $$ = new CExpSingle( "this", yylineno ); }
 	;
 
 ExpList:
-	Exp ExpRests { $$ = new CExpList( $1, $2 ); }
-	| Exp { $$ = new CExpList( $1, 0 ); }
-	| { $$ = new CExpList( 0, 0 ); }
+	Exp ExpRests { $$ = new CExpList( $1, $2, yylineno ); }
+	| Exp { $$ = new CExpList( $1, 0, yylineno ); }
+	| { $$ = new CExpList( 0, 0, yylineno ); }
 	;
 
 ExpRests:
-	ExpRest { $$ = new CExpRestList( $1, 0 ); }
-	| ExpRests ExpRest { $$ = new CExpRestList( $2, $1 ); }
+	ExpRest { $$ = new CExpRestList( $1, 0, yylineno ); }
+	| ExpRests ExpRest { $$ = new CExpRestList( $2, $1, yylineno ); }
 	;
 
 ExpRest:
-	',' Exp { $$ = new CExpRest($2); }
+	',' Exp { $$ = new CExpRest($2, yylineno); }
 	;
 
 %%

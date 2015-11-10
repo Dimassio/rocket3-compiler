@@ -6,7 +6,7 @@
 
 class CExpSquareBrackets : public IExpSquareBrackets {
 public:
-	CExpSquareBrackets( IExp* _firstExp, IExp* _secondExp );
+	CExpSquareBrackets( IExp* _firstExp, IExp* _secondExp, int yylineno );
 
 	void Accept(IVisitor* visitor) const;
 
@@ -14,7 +14,9 @@ public:
 
 	const IExp* SecondExp() const;
 
+	int yylineno;
 private:
 	IExp* firstExp;
 	IExp* secondExp;
+	
 };

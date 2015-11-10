@@ -1,7 +1,7 @@
 #include "FormalRestList.h"
 
-CFormalRestList::CFormalRestList( IFormalRest* _formalRest, IFormalRestList* _formalRestList ) :
-	formalRest(_formalRest), formalRestList(_formalRestList)
+CFormalRestList::CFormalRestList( IFormalRest* _formalRest, IFormalRestList* _formalRestList, int _yylineno ) :
+	formalRest(_formalRest), formalRestList(_formalRestList), yylineno(_yylineno )
 {
 }
 

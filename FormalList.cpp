@@ -1,9 +1,10 @@
 #include "FormalList.h"
 
-CFormalList::CFormalList( IType* _type, const std::string& _id, IFormalRestList* _formalRestList ) :
+CFormalList::CFormalList( IType* _type, const std::string& _id, IFormalRestList* _formalRestList, int _yylineno ) :
 	type( _type ),
 	id( _id ),
-	formalRestList( _formalRestList )
+	formalRestList( _formalRestList ),
+	yylineno(_yylineno )
 {
 }
 

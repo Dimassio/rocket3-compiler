@@ -5,7 +5,7 @@
 
 class CExpList : public IExpList {
 public:
-	CExpList( IExp* _exp, IExpRestList* _expRestList );
+	CExpList( IExp* _exp, IExpRestList* _expRestList, int _yylineno );
 
 	void Accept( IVisitor* visitor ) const;
 
@@ -13,7 +13,9 @@ public:
 
 	const IExpRestList* ExpRestList() const;
 
+	int yylineno;
 private:
 	IExp* exp;
 	IExpRestList* expRestList;
+	
 };

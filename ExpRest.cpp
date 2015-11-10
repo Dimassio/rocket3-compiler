@@ -1,7 +1,7 @@
 #include "ExpRest.h"
 
-CExpRest::CExpRest(IExp* _exp) :
-	exp(_exp)
+CExpRest::CExpRest(IExp* _exp, int _yylineno ) :
+	exp(_exp), yylineno(_yylineno )
 {
 }
 

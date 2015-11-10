@@ -1,13 +1,14 @@
 #include "MethodDecl.h"
 
 CMethodDecl::CMethodDecl( IType* _type, const std::string &_id, IFormalList* _formalList,
-	IVarDeclList* _varDeclList, IStatementList* _statementList, IExp* _exp ) :
+	IVarDeclList* _varDeclList, IStatementList* _statementList, IExp* _exp, int _yylineno ) :
 	type( _type ), 
 	id( _id ),
 	formalList( _formalList ),
 	varDeclList( _varDeclList ),
 	statementList( _statementList ),
-	exp( _exp )
+	exp( _exp ),
+	yylineno(_yylineno )
 {
 }
 

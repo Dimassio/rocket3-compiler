@@ -1,7 +1,7 @@
 #include "FormalRest.h"
 
-CFormalRest::CFormalRest( IType* _type, const std::string& _id ) :
-	type(_type), id(_id)
+CFormalRest::CFormalRest( IType* _type, const std::string& _id, int _yylineno ) :
+	type(_type), id(_id), yylineno(_yylineno )
 {
 }
 

@@ -1,9 +1,10 @@
 #include "MainClass.h"
 
-CMainClass::CMainClass( const std::string &_classId, const std::string &_argId, IStatement* _statement ) :
+CMainClass::CMainClass( const std::string &_classId, const std::string &_argId, IStatement* _statement, int _yylineno ) :
 	classId(_classId),
 	argId(_argId),
-	statement( _statement )
+	statement( _statement ),
+	yylineno(_yylineno )
 {
 }
 

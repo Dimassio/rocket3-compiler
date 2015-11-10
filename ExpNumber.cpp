@@ -1,7 +1,7 @@
 #include "ExpNumber.h"
 
-CExpNumber::CExpNumber(int _number)
-	: number(_number)
+CExpNumber::CExpNumber(int _number, int _yylineno )
+	: number(_number), yylineno(_yylineno )
 {
 }
 

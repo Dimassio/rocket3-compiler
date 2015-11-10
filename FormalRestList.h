@@ -5,7 +5,7 @@
 
 class CFormalRestList : public IFormalRestList {
 public:
-	CFormalRestList( IFormalRest* _formalRest, IFormalRestList* _formalRestList );
+	CFormalRestList( IFormalRest* _formalRest, IFormalRestList* _formalRestList, int yylineno );
 
 	void Accept( IVisitor* visitor ) const;
 
@@ -13,7 +13,9 @@ public:
 
 	const IFormalRestList* FormalRestList() const;
 
+	int yylineno;
 private:
 	IFormalRest* formalRest;
 	IFormalRestList* formalRestList;
+	
 };

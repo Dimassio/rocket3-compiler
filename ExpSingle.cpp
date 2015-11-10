@@ -1,7 +1,7 @@
 #include "ExpSingle.h"
 
-CExpSingle::CExpSingle(const std::string &_expName)
-	: expName(_expName)
+CExpSingle::CExpSingle(const std::string &_expName, int _yylineno )
+	: expName(_expName), yylineno(_yylineno )
 {
 }
 

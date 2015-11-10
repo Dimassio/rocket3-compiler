@@ -1,9 +1,10 @@
 #include "ExpBinOperation.h"
 
-CExpBinOperation::CExpBinOperation( const std::string &_expName, IExp* _firstExp, IExp* _secondExp )
+CExpBinOperation::CExpBinOperation( const std::string &_expName, IExp* _firstExp, IExp* _secondExp, int _yylineno )
 	: expName(_expName),
 	firstExp(_firstExp),
-	secondExp(_secondExp)
+	secondExp(_secondExp),
+	yylineno(_yylineno )
 {
 }
 

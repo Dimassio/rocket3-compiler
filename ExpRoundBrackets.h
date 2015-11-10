@@ -6,12 +6,14 @@
 
 class CExpRoundBrackets : public IExpRoundBrackets {
 public:
-	CExpRoundBrackets( IExp* _exp );
+	CExpRoundBrackets( IExp* _exp, int yylineno );
 
 	void Accept(IVisitor* visitor) const;
 
 	const IExp* Exp() const;
 
+	int yylineno;
 private:
 	IExp* exp;
+	
 };

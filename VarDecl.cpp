@@ -1,8 +1,9 @@
 #include "VarDecl.h"
 
-CVarDecl::CVarDecl( IType* _type, const std::string &_id ) :
+CVarDecl::CVarDecl( IType* _type, const std::string &_id, int _yylineno ) :
 	type( _type ),
-	id( _id )
+	id( _id ),
+	yylineno(_yylineno )
 {
 }
 

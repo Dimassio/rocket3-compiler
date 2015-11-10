@@ -25,10 +25,10 @@ int main( int argc, char *argv[] )
 	CSymbTableBuilder symbTableBuilder;
 	symbTableBuilder.visit( root );
 
-	CPrettyPrinterVisitor prettyVisitor;
-	prettyVisitor.visit( root );
+	// CPrettyPrinterVisitor prettyVisitor;
+	// prettyVisitor.visit( root );
 
-	CTypeChecker typeChecker;
+	CTypeChecker typeChecker( symbTableBuilder.GetSymbolTable() );
 	typeChecker.visit( root );
 
 	fclose( yyin );

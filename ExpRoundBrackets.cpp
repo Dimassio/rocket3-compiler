@@ -1,7 +1,7 @@
 #include "ExpRoundBrackets.h"
 
-CExpRoundBrackets::CExpRoundBrackets( IExp* _exp )
-	: exp(_exp)
+CExpRoundBrackets::CExpRoundBrackets( IExp* _exp, int _yylineno )
+	: exp(_exp), yylineno(_yylineno )
 {
 }
 
