@@ -145,7 +145,7 @@ void CSymbTableBuilder::visit(const CExpList* expList) {
 }
 
 void CSymbTableBuilder::visit(const CFormalList* formalList) {
-	if (!formalList->Type() && formalList->Id() == "" && !formalList->FormalRestList()) {
+	if (!formalList->Type() && formalList->Id().empty()) {
 		return;
 	}
 
@@ -253,6 +253,15 @@ void CSymbTableBuilder::visit(const CFormalRestList* formalRestList) {
 
 void CSymbTableBuilder::visit(const CFormalRest* formalRest) {
 	formalRest->Type()->Accept(this);
+	CType* type = lastTypeValue;
+
+	if( !currMethod ) {
+		//no method
+	} else {
+		if( !currMethod->AddArgument( formalRest->Id(), type ) ) {
+			//duplicated definition
+		}
+	}
 }
 
 void CSymbTableBuilder::visit(const CExpRestList* expRestList) {

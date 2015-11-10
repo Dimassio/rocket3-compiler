@@ -231,19 +231,19 @@ void CTypeChecker::visit( const CExpSingle* expSingle )
 void CTypeChecker::visit( const CExpLength* expLength )
 {
 	expLength->Exp()->Accept( this );
-	if( lastTypeValue != "string" ) {
+	if( lastTypeValue != "string" && lastTypeValue != "int []" ) {
 		std::cout << expLength->yylineno << "Must be string" << std::endl;
 		errorOccured = true;
 	}
 	lastTypeValue = "int";
 }
 
-void CTypeChecker::visit( const CExpList* expList ) // Аргументы метода
+void CTypeChecker::visit( const CExpList* expList ) // Аргументы метода todo
 {
 	if( expList->Exp() ) {
 		expList->Exp()->Accept( this );
 		if( lastTypeValue != currMethodCall->GetArgument( numOfArgument )->Type()->GetTypeName() ) {
-			std::cout << expList->yylineno << "Type mismatch: " << numOfArgument << " argument of " << currMethodCall->MethodSymbol()->String() << std::endl;
+			std::cout << expList->yylineno << "Type mismatch: " << numOfArgument + 1 << " argument of " << currMethodCall->MethodSymbol()->String() << std::endl;
 			errorOccured = true;
 		}
 		++numOfArgument;
@@ -256,7 +256,7 @@ void CTypeChecker::visit( const CExpList* expList ) // Аргументы метода
 void CTypeChecker::visit( const CFormalList* formalList )
 {
 	std::string id = formalList->Id();
-	if( !formalList->Type() && id == "" && !formalList->FormalRestList() ) {
+	if( !formalList->Type() && id.empty() ) {
 		return;
 	}
 	formalList->Type()->Accept( this );

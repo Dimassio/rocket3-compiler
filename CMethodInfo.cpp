@@ -29,7 +29,7 @@ const CType * CMethodInfo::Type() const
 
 const CVarInfo* CMethodInfo::GetArgument( int number ) const
 {
-	if( number > arguments.size() ) {
+	if( number >= arguments.size() ) {
 		// very bad
 		return nullptr;
 	} else {
@@ -40,10 +40,12 @@ const CVarInfo* CMethodInfo::GetArgument( int number ) const
 bool CMethodInfo::AddArgument( const std::string &argumentId, CType* type )
 {
 	const Symbols::CSymbol* argumentSymbol = symbolStorage.Get( argumentId );
+	
 	for( size_t i = 0; i < arguments.size(); ++i ) {
 		if( arguments[i].first == argumentSymbol ) {
 			return false;
 		}
+	
 	}
 	arguments.push_back( std::pair<const Symbols::CSymbol*, CVarInfo>( argumentSymbol, CVarInfo( argumentSymbol, type ) ) );
 	return true;
@@ -70,6 +72,7 @@ const CVarInfo * CMethodInfo::GetArgument( const std::string & argumentId ) cons
 			return &arguments[i].second;
 		}
 	}
+
 	return nullptr;
 }
 

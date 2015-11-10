@@ -182,7 +182,7 @@ void CPrettyPrinterVisitor::visit( const CExpList* expList )
 void CPrettyPrinterVisitor::visit( const CFormalList* formalList )
 {
 	std::string id = formalList->Id();
-	if( !formalList->Type() && id == "" && !formalList->FormalRestList() ) {
+	if( !formalList->Type() && id.empty()) {
 		return;
 	}
 	formalList->Type()->Accept( this );
