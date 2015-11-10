@@ -31,6 +31,8 @@ void CSymbTableBuilder::visit(const CMainClass* mainClass) {
 				mainClass->Statement()->Accept(this);
 			}
 		}
+
+		currClass = nullptr;
 	}
 }
 
@@ -46,6 +48,8 @@ void CSymbTableBuilder::visit(const CClassDecl* classDecl) {
 		if (classDecl->MethodDeclList() != 0) {
 			classDecl->MethodDeclList()->Accept(this);
 		}
+
+		currClass = nullptr;
 	}
 }
 
@@ -183,6 +187,8 @@ void CSymbTableBuilder::visit(const CMethodDecl* methodDecl) {
 			(methodDecl->StatementList())->Accept(this);
 		}
 		(methodDecl->Exp())->Accept(this);
+
+		currMethod = nullptr;
 	}
 }
 
@@ -228,7 +234,7 @@ void CSymbTableBuilder::visit(const CVarDecl* varDecl) {
 	varDecl->Type()->Accept(this);
 	CType* type = lastTypeValue;
 	const std::string id = varDecl->Id();
-	if (currMethod == NULL) {
+	if (currMethod == nullptr) {
 		if (!currClass->AddVariable(id, type)) {
 			std::cout << "table builder: duplicated definition in class in " << varDecl->yylineno << std::endl;
 		}

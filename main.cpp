@@ -33,9 +33,5 @@ int main( int argc, char *argv[] )
 
 	fclose( yyin );
 
-	// 1. class CExceptionTable для хранения ошибок
-	// 2. вывод ошибок в tableBuilder
-	// 3. проверка аргументов метода
-	// !!bin_tree!!, TreeVisitor, linkedList, 	
 	return 0;
 }
