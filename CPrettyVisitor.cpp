@@ -4,7 +4,7 @@
 #include "CPrettyVisitor.h"
 
 // ќн выполн€ет вывод того, что находитс€ в узле дерева.
-CPrettyPrinterVisitor::CPrettyPrinterVisitor() :
+CPrettyPrinterVisitor::CPrettyPrinterVisitor():
 	identation( 0 )
 {
 }
@@ -47,7 +47,7 @@ void CPrettyPrinterVisitor::visit( const CClassDecl* classDecl )
 {
 	printIdentation();
 	std::cout << "class " << classDecl->ClassId();
-	if( classDecl->ExtendedClassId() != "" ) {
+	if( !classDecl->ExtendedClassId().empty() ) {
 		std::cout << " extends " << classDecl->ExtendedClassId();
 	}
 	std::cout << " { " << std::endl;
@@ -66,9 +66,9 @@ void CPrettyPrinterVisitor::visit( const CClassDecl* classDecl )
 void CPrettyPrinterVisitor::visit( const CClassDeclList* classDeclList )
 {
 	if( classDeclList->ClassDeclList() ) {
-		classDeclList->ClassDeclList()->Accept(this);
+		classDeclList->ClassDeclList()->Accept( this );
 	}
-	classDeclList->ClassDecl()->Accept(this);
+	classDeclList->ClassDecl()->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CExp* exp )
@@ -182,7 +182,7 @@ void CPrettyPrinterVisitor::visit( const CExpList* expList )
 void CPrettyPrinterVisitor::visit( const CFormalList* formalList )
 {
 	std::string id = formalList->Id();
-	if( !formalList->Type() && id.empty()) {
+	if( !formalList->Type() && id.empty() ) {
 		return;
 	}
 	formalList->Type()->Accept( this );
@@ -219,9 +219,9 @@ void CPrettyPrinterVisitor::visit( const CMethodDecl* methodDecl )
 void CPrettyPrinterVisitor::visit( const CMethodDeclList* methodDeclList )
 {
 	if( methodDeclList->MethodDeclList() ) {
-		methodDeclList->MethodDeclList()->Accept(this);
+		methodDeclList->MethodDeclList()->Accept( this );
 	}
-	methodDeclList->MethodDecl()->Accept(this);
+	methodDeclList->MethodDecl()->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CStatement* statement )
@@ -303,10 +303,10 @@ void CPrettyPrinterVisitor::visit( const CVarDecl* varDecl )
 
 void CPrettyPrinterVisitor::visit( const CVarDeclList* varDeclList )
 {
-	if (varDeclList->VarDeclList()) {
-		varDeclList->VarDeclList()->Accept(this);
+	if( varDeclList->VarDeclList() ) {
+		varDeclList->VarDeclList()->Accept( this );
 	}
-	varDeclList->VarDecl()->Accept(this);
+	varDeclList->VarDecl()->Accept( this );
 }
 
 void CPrettyPrinterVisitor::visit( const CFormalRestList* formalRestList )

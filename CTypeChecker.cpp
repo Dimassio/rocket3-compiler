@@ -102,7 +102,7 @@ bool CTypeChecker::isPODName( std::string name )
 	return name == "int" || name == "void" || name == "boolean" || name == "string" || name == "int []";
 }
 
-void CTypeChecker::visit( const CExpMethodCall* expMethodCall ) 
+void CTypeChecker::visit( const CExpMethodCall* expMethodCall )
 {
 	expMethodCall->Exp()->Accept( this ); // exp - for object
 	std::string expName = lastTypeValue;
@@ -243,14 +243,14 @@ void CTypeChecker::visit( const CExpList* expList ) // Аргументы метода
 {
 	if( expList->Exp() ) {
 		expList->Exp()->Accept( this );
-		if( currMethodCall.top()->GetArgument( numOfArgument.top() ) == nullptr ) { // сюда зашло, если хотя бы 1 аргумент передали
+		if( currMethodCall.top()->GetArgument( numOfArgument.top() ) == nullptr ) { // сюда зашло, если хотя бы 1 аргумент передали в метод
 			std::cout << expList->yylineno << "Type mismatch: " << numOfArgument.top() + 1 << " argument of " << currMethodCall.top()->MethodSymbol()->String() << std::endl;
 			errorOccured = true;
 		} else
-		if( lastTypeValue != currMethodCall.top()->GetArgument( numOfArgument.top() )->Type()->GetTypeName() ) {
-			std::cout << expList->yylineno << "Type mismatch: " << numOfArgument.top() + 1 << " argument of " << currMethodCall.top()->MethodSymbol()->String() << std::endl;
-			errorOccured = true;
-		}
+			if( lastTypeValue != currMethodCall.top()->GetArgument( numOfArgument.top() )->Type()->GetTypeName() ) {
+				std::cout << expList->yylineno << "Type mismatch: " << numOfArgument.top() + 1 << " argument of " << currMethodCall.top()->MethodSymbol()->String() << std::endl;
+				errorOccured = true;
+			}
 		int num = numOfArgument.top() + 1;
 		numOfArgument.pop();
 		numOfArgument.push( num );
