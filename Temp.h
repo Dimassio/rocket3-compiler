@@ -23,11 +23,17 @@ namespace Temp
 		std::string name;
 	};
 
+	class CLabelList {
+
+	};
+
 
 	// Временная переменная
 	class CTemp {
 	public:
 		CTemp();
+
+		CTemp( const CTemp& temp );
 
 		explicit CTemp( const Symbols::CSymbol* symbol );
 

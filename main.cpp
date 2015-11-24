@@ -22,14 +22,19 @@ int main( int argc, char *argv[] )
 		std::cout << "SUCCESS" << std::endl;
 	}
 
+	// CPrettyPrinterVisitor prettyVisitor;
+	// prettyVisitor.visit( root );
+	
 	CSymbTableBuilder symbTableBuilder; 
 	symbTableBuilder.visit( root );
 
-	// CPrettyPrinterVisitor prettyVisitor;
-	// prettyVisitor.visit( root );
-
 	CTypeChecker typeChecker( symbTableBuilder.GetSymbolTable() );
 	typeChecker.visit( root );
+
+	// todo: CIRTreeBuilder: IVisitor{};
+	// CIRTreeBuilder irTreeBuilder;
+	// irTreeBuilder.visit(root); - этот визитор - последнее задание. обходит и строит IRTree c вершинами IStm, IExp. 
+	// Сами классы реализовывать не надо (чисто для обхода)
 
 	fclose( yyin );
 
