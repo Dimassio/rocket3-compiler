@@ -5,7 +5,7 @@ using namespace IRTree;
 
 class CIRMove: public IStm {
 public:
-	CIRMove( IExp* _dst, IExp* _src ):
+	CIRMove( const IExp* _dst, const IExp* _src ):
 		dst( _dst ), src( _src )
 	{
 	}
@@ -13,13 +13,13 @@ public:
 	~CIRMove();
 
 private:
-	IExp* dst;
-	IExp* src;
+	const IExp* dst;
+	const IExp* src;
 };
 
 class CIRExp: public IStm {
 public:
-	CIRExp( IExp* _exp ):
+	CIRExp( const IExp* _exp ):
 		exp( _exp )
 	{
 	}
@@ -27,12 +27,12 @@ public:
 	~CIRExp();
 
 private:
-	IExp* exp;
+	const IExp* exp;
 };
 
 class CIRJump: public IStm {
 public:
-	CIRJump( IExp* _exp, Temp::CLabelList* _targets ):
+	CIRJump( const IExp* _exp, const Temp::CLabelList* _targets ):
 		targets( _targets ), exp( _exp )
 	{
 	}
@@ -40,13 +40,13 @@ public:
 	~CIRJump();
 
 private:
-	IExp* exp;
-	Temp::CLabelList* targets;
+	const IExp* exp;
+	const Temp::CLabelList* targets;
 };
 
 class CIRCJump: public IStm {
 public:
-	CIRCJump( int op, IExp* _left, IExp* _right, Temp::CLabel* _iftrue, Temp::CLabel* _iffalse ):
+	CIRCJump( const int op, const IExp* _left, const IExp* _right, const Temp::CLabel* _iftrue, const Temp::CLabel* _iffalse ):
 		relop( op ), left( _left ), right( _right ), iftrue( _iftrue ), iffalse( _iffalse )
 	{
 	}
@@ -54,17 +54,17 @@ public:
 	~CIRCJump();
 
 private:
-	int relop;
-	IExp* left;
-	IExp* right;
-	Temp::CLabel* iftrue;
-	Temp::CLabel* iffalse;
+	const int relop;
+	const IExp* left;
+	const IExp* right;
+	const Temp::CLabel* iftrue;
+	const Temp::CLabel* iffalse;
 };
 
 
 class CIRSeq: public IStm {
 public:
-	CIRSeq( IStm* _left, IStm* _right ):
+	CIRSeq( const IStm* _left, const IStm* _right ):
 		left( _left ), right( _right )
 	{
 	}
@@ -72,14 +72,14 @@ public:
 	~CIRSeq();
 
 private:
-	IStm* left;
-	IStm* right;
+	const IStm* left;
+	const IStm* right;
 };
 
 
 class CIRLabel: public IStm {
 public:
-	CIRLabel( Temp::CLabel* _label ):
+	CIRLabel( const Temp::CLabel* _label ):
 		label( _label )
 	{
 	}
@@ -87,5 +87,5 @@ public:
 	~CIRLabel();
 
 private:
-	Temp::CLabel* label;
+	const Temp::CLabel* label;
 };

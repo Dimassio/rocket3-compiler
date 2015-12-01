@@ -14,17 +14,32 @@ namespace Frame
 		virtual const IRTree::IExp* GetExp( const Temp::CTemp* framePtr ) const = 0;
 	};
 
-	class CInFrame: public IAccess {
+	class CInFrame: public IAccess { // In frame: at fp + k
 	public:
-		CInFrame( int k );
+		CInFrame( int _offset ):
+			offset( _offset )
+		{
+		}
+
+		const IRTree::IExp* CInFrame::GetExp( const Temp::CTemp* framePtr ) const;
+	private:
+		int offset;
 	};
 
-	class CInReg: public IAccess {
-		CInReg( Temp::CTemp temp);
+	class CInReg: public IAccess { // Var in reg
+	public:
+		CInReg( Temp::CTemp _temp ):
+			temp( _temp )
+		{
+		}
+
+		const IRTree::IExp* GetExp( const Temp::CTemp* framePtr ) const;
+
+	private:
+		Temp::CTemp temp;
 	};
 
-
-	class CFrame {
+	class CFrame {  // TODO:!!!!!!!
 	public:
 		CFrame( const Symbols::CSymbol* name, int formalCount );
 
@@ -37,10 +52,12 @@ namespace Frame
 
 		// Получение аргументна под номером index
 		const IAccess* Formal( size_t index ) const;
-		const Temp::CTemp* FP() const;
+		const Temp::CTemp* getFP() const;
 
 	private:
-		std::vector<CInFrame*> formals; // аргументы функции
+		std::map<const Symbols::CSymbol*, IAccess*> formals; // аргументы функции
+		std::map<const Symbols::CSymbol*, IAccess*> locals; // локальные переменные
+		std::map<const Symbols::CSymbol*, IAccess*> temproraries; // временные переменны
 		static const int wordSize = 4;
 		Temp::CTemp* FP;
 		int offSet; // Относительно FramePointer/ offSet += WordSize

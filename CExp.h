@@ -6,7 +6,7 @@ using namespace IRTree;
 
 class CIRCall: public  IExp {
 public:
-	CIRCall( IExp* _exp, CIRExpList* _expList ):
+	CIRCall( const  IExp* _exp, const CIRExpList* _expList ):
 		exp( _exp ), expList( _expList )
 	{
 	}
@@ -14,13 +14,13 @@ public:
 	~CIRCall();
 
 private:
-	IExp* exp;
-	CIRExpList* expList;
+	const IExp* exp;
+	const CIRExpList* expList;
 };
 
 class CIRConst: public  IExp {
 public:
-	CIRConst( int _value ):
+	CIRConst( const int _value ):
 		value( _value )
 	{
 	}
@@ -28,13 +28,13 @@ public:
 	~CIRConst();
 
 private:
-	int value;
+	const int value;
 };
 
 
 class CIRBinOp: public  IExp {
 public:
-	CIRBinOp( int binop, IExp* _left, IExp* _right ):
+	CIRBinOp( const int binop, const IExp* _left, const IExp* _right ):
 		opId( binop ), left( _left ), right( _right )
 	{
 	}
@@ -42,14 +42,14 @@ public:
 	~CIRBinOp();
 
 private:
-	int opId;
-	IExp* left;
-	IExp* right;
+	const int opId; // 0 +, 1-, 2*, 3 /, 4 &&
+	const IExp* left;
+	const IExp* right;
 };
 
 class CIRESeq: public  IExp {
 public:
-	CIRESeq( IStm* _stm, IExp* _exp ):
+	CIRESeq( const IStm* _stm, const IExp* _exp ):
 		exp( _exp ), stm( _stm )
 	{
 	}
@@ -57,28 +57,27 @@ public:
 	~CIRESeq();
 
 private:
-	IExp* exp;
-	IStm* stm;
+	const IExp* exp;
+	const IStm* stm;
 };
 
 
 class CIRMem: public  IExp {
 public:
-	CIRMem( IExp* _func, CIRExpList* _args ):
-		func( _func ), args( _args )
+	CIRMem( const IExp* _exp ):
+		exp( _exp )
 	{
 	}
 
 	~CIRMem();
 
 private:
-	IExp* func;
-	CIRExpList* args;
+	const IExp* exp;
 };
 
 class CIRName: public  IExp {
 public:
-	CIRName( Temp::CLabel _label ):
+	CIRName( const Temp::CLabel* _label ):
 		label( _label )
 	{
 	}
@@ -86,12 +85,12 @@ public:
 	~CIRName();
 
 private:
-	Temp::CLabel label;
+	const Temp::CLabel* label;
 };
 
 class CIRTemp: public  IExp {
 public:
-	CIRTemp( Temp::CTemp _temp ):
+	CIRTemp( const Temp::CTemp* _temp ):
 		temp( _temp )
 	{
 	}
@@ -99,5 +98,5 @@ public:
 	~CIRTemp();
 
 private:
-	Temp::CTemp temp;
+	const Temp::CTemp* temp;
 };
