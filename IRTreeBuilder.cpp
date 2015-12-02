@@ -1,10 +1,14 @@
 #include "IRTreeBuilder.h"
+#include "CStm.h"
+#include "CExp.h"
 #include "Common.h"
 #include "Symbols.h"
+#include "StaticVariables.h"
 
 using namespace Frame;
 
-CIRTreeBuilder::CIRTreeBuilder()
+CIRTreeBuilder::CIRTreeBuilder(const CTable* _symbTable) :
+	symbTable(_symbTable)
 {
 }
 
@@ -15,12 +19,13 @@ void CIRTreeBuilder::visit( const CProgram* program )
 	if( !( program->ClassDeclList() ) ) {
 		return;
 	}
+
 	( program->ClassDeclList() )->Accept( this );
 }
 
 void CIRTreeBuilder::visit( const CMainClass* mainClass )
 {
-	CFrame* newFrame = new CFrame( new Symbols::CSymbol( "Main" ), 0 );
+	CFrame* newFrame = new CFrame( "main", 0 );
 	if( mainClass->Statement() ) {
 		mainClass->Statement()->Accept( this );
 
@@ -92,7 +97,13 @@ void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType )
 void CIRTreeBuilder::visit( const CExpSquareBrackets* expSquareBrackets )
 {
 	expSquareBrackets->FirstExp()->Accept( this );
+	IRTree::IIRExp* firstExp = lastNodeExp;
+
 	expSquareBrackets->SecondExp()->Accept( this );
+	IRTree::IIRExp* rightExp = lastNodeExp;
+
+	IIRExp* offset = new CIRBinOp(MUL, rightExp, new CIRConst(CFrame::wordSize));
+	lastNodeExp = new CIRMem(new CIRBinOp(PLUS, firstExp, offset));
 }
 
 void CIRTreeBuilder::visit( const CExpRoundBrackets* expRoundBrackets )
@@ -103,10 +114,14 @@ void CIRTreeBuilder::visit( const CExpRoundBrackets* expRoundBrackets )
 void CIRTreeBuilder::visit( const CExpNot* expNot )
 {
 	expNot->Exp()->Accept( this );
+	IRTree::IIRExp* exp = lastNodeExp;
+
+	lastNodeExp = new CIRMem(new CIRBinOp(NOT, new CIRConst(0), exp));
 }
 
 void CIRTreeBuilder::visit( const CExpNumber* expNumber )
 {
+	lastNodeExp = new CIRConst(expNumber->Number());
 }
 
 void CIRTreeBuilder::visit( const CExpId* expId )
@@ -120,7 +135,26 @@ void CIRTreeBuilder::visit( const CExpSingle* expSingle )
 void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
 {
 	expBinOperation->FirstExp()->Accept( this );
-	expBinOperation->SecondExp()->Accept( this );
+	IRTree::IIRExp* firstExp = lastNodeExp;
+
+	expBinOperation->SecondExp()->Accept(this);
+	IRTree::IIRExp* rightExp = lastNodeExp;
+
+	if (expBinOperation->ExpName() == "+") {
+		lastNodeExp = new CIRMem(new CIRBinOp(PLUS, firstExp, rightExp));
+	}
+	else if (expBinOperation->ExpName() == "-") {
+		lastNodeExp = new CIRMem(new CIRBinOp(MINUS, firstExp, rightExp));
+	}
+	else if (expBinOperation->ExpName() == "*") {
+		lastNodeExp = new CIRMem(new CIRBinOp(MUL, firstExp, rightExp));
+	}
+	else if (expBinOperation->ExpName() == "<") {
+		lastNodeExp = new CIRMem(new CIRBinOp(LE, firstExp, rightExp));
+	}
+	else { // expBinOperation->ExpName() == "&&"
+		lastNodeExp = new CIRMem(new CIRBinOp(AND, firstExp, rightExp));
+	}
 }
 
 void CIRTreeBuilder::visit( const CExpLength* expLength )
@@ -151,8 +185,7 @@ void CIRTreeBuilder::visit( const CFormalList* formalList )
 }
 
 void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
-{
-	
+{	
 	( methodDecl->Type() )->Accept( this );
 
 	if( methodDecl->FormalList() ) {
@@ -190,10 +223,24 @@ void CIRTreeBuilder::visit( const CStatement* statement )
 	} else if( statement->GetStatementType() == "PrintlnStatement" ) {
 		statement->FirstExpression()->Accept( this );
 	} else if( statement->GetStatementType() == "AssignStatement" ) {
-		statement->FirstExpression()->Accept( this );
+		const IIRExp* firstExp = frames[frames.size()]->GetVar(statement->Id())->GetExp(frames[frames.size()]->GetFP());
+
+		statement->FirstExpression()->Accept(this);
+		const IIRExp* secondExp = lastNodeExp;
+
+		lastNodeStm = new CIRMove(firstExp, secondExp);
 	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
-		statement->FirstExpression()->Accept( this );
-		statement->SecondExpression()->Accept( this );
+		statement->FirstExpression()->Accept(this);
+		const IIRExp* firstExp = lastNodeExp;
+
+		statement->SecondExpression()->Accept(this);
+		const IIRExp* secondExp = lastNodeExp;
+
+		IIRExp* offset = new CIRBinOp(MUL, firstExp, new CIRConst(CFrame::wordSize));
+		IIRExp* array = new CIRMem(frames[frames.size()]->GetVar(statement->Id())->GetExp(frames[frames.size()]->GetFP()));
+		firstExp = new CIRMem(new CIRBinOp(PLUS, array, offset));
+
+		lastNodeStm = new CIRMove(firstExp, secondExp);
 	}
 }
 

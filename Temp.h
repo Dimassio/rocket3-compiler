@@ -11,22 +11,18 @@ namespace Temp
 
 		explicit CLabel( const Symbols::CSymbol* symbol );
 
-		const std::string& Name() const
-		{
-			return name;
-		}
+		const std::string& Name() const;
 
 		~CLabel();
 
 	private:
-		static int nexUniqueId;
+		static int nextUniqueId;
 		std::string name;
 	};
 
 	class CLabelList {
 
 	};
-
 
 	// Временная переменная
 	class CTemp {
@@ -39,13 +35,10 @@ namespace Temp
 
 		~CTemp();
 
-		const std::string& Name() const
-		{
-			return name;
-		}
+		const std::string& Name() const;
 
 	private:
-		static int nexUniqueId;
+		static int nextUniqueId;
 		std::string name;
 	};
 }

@@ -247,7 +247,6 @@ ExpBinOperation:
 	| Exp AND Exp { $$ = new CExpBinOperation( "&&", $1, $3, yylineno ); }
 	| Exp '-' Exp { $$ = new CExpBinOperation( "-", $1, $3, yylineno ); }
 	| Exp '+' Exp { $$ = new CExpBinOperation( "+", $1, $3, yylineno ); }
-	| Exp '/' Exp { $$ = new CExpBinOperation( "/", $1, $3, yylineno ); }
 	| Exp '*' Exp { $$ = new CExpBinOperation( "*", $1, $3, yylineno ); }
 	;
 

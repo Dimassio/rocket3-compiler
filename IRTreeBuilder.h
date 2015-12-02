@@ -2,10 +2,11 @@
 #include "Visitor.h"
 #include "Frame.h"
 #include "IRTree.h"
+#include "CTable.h"
 
 class CIRTreeBuilder: IVisitor {
 public:
-	CIRTreeBuilder();
+	CIRTreeBuilder(const CTable* _symbTable);
 
 	void visit( const CProgram* program );
 
@@ -66,7 +67,10 @@ public:
 	void visit( const CExpRest* expRest );
 
 private:
+	const CTable* symbTable;
+
 	std::vector<Frame::CFrame*> frames; 
-	IRTree::IExp* lastNodeExp;
-	IRTree::IStm* lastNodeStm;
+
+	IRTree::IIRExp* lastNodeExp;
+	IRTree::IIRStm* lastNodeStm;
 };

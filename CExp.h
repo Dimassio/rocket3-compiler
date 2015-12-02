@@ -1,29 +1,24 @@
 #pragma once
 #include "Temp.h"
 #include "IRTree.h"
+#include "EOperation.h"
 
 using namespace IRTree;
 
-class CIRCall: public  IExp {
+class CIRCall: public IIRExp {
 public:
-	CIRCall( const  IExp* _exp, const CIRExpList* _expList ):
-		exp( _exp ), expList( _expList )
-	{
-	}
+	CIRCall(const  IIRExp* _exp, const CIRExpList* _expList);
 
 	~CIRCall();
 
 private:
-	const IExp* exp;
+	const IIRExp* exp;
 	const CIRExpList* expList;
 };
 
-class CIRConst: public  IExp {
+class CIRConst: public IIRExp {
 public:
-	CIRConst( const int _value ):
-		value( _value )
-	{
-	}
+	CIRConst(const int _value);
 
 	~CIRConst();
 
@@ -31,56 +26,42 @@ private:
 	const int value;
 };
 
-
-class CIRBinOp: public  IExp {
+class CIRBinOp: public IIRExp {
 public:
-	CIRBinOp( const int binop, const IExp* _left, const IExp* _right ):
-		opId( binop ), left( _left ), right( _right )
-	{
-	}
+	CIRBinOp(const EOperation binop, const IIRExp* _left, const IIRExp* _right);
 
 	~CIRBinOp();
 
 private:
 	const int opId; // 0 +, 1-, 2*, 3 /, 4 &&
-	const IExp* left;
-	const IExp* right;
+	const IIRExp* left;
+	const IIRExp* right;
 };
 
-class CIRESeq: public  IExp {
+class CIRESeq: public IIRExp {
 public:
-	CIRESeq( const IStm* _stm, const IExp* _exp ):
-		exp( _exp ), stm( _stm )
-	{
-	}
+	CIRESeq(const IIRStm* _stm, const IIRExp* _exp);
 
 	~CIRESeq();
 
 private:
-	const IExp* exp;
-	const IStm* stm;
+	const IIRExp* exp;
+	const IIRStm* stm;
 };
 
-
-class CIRMem: public  IExp {
+class CIRMem: public IIRExp {
 public:
-	CIRMem( const IExp* _exp ):
-		exp( _exp )
-	{
-	}
+	CIRMem(const IIRExp* _exp);
 
 	~CIRMem();
 
 private:
-	const IExp* exp;
+	const IIRExp* exp;
 };
 
-class CIRName: public  IExp {
+class CIRName: public IIRExp {
 public:
-	CIRName( const Temp::CLabel* _label ):
-		label( _label )
-	{
-	}
+	CIRName(const Temp::CLabel* _label);
 
 	~CIRName();
 
@@ -88,12 +69,9 @@ private:
 	const Temp::CLabel* label;
 };
 
-class CIRTemp: public  IExp {
+class CIRTemp: public IIRExp {
 public:
-	CIRTemp( const Temp::CTemp* _temp ):
-		temp( _temp )
-	{
-	}
+	CIRTemp(const Temp::CTemp* _temp);
 
 	~CIRTemp();
 

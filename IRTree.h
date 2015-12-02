@@ -1,8 +1,9 @@
 #pragma once
+#include <list>
 
 namespace IRTree
 {
-	class IExp {
+	class IIRExp {
 	public:
 		/*CONST( int value )
 		  NAME( Label label )
@@ -11,10 +12,10 @@ namespace IRTree
 		  MEM( Exp exp )
 		  CALL( Exp func, ExpList args )
 		  ESEQ( Stm stm, Exp exp )*/
-		virtual ~IExp();
+		virtual ~IIRExp() = 0;
 	};
 
-	class IStm {
+	class IIRStm {
 	public:
 		/*MOVE(Exp dst, Exp src):
 			EXP(Exp exp)
@@ -22,15 +23,26 @@ namespace IRTree
 			CJUMP(int relop, Exp left, Exp right, Label iftrue, Label iffalse)
 			SEQ(Stm left, Stm right)
 			LABEL(Label label)*/
-		virtual ~IStm();
+		virtual ~IIRStm() = 0;
 	};
 
 	class CIRExpList {
+	public:
+		CIRExpList(IIRExp* head, CIRExpList* tail);
+		~CIRExpList();
 
+		std::list<IIRExp> GetExpList();
+
+	private:
+		std::list<IIRExp> expList;
 	};
 
-
 	class CIRStmList {
+	public:
+		CIRStmList(IIRStm* head, CIRStmList* tail);
+		std::list<IIRStm> GetStmList();
 
+	private:
+		std::list<IIRStm> stmList;
 	};
 }

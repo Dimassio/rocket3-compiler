@@ -1,88 +1,69 @@
 #include "IRTree.h"
 #include "Temp.h"
+#include "EOperation.h"
 
 using namespace IRTree;
 
-class CIRMove: public IStm {
+class CIRMove: public IIRStm {
 public:
-	CIRMove( const IExp* _dst, const IExp* _src ):
-		dst( _dst ), src( _src )
-	{
-	}
+	CIRMove(const IIRExp* _dst, const IIRExp* _src);
 
 	~CIRMove();
 
 private:
-	const IExp* dst;
-	const IExp* src;
+	const IIRExp* dst;
+	const IIRExp* src;
 };
 
-class CIRExp: public IStm {
+class CIRExp: public IIRStm {
 public:
-	CIRExp( const IExp* _exp ):
-		exp( _exp )
-	{
-	}
+	CIRExp(const IIRExp* _exp);
 
 	~CIRExp();
 
 private:
-	const IExp* exp;
+	const IIRExp* exp;
 };
 
-class CIRJump: public IStm {
+class CIRJump: public IIRStm {
 public:
-	CIRJump( const IExp* _exp, const Temp::CLabelList* _targets ):
-		targets( _targets ), exp( _exp )
-	{
-	}
+	CIRJump(const IIRExp* _exp, const Temp::CLabelList* _targets);
 
 	~CIRJump();
 
 private:
-	const IExp* exp;
+	const IIRExp* exp;
 	const Temp::CLabelList* targets;
 };
 
-class CIRCJump: public IStm {
+class CIRCJump: public IIRStm {
 public:
-	CIRCJump( const int op, const IExp* _left, const IExp* _right, const Temp::CLabel* _iftrue, const Temp::CLabel* _iffalse ):
-		relop( op ), left( _left ), right( _right ), iftrue( _iftrue ), iffalse( _iffalse )
-	{
-	}
+	CIRCJump(const EOperation op, const IIRExp* _left, const IIRExp* _right, const Temp::CLabel* _iftrue, const Temp::CLabel* _iffalse);
 
 	~CIRCJump();
 
 private:
 	const int relop;
-	const IExp* left;
-	const IExp* right;
+	const IIRExp* left;
+	const IIRExp* right;
 	const Temp::CLabel* iftrue;
 	const Temp::CLabel* iffalse;
 };
 
-
-class CIRSeq: public IStm {
+class CIRSeq: public IIRStm {
 public:
-	CIRSeq( const IStm* _left, const IStm* _right ):
-		left( _left ), right( _right )
-	{
-	}
+	CIRSeq(const IIRStm* _left, const IIRStm* _right);
 
 	~CIRSeq();
 
 private:
-	const IStm* left;
-	const IStm* right;
+	const IIRStm* left;
+	const IIRStm* right;
 };
 
-
-class CIRLabel: public IStm {
+class CIRLabel: public IIRStm {
 public:
-	CIRLabel( const Temp::CLabel* _label ):
-		label( _label )
-	{
-	}
+	CIRLabel(const Temp::CLabel* _label);
 
 	~CIRLabel();
 

@@ -8,59 +8,53 @@ namespace Frame
 {
 	class IAccess {
 	public:
-		virtual ~IAccess()
-		{
-		}
-		virtual const IRTree::IExp* GetExp( const Temp::CTemp* framePtr ) const = 0;
+		virtual ~IAccess();
+		virtual const IRTree::IIRExp* GetExp( const Temp::CTemp* framePtr ) const = 0;
 	};
 
 	class CInFrame: public IAccess { // In frame: at fp + k
 	public:
-		CInFrame( int _offset ):
-			offset( _offset )
-		{
-		}
+		CInFrame(int _offset);
 
-		const IRTree::IExp* CInFrame::GetExp( const Temp::CTemp* framePtr ) const;
+		const IRTree::IIRExp* CInFrame::GetExp( const Temp::CTemp* framePtr ) const;
 	private:
 		int offset;
 	};
 
 	class CInReg: public IAccess { // Var in reg
 	public:
-		CInReg( Temp::CTemp _temp ):
-			temp( _temp )
-		{
-		}
+		CInReg(Temp::CTemp _temp);
 
-		const IRTree::IExp* GetExp( const Temp::CTemp* framePtr ) const;
+		const IRTree::IIRExp* GetExp( const Temp::CTemp* framePtr ) const;
 
 	private:
 		Temp::CTemp temp;
 	};
 
-	class CFrame {  // TODO:!!!!!!!
+	class CFrame {
 	public:
-		CFrame( const Symbols::CSymbol* name, int formalCount );
+		CFrame( const std::string& name, int formalCount );
 
 		~CFrame();
 
-		int FormalCount() const
-		{
-			return formals.size();
-		}
+		int FormalCount() const;
 
 		// Получение аргументна под номером index
 		const IAccess* Formal( size_t index ) const;
-		const Temp::CTemp* getFP() const;
 
+		const Temp::CTemp* GetFP() const;
+
+		const IAccess* GetVar( const std::string& id) const;
+
+		// Размер ячейки
+		static const int wordSize = 4;
 	private:
 		std::map<const Symbols::CSymbol*, IAccess*> formals; // аргументы функции
 		std::map<const Symbols::CSymbol*, IAccess*> locals; // локальные переменные
-		std::map<const Symbols::CSymbol*, IAccess*> temproraries; // временные переменны
-		static const int wordSize = 4;
-		Temp::CTemp* FP;
-		int offSet; // Относительно FramePointer/ offSet += WordSize
-	};
+		std::map<const Symbols::CSymbol*, IAccess*> temproraries; // временные переменные
 
+		Temp::CTemp* FP; // frame pointer
+
+		int offSet; // Относительно FP
+	};
 }
