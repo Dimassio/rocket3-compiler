@@ -23,6 +23,7 @@ public:
 	bool AddLocalVariable(const std::string &variableId, CType* type);
 	CVarInfo* GetLocalVariable(const std::string &variableId);
 	const CVarInfo* GetLocalVariable( const std::string &variableId ) const;
+	const int GetFormalsSize() const;
 
 private:
 	const Symbols::CSymbol* methodSymbol;

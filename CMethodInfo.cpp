@@ -112,3 +112,8 @@ const CVarInfo* CMethodInfo::GetLocalVariable( const std::string &variableId ) c
 	}
 	return nullptr;
 }
+
+const int CMethodInfo::GetFormalsSize() const
+{
+	return arguments.size();
+}

@@ -18,6 +18,7 @@ public:
 	const std::string& Id() const;
 
 	int yylineno;
+
 private:
 	IExp* exp;
 	IExpList* expList;

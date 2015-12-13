@@ -1,3 +1,8 @@
+Terminals unused in grammar
+
+   '/'
+
+
 Grammar
 
     0 $accept: Program $end
@@ -88,25 +93,24 @@ Grammar
    62                | Exp AND Exp
    63                | Exp '-' Exp
    64                | Exp '+' Exp
-   65                | Exp '/' Exp
-   66                | Exp '*' Exp
+   65                | Exp '*' Exp
 
-   67 ExpNumber: NUMBER
+   66 ExpNumber: NUMBER
 
-   68 ExpId: ID
+   67 ExpId: ID
 
-   69 ExpSingle: TRUE
-   70          | FALSE
-   71          | THIS
+   68 ExpSingle: TRUE
+   69          | FALSE
+   70          | THIS
 
-   72 ExpList: Exp ExpRests
-   73        | Exp
-   74        | /* empty */
+   71 ExpList: Exp ExpRests
+   72        | Exp
+   73        | /* empty */
 
-   75 ExpRests: ExpRest
-   76         | ExpRests ExpRest
+   74 ExpRests: ExpRest
+   75         | ExpRests ExpRest
 
-   77 ExpRest: ',' Exp
+   76 ExpRest: ',' Exp
 
 
 Terminals, with rules where they appear
@@ -115,12 +119,12 @@ $end (0) 0
 '!' (33) 60
 '(' (40) 5 19 20 21 22 38 39 40 55 57 59
 ')' (41) 5 19 20 21 22 38 39 40 55 57 59
-'*' (42) 66
+'*' (42) 65
 '+' (43) 64
-',' (44) 28 77
+',' (44) 28 76
 '-' (45) 63
 '.' (46) 54 55
-'/' (47) 65
+'/' (47)
 ';' (59) 18 19 20 21 22 40 41 42
 '<' (60) 61
 '=' (61) 41 42
@@ -130,9 +134,9 @@ $end (0) 0
 '}' (125) 5 6 7 8 9 10 11 12 13 19 20 21 22 37
 error (256)
 AND (258) 62
-NUMBER (259) 67
+NUMBER (259) 66
 ID (260) 5 6 7 8 9 10 11 12 13 18 19 20 21 22 23 24 28 36 41 42 55
-    57 68
+    57 67
 CLASS (261) 5 6 7 8 9 10 11 12 13
 EXTENDS (262) 10 11 12 13
 PUBLIC (263) 5 19 20 21 22
@@ -144,9 +148,9 @@ INT (268) 31 32 56
 WHILE (269) 39
 SYSTEMOUTPRINTLN (270) 40
 LENGTH (271) 54
-TRUE (272) 69
-FALSE (273) 70
-THIS (274) 71
+TRUE (272) 68
+FALSE (273) 69
+THIS (274) 70
 NEW (275) 56 57
 VOID (276) 5 35
 STATIC (277) 5
@@ -188,7 +192,7 @@ Statement (55)
     on left: 37 38 39 40 41 42, on right: 5 29 30 38 39
 Exp (56)
     on left: 43 44 45 46 47 48 49 50 51 52 53, on right: 19 20 21 22
-    38 39 40 41 42 54 55 56 58 59 60 61 62 63 64 65 66 72 73 77
+    38 39 40 41 42 54 55 56 58 59 60 61 62 63 64 65 71 72 76
 ExpLength (57)
     on left: 54, on right: 43
 ExpMethodCall (58)
@@ -204,19 +208,19 @@ ExpRoundBrackets (62)
 ExpNot (63)
     on left: 60, on right: 49
 ExpBinOperation (64)
-    on left: 61 62 63 64 65 66, on right: 53
+    on left: 61 62 63 64 65, on right: 53
 ExpNumber (65)
-    on left: 67, on right: 50
+    on left: 66, on right: 50
 ExpId (66)
-    on left: 68, on right: 51
+    on left: 67, on right: 51
 ExpSingle (67)
-    on left: 69 70 71, on right: 52
+    on left: 68 69 70, on right: 52
 ExpList (68)
-    on left: 72 73 74, on right: 55
+    on left: 71 72 73, on right: 55
 ExpRests (69)
-    on left: 75 76, on right: 72 76
+    on left: 74 75, on right: 71 75
 ExpRest (70)
-    on left: 77, on right: 75 76
+    on left: 76, on right: 74 75
 
 
 State 0
@@ -1103,37 +1107,37 @@ State 80
 
 State 81
 
-   67 ExpNumber: NUMBER .
+   66 ExpNumber: NUMBER .
 
-    $default  reduce using rule 67 (ExpNumber)
+    $default  reduce using rule 66 (ExpNumber)
 
 
 State 82
 
-   68 ExpId: ID .
+   67 ExpId: ID .
 
-    $default  reduce using rule 68 (ExpId)
+    $default  reduce using rule 67 (ExpId)
 
 
 State 83
 
-   69 ExpSingle: TRUE .
+   68 ExpSingle: TRUE .
 
-    $default  reduce using rule 69 (ExpSingle)
+    $default  reduce using rule 68 (ExpSingle)
 
 
 State 84
 
-   70 ExpSingle: FALSE .
+   69 ExpSingle: FALSE .
 
-    $default  reduce using rule 70 (ExpSingle)
+    $default  reduce using rule 69 (ExpSingle)
 
 
 State 85
 
-   71 ExpSingle: THIS .
+   70 ExpSingle: THIS .
 
-    $default  reduce using rule 71 (ExpSingle)
+    $default  reduce using rule 70 (ExpSingle)
 
 
 State 86
@@ -1155,18 +1159,16 @@ State 87
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ';'  shift, and go to state 124
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ';'  shift, and go to state 123
 
 
 State 88
@@ -1259,7 +1261,7 @@ State 99
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 125
+    Exp                go to state 124
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1286,7 +1288,7 @@ State 100
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 126
+    Exp                go to state 125
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1313,7 +1315,7 @@ State 101
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 127
+    Exp                go to state 126
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1346,7 +1348,7 @@ State 103
     WHILE             shift, and go to state 68
     SYSTEMOUTPRINTLN  shift, and go to state 69
     '{'               shift, and go to state 70
-    '}'               shift, and go to state 128
+    '}'               shift, and go to state 127
 
     Statement  go to state 107
 
@@ -1364,7 +1366,7 @@ State 104
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 129
+    Exp                go to state 128
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1384,7 +1386,7 @@ State 105
    30 Statements: Statements . Statement
 
     ID                shift, and go to state 102
-    RETURN            shift, and go to state 130
+    RETURN            shift, and go to state 129
     IF                shift, and go to state 67
     WHILE             shift, and go to state 68
     SYSTEMOUTPRINTLN  shift, and go to state 69
@@ -1406,7 +1408,7 @@ State 106
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 131
+    Exp                go to state 130
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1444,7 +1446,7 @@ State 109
     SYSTEMOUTPRINTLN  shift, and go to state 69
     '{'               shift, and go to state 70
 
-    Statement  go to state 132
+    Statement  go to state 131
 
 
 State 110
@@ -1457,18 +1459,16 @@ State 110
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ';'  shift, and go to state 133
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ';'  shift, and go to state 132
 
 
 State 111
@@ -1481,18 +1481,16 @@ State 111
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ']'  shift, and go to state 134
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ']'  shift, and go to state 133
 
 
 State 112
@@ -1505,11 +1503,10 @@ State 112
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
 
     $default  reduce using rule 60 (ExpNot)
 
@@ -1524,32 +1521,30 @@ State 113
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ')'  shift, and go to state 135
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ')'  shift, and go to state 134
 
 
 State 114
 
    57 ExpNewCustomType: NEW ID . '(' ')'
 
-    '('  shift, and go to state 136
+    '('  shift, and go to state 135
 
 
 State 115
 
    56 ExpNewIntArray: NEW INT . '[' Exp ']'
 
-    '['  shift, and go to state 137
+    '['  shift, and go to state 136
 
 
 State 116
@@ -1565,7 +1560,7 @@ State 116
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 138
+    Exp                go to state 137
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1592,7 +1587,7 @@ State 117
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 139
+    Exp                go to state 138
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1619,7 +1614,7 @@ State 118
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 140
+    Exp                go to state 139
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1635,7 +1630,34 @@ State 118
 
 State 119
 
-   66 ExpBinOperation: Exp '*' . Exp
+   65 ExpBinOperation: Exp '*' . Exp
+
+    '!'     shift, and go to state 79
+    '('     shift, and go to state 80
+    NUMBER  shift, and go to state 81
+    ID      shift, and go to state 82
+    TRUE    shift, and go to state 83
+    FALSE   shift, and go to state 84
+    THIS    shift, and go to state 85
+    NEW     shift, and go to state 86
+
+    Exp                go to state 140
+    ExpLength          go to state 88
+    ExpMethodCall      go to state 89
+    ExpNewIntArray     go to state 90
+    ExpNewCustomType   go to state 91
+    ExpSquareBrackets  go to state 92
+    ExpRoundBrackets   go to state 93
+    ExpNot             go to state 94
+    ExpBinOperation    go to state 95
+    ExpNumber          go to state 96
+    ExpId              go to state 97
+    ExpSingle          go to state 98
+
+
+State 120
+
+   62 ExpBinOperation: Exp AND . Exp
 
     '!'     shift, and go to state 79
     '('     shift, and go to state 80
@@ -1660,70 +1682,16 @@ State 119
     ExpSingle          go to state 98
 
 
-State 120
-
-   65 ExpBinOperation: Exp '/' . Exp
-
-    '!'     shift, and go to state 79
-    '('     shift, and go to state 80
-    NUMBER  shift, and go to state 81
-    ID      shift, and go to state 82
-    TRUE    shift, and go to state 83
-    FALSE   shift, and go to state 84
-    THIS    shift, and go to state 85
-    NEW     shift, and go to state 86
-
-    Exp                go to state 142
-    ExpLength          go to state 88
-    ExpMethodCall      go to state 89
-    ExpNewIntArray     go to state 90
-    ExpNewCustomType   go to state 91
-    ExpSquareBrackets  go to state 92
-    ExpRoundBrackets   go to state 93
-    ExpNot             go to state 94
-    ExpBinOperation    go to state 95
-    ExpNumber          go to state 96
-    ExpId              go to state 97
-    ExpSingle          go to state 98
-
-
 State 121
-
-   62 ExpBinOperation: Exp AND . Exp
-
-    '!'     shift, and go to state 79
-    '('     shift, and go to state 80
-    NUMBER  shift, and go to state 81
-    ID      shift, and go to state 82
-    TRUE    shift, and go to state 83
-    FALSE   shift, and go to state 84
-    THIS    shift, and go to state 85
-    NEW     shift, and go to state 86
-
-    Exp                go to state 143
-    ExpLength          go to state 88
-    ExpMethodCall      go to state 89
-    ExpNewIntArray     go to state 90
-    ExpNewCustomType   go to state 91
-    ExpSquareBrackets  go to state 92
-    ExpRoundBrackets   go to state 93
-    ExpNot             go to state 94
-    ExpBinOperation    go to state 95
-    ExpNumber          go to state 96
-    ExpId              go to state 97
-    ExpSingle          go to state 98
-
-
-State 122
 
    54 ExpLength: Exp '.' . LENGTH
    55 ExpMethodCall: Exp '.' . ID '(' ExpList ')'
 
-    ID      shift, and go to state 144
-    LENGTH  shift, and go to state 145
+    ID      shift, and go to state 142
+    LENGTH  shift, and go to state 143
 
 
-State 123
+State 122
 
    58 ExpSquareBrackets: Exp '[' . Exp ']'
 
@@ -1736,7 +1704,7 @@ State 123
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 146
+    Exp                go to state 144
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1750,14 +1718,14 @@ State 123
     ExpSingle          go to state 98
 
 
-State 124
+State 123
 
    22 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' RETURN Exp ';' . '}'
 
-    '}'  shift, and go to state 147
+    '}'  shift, and go to state 145
 
 
-State 125
+State 124
 
    38 Statement: IF '(' Exp . ')' Statement ELSE Statement
    54 ExpLength: Exp . '.' LENGTH
@@ -1767,21 +1735,19 @@ State 125
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ')'  shift, and go to state 148
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ')'  shift, and go to state 146
 
 
-State 126
+State 125
 
    39 Statement: WHILE '(' Exp . ')' Statement
    54 ExpLength: Exp . '.' LENGTH
@@ -1791,21 +1757,19 @@ State 126
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ')'  shift, and go to state 149
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ')'  shift, and go to state 147
 
 
-State 127
+State 126
 
    40 Statement: SYSTEMOUTPRINTLN '(' Exp . ')' ';'
    54 ExpLength: Exp . '.' LENGTH
@@ -1815,28 +1779,26 @@ State 127
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ')'  shift, and go to state 150
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ')'  shift, and go to state 148
 
 
-State 128
+State 127
 
    37 Statement: '{' Statements '}' .
 
     $default  reduce using rule 37 (Statement)
 
 
-State 129
+State 128
 
    21 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp . ';' '}'
    54 ExpLength: Exp . '.' LENGTH
@@ -1846,21 +1808,19 @@ State 129
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ';'  shift, and go to state 151
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ';'  shift, and go to state 149
 
 
-State 130
+State 129
 
    19 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN . Exp ';' '}'
 
@@ -1873,7 +1833,7 @@ State 130
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 152
+    Exp                go to state 150
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1887,7 +1847,7 @@ State 130
     ExpSingle          go to state 98
 
 
-State 131
+State 130
 
    20 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp . ';' '}'
    54 ExpLength: Exp . '.' LENGTH
@@ -1897,56 +1857,54 @@ State 131
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ';'  shift, and go to state 153
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ';'  shift, and go to state 151
 
 
-State 132
+State 131
 
     5 MainClass: CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' Statement . '}' '}'
 
-    '}'  shift, and go to state 154
+    '}'  shift, and go to state 152
 
 
-State 133
+State 132
 
    41 Statement: ID '=' Exp ';' .
 
     $default  reduce using rule 41 (Statement)
 
 
-State 134
+State 133
 
    42 Statement: ID '[' Exp ']' . '=' Exp ';'
 
-    '='  shift, and go to state 155
+    '='  shift, and go to state 153
 
 
-State 135
+State 134
 
    59 ExpRoundBrackets: '(' Exp ')' .
 
     $default  reduce using rule 59 (ExpRoundBrackets)
 
 
-State 136
+State 135
 
    57 ExpNewCustomType: NEW ID '(' . ')'
 
-    ')'  shift, and go to state 156
+    ')'  shift, and go to state 154
 
 
-State 137
+State 136
 
    56 ExpNewIntArray: NEW INT '[' . Exp ']'
 
@@ -1959,7 +1917,7 @@ State 137
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 157
+    Exp                go to state 155
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -1973,7 +1931,7 @@ State 137
     ExpSingle          go to state 98
 
 
-State 138
+State 137
 
    54 ExpLength: Exp . '.' LENGTH
    55 ExpMethodCall: Exp . '.' ID '(' ExpList ')'
@@ -1983,19 +1941,37 @@ State 138
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
 
     $default  reduce using rule 61 (ExpBinOperation)
+
+
+State 138
+
+   54 ExpLength: Exp . '.' LENGTH
+   55 ExpMethodCall: Exp . '.' ID '(' ExpList ')'
+   58 ExpSquareBrackets: Exp . '[' Exp ']'
+   61 ExpBinOperation: Exp . '<' Exp
+   62                | Exp . AND Exp
+   63                | Exp . '-' Exp
+   64                | Exp . '+' Exp
+   64                | Exp '+' Exp .
+   65                | Exp . '*' Exp
+
+    '*'  shift, and go to state 119
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+
+    $default  reduce using rule 64 (ExpBinOperation)
 
 
 State 139
@@ -2006,18 +1982,16 @@ State 139
    61 ExpBinOperation: Exp . '<' Exp
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
+   63                | Exp '-' Exp .
    64                | Exp . '+' Exp
-   64                | Exp '+' Exp .
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
 
-    $default  reduce using rule 64 (ExpBinOperation)
+    $default  reduce using rule 63 (ExpBinOperation)
 
 
 State 140
@@ -2028,18 +2002,14 @@ State 140
    61 ExpBinOperation: Exp . '<' Exp
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
-   63                | Exp '-' Exp .
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
+   65                | Exp '*' Exp .
 
-    '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
 
-    $default  reduce using rule 63 (ExpBinOperation)
+    $default  reduce using rule 65 (ExpBinOperation)
 
 
 State 141
@@ -2049,71 +2019,32 @@ State 141
    58 ExpSquareBrackets: Exp . '[' Exp ']'
    61 ExpBinOperation: Exp . '<' Exp
    62                | Exp . AND Exp
-   63                | Exp . '-' Exp
-   64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
-   66                | Exp '*' Exp .
-
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-
-    $default  reduce using rule 66 (ExpBinOperation)
-
-
-State 142
-
-   54 ExpLength: Exp . '.' LENGTH
-   55 ExpMethodCall: Exp . '.' ID '(' ExpList ')'
-   58 ExpSquareBrackets: Exp . '[' Exp ']'
-   61 ExpBinOperation: Exp . '<' Exp
-   62                | Exp . AND Exp
-   63                | Exp . '-' Exp
-   64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   65                | Exp '/' Exp .
-   66                | Exp . '*' Exp
-
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-
-    $default  reduce using rule 65 (ExpBinOperation)
-
-
-State 143
-
-   54 ExpLength: Exp . '.' LENGTH
-   55 ExpMethodCall: Exp . '.' ID '(' ExpList ')'
-   58 ExpSquareBrackets: Exp . '[' Exp ']'
-   61 ExpBinOperation: Exp . '<' Exp
-   62                | Exp . AND Exp
    62                | Exp AND Exp .
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
 
     $default  reduce using rule 62 (ExpBinOperation)
 
 
-State 144
+State 142
 
    55 ExpMethodCall: Exp '.' ID . '(' ExpList ')'
 
-    '('  shift, and go to state 158
+    '('  shift, and go to state 156
 
 
-State 145
+State 143
 
    54 ExpLength: Exp '.' LENGTH .
 
     $default  reduce using rule 54 (ExpLength)
 
 
-State 146
+State 144
 
    54 ExpLength: Exp . '.' LENGTH
    55 ExpMethodCall: Exp . '.' ID '(' ExpList ')'
@@ -2123,28 +2054,26 @@ State 146
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ']'  shift, and go to state 159
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ']'  shift, and go to state 157
 
 
-State 147
+State 145
 
    22 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' RETURN Exp ';' '}' .
 
     $default  reduce using rule 22 (MethodDecl)
 
 
-State 148
+State 146
 
    38 Statement: IF '(' Exp ')' . Statement ELSE Statement
 
@@ -2154,10 +2083,10 @@ State 148
     SYSTEMOUTPRINTLN  shift, and go to state 69
     '{'               shift, and go to state 70
 
-    Statement  go to state 160
+    Statement  go to state 158
 
 
-State 149
+State 147
 
    39 Statement: WHILE '(' Exp ')' . Statement
 
@@ -2167,24 +2096,24 @@ State 149
     SYSTEMOUTPRINTLN  shift, and go to state 69
     '{'               shift, and go to state 70
 
-    Statement  go to state 161
+    Statement  go to state 159
 
 
-State 150
+State 148
 
    40 Statement: SYSTEMOUTPRINTLN '(' Exp ')' . ';'
 
-    ';'  shift, and go to state 162
+    ';'  shift, and go to state 160
 
 
-State 151
+State 149
 
    21 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' . '}'
 
-    '}'  shift, and go to state 163
+    '}'  shift, and go to state 161
 
 
-State 152
+State 150
 
    19 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp . ';' '}'
    54 ExpLength: Exp . '.' LENGTH
@@ -2194,35 +2123,33 @@ State 152
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ';'  shift, and go to state 164
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ';'  shift, and go to state 162
 
 
-State 153
+State 151
 
    20 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp ';' . '}'
 
-    '}'  shift, and go to state 165
+    '}'  shift, and go to state 163
 
 
-State 154
+State 152
 
     5 MainClass: CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' Statement '}' . '}'
 
-    '}'  shift, and go to state 166
+    '}'  shift, and go to state 164
 
 
-State 155
+State 153
 
    42 Statement: ID '[' Exp ']' '=' . Exp ';'
 
@@ -2234,6 +2161,64 @@ State 155
     FALSE   shift, and go to state 84
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
+
+    Exp                go to state 165
+    ExpLength          go to state 88
+    ExpMethodCall      go to state 89
+    ExpNewIntArray     go to state 90
+    ExpNewCustomType   go to state 91
+    ExpSquareBrackets  go to state 92
+    ExpRoundBrackets   go to state 93
+    ExpNot             go to state 94
+    ExpBinOperation    go to state 95
+    ExpNumber          go to state 96
+    ExpId              go to state 97
+    ExpSingle          go to state 98
+
+
+State 154
+
+   57 ExpNewCustomType: NEW ID '(' ')' .
+
+    $default  reduce using rule 57 (ExpNewCustomType)
+
+
+State 155
+
+   54 ExpLength: Exp . '.' LENGTH
+   55 ExpMethodCall: Exp . '.' ID '(' ExpList ')'
+   56 ExpNewIntArray: NEW INT '[' Exp . ']'
+   58 ExpSquareBrackets: Exp . '[' Exp ']'
+   61 ExpBinOperation: Exp . '<' Exp
+   62                | Exp . AND Exp
+   63                | Exp . '-' Exp
+   64                | Exp . '+' Exp
+   65                | Exp . '*' Exp
+
+    '<'  shift, and go to state 116
+    '+'  shift, and go to state 117
+    '-'  shift, and go to state 118
+    '*'  shift, and go to state 119
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ']'  shift, and go to state 166
+
+
+State 156
+
+   55 ExpMethodCall: Exp '.' ID '(' . ExpList ')'
+
+    '!'     shift, and go to state 79
+    '('     shift, and go to state 80
+    NUMBER  shift, and go to state 81
+    ID      shift, and go to state 82
+    TRUE    shift, and go to state 83
+    FALSE   shift, and go to state 84
+    THIS    shift, and go to state 85
+    NEW     shift, and go to state 86
+
+    $default  reduce using rule 73 (ExpList)
 
     Exp                go to state 167
     ExpLength          go to state 88
@@ -2247,126 +2232,66 @@ State 155
     ExpNumber          go to state 96
     ExpId              go to state 97
     ExpSingle          go to state 98
-
-
-State 156
-
-   57 ExpNewCustomType: NEW ID '(' ')' .
-
-    $default  reduce using rule 57 (ExpNewCustomType)
+    ExpList            go to state 168
 
 
 State 157
-
-   54 ExpLength: Exp . '.' LENGTH
-   55 ExpMethodCall: Exp . '.' ID '(' ExpList ')'
-   56 ExpNewIntArray: NEW INT '[' Exp . ']'
-   58 ExpSquareBrackets: Exp . '[' Exp ']'
-   61 ExpBinOperation: Exp . '<' Exp
-   62                | Exp . AND Exp
-   63                | Exp . '-' Exp
-   64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
-
-    '<'  shift, and go to state 116
-    '+'  shift, and go to state 117
-    '-'  shift, and go to state 118
-    '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ']'  shift, and go to state 168
-
-
-State 158
-
-   55 ExpMethodCall: Exp '.' ID '(' . ExpList ')'
-
-    '!'     shift, and go to state 79
-    '('     shift, and go to state 80
-    NUMBER  shift, and go to state 81
-    ID      shift, and go to state 82
-    TRUE    shift, and go to state 83
-    FALSE   shift, and go to state 84
-    THIS    shift, and go to state 85
-    NEW     shift, and go to state 86
-
-    $default  reduce using rule 74 (ExpList)
-
-    Exp                go to state 169
-    ExpLength          go to state 88
-    ExpMethodCall      go to state 89
-    ExpNewIntArray     go to state 90
-    ExpNewCustomType   go to state 91
-    ExpSquareBrackets  go to state 92
-    ExpRoundBrackets   go to state 93
-    ExpNot             go to state 94
-    ExpBinOperation    go to state 95
-    ExpNumber          go to state 96
-    ExpId              go to state 97
-    ExpSingle          go to state 98
-    ExpList            go to state 170
-
-
-State 159
 
    58 ExpSquareBrackets: Exp '[' Exp ']' .
 
     $default  reduce using rule 58 (ExpSquareBrackets)
 
 
-State 160
+State 158
 
    38 Statement: IF '(' Exp ')' Statement . ELSE Statement
 
-    ELSE  shift, and go to state 171
+    ELSE  shift, and go to state 169
 
 
-State 161
+State 159
 
    39 Statement: WHILE '(' Exp ')' Statement .
 
     $default  reduce using rule 39 (Statement)
 
 
-State 162
+State 160
 
    40 Statement: SYSTEMOUTPRINTLN '(' Exp ')' ';' .
 
     $default  reduce using rule 40 (Statement)
 
 
-State 163
+State 161
 
    21 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' VarDecls RETURN Exp ';' '}' .
 
     $default  reduce using rule 21 (MethodDecl)
 
 
-State 164
+State 162
 
    19 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' . '}'
 
-    '}'  shift, and go to state 172
+    '}'  shift, and go to state 170
 
 
-State 165
+State 163
 
    20 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' Statements RETURN Exp ';' '}' .
 
     $default  reduce using rule 20 (MethodDecl)
 
 
-State 166
+State 164
 
     5 MainClass: CLASS ID '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' ID ')' '{' Statement '}' '}' .
 
     $default  reduce using rule 5 (MainClass)
 
 
-State 167
+State 165
 
    42 Statement: ID '[' Exp ']' '=' Exp . ';'
    54 ExpLength: Exp . '.' LENGTH
@@ -2376,28 +2301,26 @@ State 167
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
+   65                | Exp . '*' Exp
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ';'  shift, and go to state 173
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ';'  shift, and go to state 171
 
 
-State 168
+State 166
 
    56 ExpNewIntArray: NEW INT '[' Exp ']' .
 
     $default  reduce using rule 56 (ExpNewIntArray)
 
 
-State 169
+State 167
 
    54 ExpLength: Exp . '.' LENGTH
    55 ExpMethodCall: Exp . '.' ID '(' ExpList ')'
@@ -2406,35 +2329,33 @@ State 169
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
-   72 ExpList: Exp . ExpRests
-   73        | Exp .
+   65                | Exp . '*' Exp
+   71 ExpList: Exp . ExpRests
+   72        | Exp .
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
-    ','  shift, and go to state 174
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
+    ','  shift, and go to state 172
 
-    $default  reduce using rule 73 (ExpList)
+    $default  reduce using rule 72 (ExpList)
 
-    ExpRests  go to state 175
-    ExpRest   go to state 176
+    ExpRests  go to state 173
+    ExpRest   go to state 174
 
 
-State 170
+State 168
 
    55 ExpMethodCall: Exp '.' ID '(' ExpList . ')'
 
-    ')'  shift, and go to state 177
+    ')'  shift, and go to state 175
 
 
-State 171
+State 169
 
    38 Statement: IF '(' Exp ')' Statement ELSE . Statement
 
@@ -2444,26 +2365,26 @@ State 171
     SYSTEMOUTPRINTLN  shift, and go to state 69
     '{'               shift, and go to state 70
 
-    Statement  go to state 178
+    Statement  go to state 176
 
 
-State 172
+State 170
 
    19 MethodDecl: PUBLIC Type ID '(' FormalList ')' '{' VarDecls Statements RETURN Exp ';' '}' .
 
     $default  reduce using rule 19 (MethodDecl)
 
 
-State 173
+State 171
 
    42 Statement: ID '[' Exp ']' '=' Exp ';' .
 
     $default  reduce using rule 42 (Statement)
 
 
-State 174
+State 172
 
-   77 ExpRest: ',' . Exp
+   76 ExpRest: ',' . Exp
 
     '!'     shift, and go to state 79
     '('     shift, and go to state 80
@@ -2474,7 +2395,7 @@ State 174
     THIS    shift, and go to state 85
     NEW     shift, and go to state 86
 
-    Exp                go to state 179
+    Exp                go to state 177
     ExpLength          go to state 88
     ExpMethodCall      go to state 89
     ExpNewIntArray     go to state 90
@@ -2488,40 +2409,40 @@ State 174
     ExpSingle          go to state 98
 
 
+State 173
+
+   71 ExpList: Exp ExpRests .
+   75 ExpRests: ExpRests . ExpRest
+
+    ','  shift, and go to state 172
+
+    $default  reduce using rule 71 (ExpList)
+
+    ExpRest  go to state 178
+
+
+State 174
+
+   74 ExpRests: ExpRest .
+
+    $default  reduce using rule 74 (ExpRests)
+
+
 State 175
-
-   72 ExpList: Exp ExpRests .
-   76 ExpRests: ExpRests . ExpRest
-
-    ','  shift, and go to state 174
-
-    $default  reduce using rule 72 (ExpList)
-
-    ExpRest  go to state 180
-
-
-State 176
-
-   75 ExpRests: ExpRest .
-
-    $default  reduce using rule 75 (ExpRests)
-
-
-State 177
 
    55 ExpMethodCall: Exp '.' ID '(' ExpList ')' .
 
     $default  reduce using rule 55 (ExpMethodCall)
 
 
-State 178
+State 176
 
    38 Statement: IF '(' Exp ')' Statement ELSE Statement .
 
     $default  reduce using rule 38 (Statement)
 
 
-State 179
+State 177
 
    54 ExpLength: Exp . '.' LENGTH
    55 ExpMethodCall: Exp . '.' ID '(' ExpList ')'
@@ -2530,24 +2451,22 @@ State 179
    62                | Exp . AND Exp
    63                | Exp . '-' Exp
    64                | Exp . '+' Exp
-   65                | Exp . '/' Exp
-   66                | Exp . '*' Exp
-   77 ExpRest: ',' Exp .
+   65                | Exp . '*' Exp
+   76 ExpRest: ',' Exp .
 
     '<'  shift, and go to state 116
     '+'  shift, and go to state 117
     '-'  shift, and go to state 118
     '*'  shift, and go to state 119
-    '/'  shift, and go to state 120
-    AND  shift, and go to state 121
-    '.'  shift, and go to state 122
-    '['  shift, and go to state 123
+    AND  shift, and go to state 120
+    '.'  shift, and go to state 121
+    '['  shift, and go to state 122
 
-    $default  reduce using rule 77 (ExpRest)
+    $default  reduce using rule 76 (ExpRest)
 
 
-State 180
+State 178
 
-   76 ExpRests: ExpRests ExpRest .
+   75 ExpRests: ExpRests ExpRest .
 
-    $default  reduce using rule 76 (ExpRests)
+    $default  reduce using rule 75 (ExpRests)

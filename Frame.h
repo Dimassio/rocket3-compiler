@@ -46,6 +46,10 @@ namespace Frame
 
 		const IAccess* GetVar( const std::string& id) const;
 
+		const bool AddLocal( const Symbols::CSymbol* symbol );
+
+		const bool AddTemprorary( const Symbols::CSymbol* symbol );
+
 		// Размер ячейки
 		static const int wordSize = 4;
 	private:

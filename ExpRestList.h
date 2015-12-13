@@ -9,7 +9,7 @@ public:
 	
 	void Accept( IVisitor* visitor ) const;
 
-	const IExpRest* Exp() const;
+	const IExpRest* ExpRest() const;
 
 	const IExpRestList* ExpRestList() const;
 

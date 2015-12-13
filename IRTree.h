@@ -12,7 +12,7 @@ namespace IRTree
 		  MEM( Exp exp )
 		  CALL( Exp func, ExpList args )
 		  ESEQ( Stm stm, Exp exp )*/
-		virtual ~IIRExp() = 0;
+		virtual ~IIRExp();
 	};
 
 	class IIRStm {
@@ -23,7 +23,7 @@ namespace IRTree
 			CJUMP(int relop, Exp left, Exp right, Label iftrue, Label iffalse)
 			SEQ(Stm left, Stm right)
 			LABEL(Label label)*/
-		virtual ~IIRStm() = 0;
+		virtual ~IIRStm();
 	};
 
 	class CIRExpList {
@@ -31,18 +31,22 @@ namespace IRTree
 		CIRExpList(IIRExp* head, CIRExpList* tail);
 		~CIRExpList();
 
-		std::list<IIRExp> GetExpList();
+		std::list<IIRExp*> GetExpList();
+		void Add( IIRExp* exp );
 
 	private:
-		std::list<IIRExp> expList;
+		std::list<IIRExp*> expList;  // first IIRExp to this
 	};
 
 	class CIRStmList {
-	public:
+	public:	
 		CIRStmList(IIRStm* head, CIRStmList* tail);
-		std::list<IIRStm> GetStmList();
+		~CIRStmList();
+
+		std::list<IIRStm*> GetStmList();
+		void Add( IIRStm* exp );
 
 	private:
-		std::list<IIRStm> stmList;
+		std::list<IIRStm*> stmList;
 	};
 }

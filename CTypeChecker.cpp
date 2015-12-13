@@ -12,7 +12,6 @@ CTypeChecker::CTypeChecker( const CTable* _symbTable )
 
 void CTypeChecker::visit( const CProgram* program )
 {
-	//std::cout << argument->yylineno << "Program has started:" << std::endl << std::endl;
 	program->MainClass()->Accept( this );
 
 	if( !( program->ClassDeclList() ) ) {

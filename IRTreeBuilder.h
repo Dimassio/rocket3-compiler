@@ -67,10 +67,14 @@ public:
 	void visit( const CExpRest* expRest );
 
 private:
-	const CTable* symbTable;
+	const CTable* symbolTable;
 
 	std::vector<Frame::CFrame*> frames; 
 
 	IRTree::IIRExp* lastNodeExp;
 	IRTree::IIRStm* lastNodeStm;
+	CFrame* currFrame;
+	CIRExpList* currExpList;
+	const CClassInfo* currClass;
+	const CMethodInfo* currMethod;
 };

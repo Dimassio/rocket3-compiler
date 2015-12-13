@@ -329,8 +329,8 @@ void CPrettyPrinterVisitor::visit( const CExpRestList* expRestList )
 	if( expRestList->ExpRestList() ) {
 		( expRestList->ExpRestList() )->Accept( this );
 	}
-	if( expRestList->Exp() ) {
-		( expRestList->Exp() )->Accept( this );
+	if( expRestList->ExpRest() ) {
+		( expRestList->ExpRest() )->Accept( this );
 	}
 }
 

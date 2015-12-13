@@ -70,3 +70,13 @@ public:
 private:
 	const Temp::CLabel* label;
 };
+
+class CIRPrint: public IIRStm {
+public:
+	CIRPrint( const IIRExp* _exp );
+
+	~CIRPrint();
+
+private:
+	const IIRExp* exp;
+};

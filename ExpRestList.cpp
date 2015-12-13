@@ -10,7 +10,7 @@ void CExpRestList::Accept(IVisitor* visitor) const
 	visitor->visit(this);
 }
 
-const IExpRest* CExpRestList::Exp() const
+const IExpRest* CExpRestList::ExpRest() const
 {
 	return expRest;
 }
