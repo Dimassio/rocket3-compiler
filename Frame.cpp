@@ -53,6 +53,7 @@ int CFrame::FormalCount() const
 const IAccess* CFrame::Formal( size_t index ) const
 {
 	// todo:: unordered_map?
+	return nullptr; // todo
 }
 
 const Temp::CTemp* CFrame::GetFP() const
@@ -68,7 +69,7 @@ const IAccess* CFrame::GetVar( const std::string& id ) const
 		return formals.at( symbol );
 	} else if( locals.find( symbol ) != formals.end() ) {
 		return locals.at( symbol );
-	} else if( temproraries.find( symbol ) != formals.end ) {
+	} else if( temproraries.find( symbol ) != formals.end() ) {
 		return temproraries.at( symbol );
 	} else {
 		return nullptr;

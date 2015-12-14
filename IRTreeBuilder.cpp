@@ -7,8 +7,8 @@
 
 using namespace Frame;
 
-CIRTreeBuilder::CIRTreeBuilder( const CTable* _symbTable ):
-	symbTable( _symbTable )
+CIRTreeBuilder::CIRTreeBuilder( const CTable* _symbolTable ):
+	symbolTable( _symbolTable )
 {
 }
 
@@ -59,9 +59,9 @@ void CIRTreeBuilder::visit( const CExp* exp ) // todo: in each exp todo
 	} else if( exp->ExpBinOperation() ) {
 		exp->ExpBinOperation()->Accept( this );
 	} else if( exp->ExpNewIntArray() ) {
-		exp->ExpNewIntArray()->Accept( this );
+		exp->ExpNewIntArray()->Accept( this ); // ץונו
 	} else if( exp->ExpNewCustomType() ) {
-		exp->ExpNewCustomType()->Accept( this );
+		exp->ExpNewCustomType()->Accept( this ); // lol
 	} else if( exp->ExpSquareBrackets() ) {
 		exp->ExpSquareBrackets()->Accept( this );
 	} else if( exp->ExpRoundBrackets() ) {
@@ -99,7 +99,8 @@ void CIRTreeBuilder::visit( const CExpNewIntArray* expNewIntArray )
 
 void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType )
 {
-	expNewCustomType->Type()->Accept( this );
+	expNewCustomType->Type()->Accept( this ); // MyClass b;
+
 }
 
 void CIRTreeBuilder::visit( const CExpSquareBrackets* expSquareBrackets )
@@ -138,9 +139,10 @@ void CIRTreeBuilder::visit( const CExpId* expId )
 
 void CIRTreeBuilder::visit( const CExpSingle* expSingle )
 {
+	// עמהמ
 }
 
-void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
+void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation ) 
 {
 	expBinOperation->FirstExp()->Accept( this );
 	IRTree::IIRExp* firstExp = lastNodeExp;
@@ -161,7 +163,7 @@ void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
 	}
 }
 
-void CIRTreeBuilder::visit( const CExpLength* expLength )
+void CIRTreeBuilder::visit( const CExpLength* expLength ) // עמהמ
 {
 	expLength->Exp()->Accept( this );
 }

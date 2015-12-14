@@ -1,3 +1,5 @@
+#pragma once
+
 #include "IRTree.h"
 #include "Temp.h"
 #include "EOperation.h"
