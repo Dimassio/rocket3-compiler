@@ -52,16 +52,16 @@ void CIRTreeBuilder::visit( const CClassDeclList* classDeclList )
 	classDeclList->ClassDecl()->Accept( this );
 }
 
-void CIRTreeBuilder::visit( const CExp* exp ) // todo: in each exp todo
+void CIRTreeBuilder::visit( const CExp* exp )
 {
 	if( exp->ExpMethodCall() ) {
 		exp->ExpMethodCall()->Accept( this );
 	} else if( exp->ExpBinOperation() ) {
 		exp->ExpBinOperation()->Accept( this );
 	} else if( exp->ExpNewIntArray() ) {
-		exp->ExpNewIntArray()->Accept( this ); // ץונו
+		exp->ExpNewIntArray()->Accept( this );
 	} else if( exp->ExpNewCustomType() ) {
-		exp->ExpNewCustomType()->Accept( this ); // lol
+		exp->ExpNewCustomType()->Accept( this );
 	} else if( exp->ExpSquareBrackets() ) {
 		exp->ExpSquareBrackets()->Accept( this );
 	} else if( exp->ExpRoundBrackets() ) {
@@ -79,10 +79,10 @@ void CIRTreeBuilder::visit( const CExp* exp ) // todo: in each exp todo
 	}
 }
 
-void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall ) // todo:
+void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall )
 {
 	expMethodCall->Exp()->Accept( this );
-	IIRExp* expForCall = lastNodeExp; // todo: is it okey???
+	IIRExp* expForCall = lastNodeExp;
 	currExpList = new CIRExpList( lastNodeExp, nullptr ); // adding "this"
 
 	expMethodCall->ExpList()->Accept( this );
@@ -95,12 +95,21 @@ void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall ) // todo:
 void CIRTreeBuilder::visit( const CExpNewIntArray* expNewIntArray )
 {
 	expNewIntArray->Exp()->Accept( this );
+
+	IIRExp* count = lastNodeExp;
+	IIRExp* allocationSize = new CIRBinOp( PLUS, count, new CIRConst( 1 ) );
+	CIRTemp* tmp = new CIRTemp( new Temp::CTemp() );
+	IIRStm* first = new CIRMove( tmp, new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "malloc" ) ) ), new CIRExpList( allocationSize, nullptr ) ) );
+	IIRStm* second = new CIRExp( new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "memset" ) ) ), new CIRExpList( std::list< IIRExp* >{ new CIRConst( 0 ), allocationSize, tmp } ) ) );
+	IIRStm* third = new CIRMove( tmp, count );
+	second = new CIRSeq( second, third );
+
+	lastNodeExp = new CIRESeq( new CIRSeq( first, second ), tmp );
 }
 
-void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType )
+void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType ) // todo
 {
 	expNewCustomType->Type()->Accept( this ); // MyClass b;
-
 }
 
 void CIRTreeBuilder::visit( const CExpSquareBrackets* expSquareBrackets )
@@ -135,14 +144,15 @@ void CIRTreeBuilder::visit( const CExpNumber* expNumber )
 
 void CIRTreeBuilder::visit( const CExpId* expId )
 {
+	// nothing to do here
 }
 
-void CIRTreeBuilder::visit( const CExpSingle* expSingle )
+void CIRTreeBuilder::visit( const CExpSingle* expSingle )// עמהמ
 {
-	// עמהמ
+
 }
 
-void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation ) 
+void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
 {
 	expBinOperation->FirstExp()->Accept( this );
 	IRTree::IIRExp* firstExp = lastNodeExp;
@@ -163,9 +173,16 @@ void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
 	}
 }
 
-void CIRTreeBuilder::visit( const CExpLength* expLength ) // עמהמ
+void CIRTreeBuilder::visit( const CExpLength* expLength )
 {
 	expLength->Exp()->Accept( this );
+	IIRExp* array = lastNodeExp;
+
+	CIRTemp* length = new CIRTemp( new Temp::CTemp() );
+
+	CIRMove* move = new CIRMove( length, /*instead of nullptr sholuld be arraylength*/nullptr );
+
+	lastNodeExp = new CIRESeq( move, length ); // we need this?
 }
 
 void CIRTreeBuilder::visit( const CExpList* expList )
@@ -194,7 +211,7 @@ void CIRTreeBuilder::visit( const CFormalList* formalList )
 	}
 }
 
-void CIRTreeBuilder::visit( const CMethodDecl* methodDecl ) // todo: return label
+void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
 {
 	currMethod = currClass->GetMethod( methodDecl->Id() );
 	( methodDecl->Type() )->Accept( this );
@@ -213,7 +230,7 @@ void CIRTreeBuilder::visit( const CMethodDecl* methodDecl ) // todo: return labe
 	if( methodDecl->StatementList() ) {
 		( methodDecl->StatementList() )->Accept( this );
 	}
-	( methodDecl->Exp() )->Accept( this );
+	( methodDecl->Exp() )->Accept( this ); // todo: return label
 	currMethod = nullptr;
 	currFrame = nullptr;
 }
@@ -226,20 +243,57 @@ void CIRTreeBuilder::visit( const CMethodDeclList* methodDeclList )
 	methodDeclList->MethodDecl()->Accept( this );
 }
 
-void CIRTreeBuilder::visit( const CStatement* statement )  // todo
+void CIRTreeBuilder::buildIfStatement( const IIRExp* condition, const IIRStm* trueStm, const IIRStm* falseStm )
+{
+	CIRLabel* trueLabel = new CIRLabel( new Temp::CLabel() );
+	CIRLabel* falseLabel = new CIRLabel( new Temp::CLabel() );
+	CIRLabel* endLabel = new CIRLabel( new Temp::CLabel() );
+
+	// todo: what we gonna do with trueBLock, falseBlock
+	IIRStm* trueBlock = new CIRSeq( trueLabel, new CIRSeq( trueStm, endLabel ) ); // example: true_label; true_stm; end_label;
+	IIRStm* falseBlock = new CIRSeq( falseLabel, new CIRSeq( falseStm, endLabel ) );
+	lastNodeStm = new CIRCJump( NE, condition, new CIRConst( 0 ), trueLabel, falseLabel ); // if condition != 0 then trueLabel else falseLabel
+}
+
+void CIRTreeBuilder::buildWhileStatement( const IIRExp* condition, const IIRStm* body )
+{
+	CIRLabel* begin = new CIRLabel( new Temp::CLabel() );
+	CIRLabel* ifTrue = new CIRLabel( new Temp::CLabel() );
+	CIRLabel* end = new CIRLabel( new Temp::CLabel() );
+
+	IIRStm* cycleStep = new CIRSeq( ifTrue, body );
+	IIRStm* checkCondition = new CIRCJump( NE, condition, new CIRConst( 0 ), ifTrue, end );
+
+	//IIRStm* jumpToBegin = new CIRJump( nullptr,); // todo: first parameter - ??? and second is list i don't know how it works(
+
+	lastNodeStm = new CIRSeq( begin, new CIRSeq( checkCondition, new CIRSeq( cycleStep, /*jumpToBegin instead nullptr*/ nullptr ) ) );
+}
+
+void CIRTreeBuilder::visit( const CStatement* statement )
 {
 	if( statement->GetStatementType() == "BlockStatement" ) {
 		statement->Statements()->Accept( this );
-	} else if( statement->GetStatementType() == "IfStatement" ) { // todo
+	} else if( statement->GetStatementType() == "IfStatement" ) {
 		statement->FirstExpression()->Accept( this );
+		IIRExp* condition = lastNodeExp;
 		statement->FirstStatement()->Accept( this );
+		IIRStm* trueStm = lastNodeStm;
 		statement->SecondStatement()->Accept( this );
-	} else if( statement->GetStatementType() == "WhileStatement" ) { // todo
+		IIRStm* falseStm = lastNodeStm;
+
+		buildIfStatement( condition, trueStm, falseStm );
+	} else if( statement->GetStatementType() == "WhileStatement" ) {
 		statement->FirstExpression()->Accept( this );
+		IIRExp* condition = lastNodeExp;
 		statement->FirstStatement()->Accept( this );
+		IIRStm* body = lastNodeStm;
+
+		buildWhileStatement( condition, body );
 	} else if( statement->GetStatementType() == "PrintlnStatement" ) {
 		statement->FirstExpression()->Accept( this );
-		lastNodeStm = new CIRPrint( lastNodeExp );
+		IIRExp* toPrint = lastNodeExp;
+
+		lastNodeExp = new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "print" ) ) ), new CIRExpList( toPrint, nullptr ) );
 	} else if( statement->GetStatementType() == "AssignStatement" ) {
 		const IIRExp* firstExp = frames[frames.size()]->GetVar( statement->Id() )->GetExp( frames[frames.size()]->GetFP() );
 
@@ -272,6 +326,7 @@ void CIRTreeBuilder::visit( const CStatementList* statementList )
 
 void CIRTreeBuilder::visit( const CType* type )
 {
+	// nothing to do here
 }
 
 void CIRTreeBuilder::visit( const CVarDecl* varDecl )

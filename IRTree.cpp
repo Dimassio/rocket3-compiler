@@ -48,3 +48,9 @@ void CIRStmList::Add( IIRStm* exp )
 {
 	stmList.push_back( exp );
 }
+
+
+CIRExpList::CIRExpList( const std::list<IIRExp*>& _expList ):
+	expList(_expList)
+{
+}

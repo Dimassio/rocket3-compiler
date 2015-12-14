@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "Symbols.h"
+#include <list>
 
 namespace Temp
 {
@@ -21,7 +22,13 @@ namespace Temp
 	};
 
 	class CLabelList {
+	public:
+		CLabelList( const CLabel* label );
+		~CLabelList();
 
+		void Add( const CLabel* label );
+	private:
+		std::list<const CLabel*> labels;
 	};
 
 	// Временная переменная

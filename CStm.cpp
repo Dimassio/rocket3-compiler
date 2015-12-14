@@ -30,8 +30,8 @@ CIRJump::~CIRJump()
 {
 }
 
-CIRCJump::CIRCJump( const EOperation op, const IIRExp* _left, const IIRExp* _right, const Temp::CLabel* _iftrue, const Temp::CLabel* _iffalse ):
-	relop( op ), left( _left ), right( _right ), iftrue( _iftrue ), iffalse( _iffalse )
+CIRCJump::CIRCJump( const EOperation _op, const IIRExp* _left, const IIRExp* _right, const CIRLabel* _iftrue, const CIRLabel* _iffalse ):
+	op( _op ), left( _left ), right( _right ), iftrue( _iftrue ), iffalse( _iffalse )
 {
 }
 

@@ -8,7 +8,7 @@ using namespace IRTree;
 
 class CIRMove: public IIRStm {
 public:
-	CIRMove(const IIRExp* _dst, const IIRExp* _src);
+	CIRMove( const IIRExp* _dst, const IIRExp* _src );
 
 	~CIRMove();
 
@@ -19,7 +19,7 @@ private:
 
 class CIRExp: public IIRStm {
 public:
-	CIRExp(const IIRExp* _exp);
+	CIRExp( const IIRExp* _exp );
 
 	~CIRExp();
 
@@ -29,7 +29,7 @@ private:
 
 class CIRJump: public IIRStm {
 public:
-	CIRJump(const IIRExp* _exp, const Temp::CLabelList* _targets);
+	CIRJump( const IIRExp* _exp, const Temp::CLabelList* _targets );
 
 	~CIRJump();
 
@@ -38,23 +38,34 @@ private:
 	const Temp::CLabelList* targets;
 };
 
+class CIRLabel: public IIRStm {
+public:
+	CIRLabel( const Temp::CLabel* _label );
+
+	~CIRLabel();
+
+private:
+	const Temp::CLabel* label;
+};
+
+
 class CIRCJump: public IIRStm {
 public:
-	CIRCJump(const EOperation op, const IIRExp* _left, const IIRExp* _right, const Temp::CLabel* _iftrue, const Temp::CLabel* _iffalse);
+	CIRCJump( const EOperation op, const IIRExp* _left, const IIRExp* _right, const CIRLabel* _iftrue, const CIRLabel* _iffalse );
 
 	~CIRCJump();
 
 private:
-	const int relop;
+	const EOperation op;
 	const IIRExp* left;
 	const IIRExp* right;
-	const Temp::CLabel* iftrue;
-	const Temp::CLabel* iffalse;
+	const CIRLabel* iftrue;
+	const CIRLabel* iffalse;
 };
 
 class CIRSeq: public IIRStm {
 public:
-	CIRSeq(const IIRStm* _left, const IIRStm* _right);
+	CIRSeq( const IIRStm* _left, const IIRStm* _right );
 
 	~CIRSeq();
 
@@ -63,15 +74,6 @@ private:
 	const IIRStm* right;
 };
 
-class CIRLabel: public IIRStm {
-public:
-	CIRLabel(const Temp::CLabel* _label);
-
-	~CIRLabel();
-
-private:
-	const Temp::CLabel* label;
-};
 
 class CIRPrint: public IIRStm {
 public:

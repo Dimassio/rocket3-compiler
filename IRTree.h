@@ -29,6 +29,7 @@ namespace IRTree
 	class CIRExpList {
 	public:
 		CIRExpList(IIRExp* head, CIRExpList* tail);
+		CIRExpList( const std::list<IIRExp*>& expList );
 		~CIRExpList();
 
 		std::list<IIRExp*> GetExpList();

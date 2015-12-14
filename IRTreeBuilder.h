@@ -77,4 +77,7 @@ private:
 	IRTree::CIRExpList* currExpList;
 	const CClassInfo* currClass;
 	const CMethodInfo* currMethod;
+
+	void buildIfStatement( const IRTree::IIRExp* condition, const IRTree::IIRStm* trueStm, const IRTree::IIRStm* falseStm );
+	void buildWhileStatement( const IRTree::IIRExp* condition, const IRTree::IIRStm* body );
 };
