@@ -81,7 +81,7 @@ void CIRTreeBuilder::visit( const CExp* exp )
 	}
 }
 
-void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall )
+void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall ) // ?
 {
 	expMethodCall->Exp()->Accept( this );
 	IIRExp* expForCall = lastNodeExp;
@@ -94,7 +94,7 @@ void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall )
 	lastNodeExp = newCall;
 }
 
-void CIRTreeBuilder::visit( const CExpNewIntArray* expNewIntArray )
+void CIRTreeBuilder::visit( const CExpNewIntArray* expNewIntArray ) // ?
 {
 	expNewIntArray->Exp()->Accept( this );
 
@@ -109,7 +109,7 @@ void CIRTreeBuilder::visit( const CExpNewIntArray* expNewIntArray )
 	lastNodeExp = new CIRESeq( new CIRSeq( first, second ), tmp );
 }
 
-void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType ) // todo
+void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType ) // ?
 {
 	expNewCustomType->Type()->Accept( this ); // MyClass b;
 }
@@ -126,7 +126,7 @@ void CIRTreeBuilder::visit( const CExpSquareBrackets* expSquareBrackets )
 	lastNodeExp = new CIRMem( new CIRBinOp( PLUS, firstExp, offset ) );
 }
 
-void CIRTreeBuilder::visit( const CExpRoundBrackets* expRoundBrackets )
+void CIRTreeBuilder::visit( const CExpRoundBrackets* expRoundBrackets ) // ?
 {
 	expRoundBrackets->Exp()->Accept( this );
 }
@@ -149,9 +149,8 @@ void CIRTreeBuilder::visit( const CExpId* expId )
 	// nothing to do here
 }
 
-void CIRTreeBuilder::visit( const CExpSingle* expSingle )// тодо
+void CIRTreeBuilder::visit( const CExpSingle* expSingle )// ?
 {
-
 }
 
 void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
@@ -175,7 +174,7 @@ void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
 	}
 }
 
-void CIRTreeBuilder::visit( const CExpLength* expLength )
+void CIRTreeBuilder::visit( const CExpLength* expLength ) // ?
 {
 	expLength->Exp()->Accept( this );
 	IIRExp* array = lastNodeExp;
@@ -187,7 +186,7 @@ void CIRTreeBuilder::visit( const CExpLength* expLength )
 	lastNodeExp = new CIRESeq( move, length );
 }
 
-void CIRTreeBuilder::visit( const CExpList* expList )
+void CIRTreeBuilder::visit( const CExpList* expList ) // ?
 {
 	if( expList->Exp() ) {
 		expList->Exp()->Accept( this );
@@ -200,7 +199,7 @@ void CIRTreeBuilder::visit( const CExpList* expList )
 	}
 }
 
-void CIRTreeBuilder::visit( const CFormalList* formalList )
+void CIRTreeBuilder::visit( const CFormalList* formalList )// ?
 {
 	if( !formalList->Type() && formalList->Id().empty() ) {
 		return;
@@ -213,7 +212,7 @@ void CIRTreeBuilder::visit( const CFormalList* formalList )
 	}
 }
 
-void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
+void CIRTreeBuilder::visit( const CMethodDecl* methodDecl ) // ?
 {
 	currMethod = currClass->GetMethod( methodDecl->Id() );
 	( methodDecl->Type() )->Accept( this );
@@ -284,14 +283,14 @@ void CIRTreeBuilder::visit( const CStatement* statement )
 		statement->SecondStatement()->Accept( this );
 		IIRStm* falseStm = lastNodeStm;
 
-		buildIfStatement( condition, trueStm, falseStm );
+		buildIfStatement( condition, trueStm, falseStm ); // ?
 	} else if( statement->GetStatementType() == "WhileStatement" ) {
 		statement->FirstExpression()->Accept( this );
 		IIRExp* condition = lastNodeExp;
 		statement->FirstStatement()->Accept( this );
 		IIRStm* body = lastNodeStm;
 
-		buildWhileStatement( condition, body );
+		buildWhileStatement( condition, body ); // ?
 	} else if( statement->GetStatementType() == "PrintlnStatement" ) {
 		statement->FirstExpression()->Accept( this );
 		IIRExp* toPrint = lastNodeExp;
@@ -319,7 +318,7 @@ void CIRTreeBuilder::visit( const CStatement* statement )
 	}
 }
 
-void CIRTreeBuilder::visit( const CStatementList* statementList )
+void CIRTreeBuilder::visit( const CStatementList* statementList ) // ?
 {
 	if( statementList->StatementList() ) {
 		( statementList->StatementList() )->Accept( this );
@@ -332,7 +331,7 @@ void CIRTreeBuilder::visit( const CType* type )
 	// nothing to do here
 }
 
-void CIRTreeBuilder::visit( const CVarDecl* varDecl )
+void CIRTreeBuilder::visit( const CVarDecl* varDecl ) // ?
 {
 	varDecl->Type()->Accept( this );
 	currFrame->AddLocal( new Symbols::CSymbol( varDecl->Id() ) );

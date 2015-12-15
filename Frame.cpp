@@ -54,6 +54,11 @@ const Temp::CTemp* CFrame::GetFP() const
 	return FP;
 }
 
+void CFrame::HangToRoot( const IIRStm* stm )
+{
+	root = stm;
+}
+
 const IAccess* CFrame::GetVar( const std::string& id ) const
 {
 	const Symbols::CSymbol* symbol = symbolStorage.Get( id );

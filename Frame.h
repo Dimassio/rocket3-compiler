@@ -47,6 +47,7 @@ namespace Frame
 
 		bool AddTemprorary( const Symbols::CSymbol* symbol );
 
+		void HangToRoot( const IIRStm* stm );
 		// Размер ячейки
 		static const int wordSize = 4;
 	private:
@@ -55,6 +56,7 @@ namespace Frame
 		std::map<const Symbols::CSymbol*, IAccess*> temproraries; // временные переменные
 
 		Temp::CTemp* FP; // frame pointer
+		const IIRStm* root; // root of frame irtree
 
 		int offSet; // Относительно FP
 
