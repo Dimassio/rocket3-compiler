@@ -39,9 +39,6 @@ namespace Frame
 
 		int FormalCount() const;
 
-		// Получение аргументна под номером index
-		const IAccess* Formal( size_t index ) const;
-
 		const Temp::CTemp* GetFP() const;
 
 		const IAccess* GetVar( const std::string& id) const;
