@@ -22,7 +22,7 @@ int main( int argc, char *argv[] )
 
 	try {
 		if( !yyparse( root ) ) {
-			std::cout << "SUCCESS" << std::endl;
+			std::cout << "syntax analysis: success" << std::endl;
 		}
 
 		// CPrettyPrinterVisitor prettyVisitor;
