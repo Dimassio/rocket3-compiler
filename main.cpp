@@ -4,6 +4,8 @@
 #include "CPrettyVisitor.h"
 #include "CSymbTableBuilder.h"
 #include "CTypeChecker.h"
+#include "IRTreeBuilder.h"
+#include "CMiniJException.h"
 
 int yyparse( CProgram*& root );
 
@@ -18,25 +20,28 @@ int main( int argc, char *argv[] )
 
 	CProgram* root;
 
-	if( !yyparse( root ) ) {
-		std::cout << "SUCCESS" << std::endl;
+	try {
+		if( !yyparse( root ) ) {
+			std::cout << "SUCCESS" << std::endl;
+		}
+
+		// CPrettyPrinterVisitor prettyVisitor;
+		// prettyVisitor.visit( root );
+
+		CSymbTableBuilder symbTableBuilder;
+		symbTableBuilder.visit( root );
+
+		CTypeChecker typeChecker( symbTableBuilder.GetSymbolTable() );
+		typeChecker.visit( root );
+
+		CIRTreeBuilder irTreeBuilder( symbTableBuilder.GetSymbolTable() );
+		//irTreeBuilder.visit(root);
+
+		fclose( yyin );
 	}
-
-	// CPrettyPrinterVisitor prettyVisitor;
-	// prettyVisitor.visit( root );
-	
-	CSymbTableBuilder symbTableBuilder; 
-	symbTableBuilder.visit( root );
-
-	CTypeChecker typeChecker( symbTableBuilder.GetSymbolTable() );
-	typeChecker.visit( root );
-
-	// todo: CIRTreeBuilder: IVisitor{};
-	// CIRTreeBuilder irTreeBuilder;
-	// irTreeBuilder.visit(root); - этот визитор - последнее задание. обходит и строит IRTree c вершинами IStm, IExp. 
-	// Сами классы реализовывать не надо (чисто для обхода)
-
-	fclose( yyin );
+	catch( CMiniJException& e ) {
+		std::cout << e.what() << std::endl;
+	}
 
 	return 0;
 }
