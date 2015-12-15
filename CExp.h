@@ -33,7 +33,7 @@ public:
 	~CIRBinOp();
 
 private:
-	const EOperation opId; // 0 +, 1-, 2*, 3 /, 4 &&
+	const EOperation opId;
 	const IIRExp* left;
 	const IIRExp* right;
 };

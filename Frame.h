@@ -33,7 +33,7 @@ namespace Frame
 
 	class CFrame {
 	public:
-		CFrame( const std::string& name, int formalCount );
+		CFrame( const std::string& name, int formalCount);
 
 		~CFrame();
 
@@ -46,9 +46,9 @@ namespace Frame
 
 		const IAccess* GetVar( const std::string& id) const;
 
-		const bool AddLocal( const Symbols::CSymbol* symbol );
+		bool AddLocal( const Symbols::CSymbol* symbol );
 
-		const bool AddTemprorary( const Symbols::CSymbol* symbol );
+		bool AddTemprorary( const Symbols::CSymbol* symbol );
 
 		// Размер ячейки
 		static const int wordSize = 4;
@@ -60,5 +60,7 @@ namespace Frame
 		Temp::CTemp* FP; // frame pointer
 
 		int offSet; // Относительно FP
+
+		const Symbols::CSymbol* symbol;
 	};
 }

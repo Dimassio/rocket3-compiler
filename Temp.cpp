@@ -4,7 +4,6 @@ using namespace Temp;
 
 CLabel::CLabel()
 {
-
 }
 
 CLabel::~CLabel()
@@ -12,8 +11,8 @@ CLabel::~CLabel()
 }
 
 CLabel::CLabel( const Symbols::CSymbol* symbol )
+	: name( symbol->String() )
 {
-
 }
 
 const std::string& CLabel::Name() const
@@ -34,7 +33,8 @@ CTemp::CTemp( const CTemp& temp ):
 {
 }
 
-CTemp::CTemp( const Symbols::CSymbol* symbol )
+CTemp::CTemp( const Symbols::CSymbol* symbol ) :
+	name( symbol->String() )
 {
 }
 
@@ -42,7 +42,6 @@ const std::string& CTemp::Name() const
 {
 	return name;
 }
-
 
 CLabelList::CLabelList( const CLabel* label )
 {

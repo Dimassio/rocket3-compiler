@@ -73,7 +73,9 @@ private:
 
 	IRTree::IIRExp* lastNodeExp;
 	IRTree::IIRStm* lastNodeStm;
+
 	Frame::CFrame* currFrame;
+
 	IRTree::CIRExpList* currExpList;
 	const CClassInfo* currClass;
 	const CMethodInfo* currMethod;

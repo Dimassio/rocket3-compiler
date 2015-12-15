@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Symbols.h"
 #include "StaticVariables.h"
+#include "Temp.h"
 
 using namespace Frame;
 
@@ -35,6 +36,7 @@ void CIRTreeBuilder::visit( const CMainClass* mainClass )
 void CIRTreeBuilder::visit( const CClassDecl* classDecl )
 {
 	currClass = symbolTable->GetClass( classDecl->ClassId() );
+
 	if( classDecl->VarDeclList() != 0 ) {
 		classDecl->VarDeclList()->Accept( this );
 	}
@@ -167,7 +169,7 @@ void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
 	} else if( expBinOperation->ExpName() == "*" ) {
 		lastNodeExp = new CIRMem( new CIRBinOp( MUL, firstExp, secondExp ) );
 	} else if( expBinOperation->ExpName() == "<" ) {
-		lastNodeExp = new CIRMem( new CIRBinOp( LE, firstExp, secondExp ) );
+		lastNodeExp = new CIRMem( new CIRBinOp( LT, firstExp, secondExp ) );
 	} else { // expBinOperation->ExpName() == "&&"
 		lastNodeExp = new CIRMem( new CIRBinOp( AND, firstExp, secondExp ) );
 	}
@@ -182,7 +184,7 @@ void CIRTreeBuilder::visit( const CExpLength* expLength )
 
 	CIRMove* move = new CIRMove( length, /*instead of nullptr sholuld be arraylength*/nullptr );
 
-	lastNodeExp = new CIRESeq( move, length ); // we need this?
+	lastNodeExp = new CIRESeq( move, length );
 }
 
 void CIRTreeBuilder::visit( const CExpList* expList )
@@ -231,6 +233,7 @@ void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
 		( methodDecl->StatementList() )->Accept( this );
 	}
 	( methodDecl->Exp() )->Accept( this ); // todo: return label
+	
 	currMethod = nullptr;
 	currFrame = nullptr;
 }
@@ -372,5 +375,3 @@ void CIRTreeBuilder::visit( const CExpRest* expRest )
 
 	currExpList->Add( lastNodeExp );
 }
-
-

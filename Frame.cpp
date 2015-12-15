@@ -30,10 +30,9 @@ CInReg::CInReg( Temp::CTemp _temp ) :
 {
 }
 
-CFrame::CFrame( const std::string& name, int formalCount )
+CFrame::CFrame( const std::string& name, int formalCount ) :
+	symbol( symbolStorage.Get(name) )
 {
-	const Symbols::CSymbol* symbol = symbolStorage.Get( name );
-
 	FP = new Temp::CTemp();
 	for( size_t i = 0; i < formalCount; ++i, offSet += wordSize ) {
 		formals[symbol] = new CInFrame( offSet );
@@ -76,7 +75,7 @@ const IAccess* CFrame::GetVar( const std::string& id ) const
 	}
 }
 
-const bool CFrame::AddLocal( const Symbols::CSymbol* symbol )
+bool CFrame::AddLocal( const Symbols::CSymbol* symbol )
 {
 	if( locals.find( symbol ) != locals.end() ) {
 		locals[symbol] = new CInFrame(offSet);
@@ -87,7 +86,7 @@ const bool CFrame::AddLocal( const Symbols::CSymbol* symbol )
 	}
 }
 
-const bool CFrame::AddTemprorary( const Symbols::CSymbol* symbol )
+bool CFrame::AddTemprorary( const Symbols::CSymbol* symbol )
 {
 	if( temproraries.find( symbol ) != temproraries.end() ) {
 		temproraries[symbol] = new CInFrame( offSet );

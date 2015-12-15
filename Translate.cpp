@@ -1,9 +1,15 @@
+#include <cassert>
 #include "Translate.h"
+#include "CStm.h"
 
 using namespace Translate;
 
 CExpConverter::CExpConverter(const IRTree::IIRExp* _exp)
 	: exp(_exp)
+{
+}
+
+CExpConverter::~CExpConverter()
 {
 }
 
@@ -14,7 +20,7 @@ const IRTree::IIRExp* CExpConverter::ToExp() const
 
 const IRTree::IIRStm* CExpConverter::ToStm() const
 {
-	return nullptr;
+	return new CIRExp(exp);
 }
 
 const IRTree::IIRStm* CExpConverter::ToConditional(const Temp::CLabel* trueLable, const Temp::CLabel* falseLable) const
@@ -27,8 +33,13 @@ CStmConverter::CStmConverter(const IRTree::IIRStm * _stm) :
 {
 }
 
+CStmConverter::~CStmConverter() 
+{
+}
+
 const IRTree::IIRExp* CStmConverter::ToExp() const
 {
+	assert(false);
 	return nullptr;
 }
 
