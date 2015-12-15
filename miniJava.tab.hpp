@@ -43,9 +43,12 @@ extern int yydebug;
 /* Line 2058 of yacc.c  */
 #line 11 "miniJava.y"
  #include "Common.h"
+#include "CMiniJException.h"
+#include <string>
+
 
 /* Line 2058 of yacc.c  */
-#line 49 "miniJava.tab.hpp"
+#line 52 "miniJava.tab.hpp"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -83,7 +86,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 17 "miniJava.y"
+#line 20 "miniJava.y"
 
 	int ival;
 	char sval[255];
@@ -119,7 +122,7 @@ typedef union YYSTYPE
 
 
 /* Line 2058 of yacc.c  */
-#line 123 "miniJava.tab.hpp"
+#line 126 "miniJava.tab.hpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

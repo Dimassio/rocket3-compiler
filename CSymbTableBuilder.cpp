@@ -1,7 +1,9 @@
 #include "StaticVariables.h"
 #include "CSymbTableBuilder.h"
 #include "Symbols.h"
+#include "CMiniJException.h"
 #include <iostream>
+
 
 CSymbTableBuilder::CSymbTableBuilder():
 	symbTable( new CTable() )
@@ -20,14 +22,14 @@ void CSymbTableBuilder::visit( const CProgram* program )
 void CSymbTableBuilder::visit( const CMainClass* mainClass )
 {
 	if( !symbTable->AddClass( mainClass->ClassId(), "" ) ) {
-		std::cout << "table builder: duplicated definition in " << mainClass->yylineno << std::endl;
+		throw CMiniJException( "table builder: duplicated definition in " + std::to_string( mainClass->yylineno ) );
 	} else {
 		currClass = symbTable->GetClass( mainClass->ClassId() );
 
 		CType* type = new CType( std::string( "void" ), mainClass->yylineno );
 
 		if( !currClass->AddMethod( std::string( "main" ), type ) ) {
-			std::cout << "table builder: duplicated definition in " << mainClass->yylineno << std::endl;
+			throw CMiniJException( "table builder: duplicated definition in " + std::to_string( mainClass->yylineno ) );
 		} else {
 			if( mainClass->Statement() ) {
 				mainClass->Statement()->Accept( this );
@@ -41,7 +43,7 @@ void CSymbTableBuilder::visit( const CMainClass* mainClass )
 void CSymbTableBuilder::visit( const CClassDecl* classDecl )
 {
 	if( !symbTable->AddClass( classDecl->ClassId(), classDecl->ExtendedClassId() ) ) {
-		std::cout << "table builder: duplicated class definition in " << classDecl->yylineno << std::endl;
+		throw CMiniJException( "table builder: duplicated class definition in " + std::to_string( classDecl->yylineno ) );
 	} else {
 		currClass = symbTable->GetClass( classDecl->ClassId() );
 		if( classDecl->VarDeclList() != 0 ) {
@@ -165,10 +167,10 @@ void CSymbTableBuilder::visit( const CFormalList* formalList )
 	CType* type = lastTypeValue;
 
 	if( !currMethod ) {
-		std::cout << "table builder: no such method in " << formalList->yylineno << std::endl;
+		throw CMiniJException( "table builder: no such method in " + std::to_string( formalList->yylineno ) );
 	} else {
 		if( !currMethod->AddArgument( formalList->Id(), type ) ) {
-			std::cout << "table builder: duplicated definition in " << formalList->yylineno << std::endl;
+			throw CMiniJException( "table builder: duplicated definition in " + std::to_string( formalList->yylineno ) );
 		}
 	}
 
@@ -182,7 +184,7 @@ void CSymbTableBuilder::visit( const CMethodDecl* methodDecl )
 	( methodDecl->Type() )->Accept( this );
 	CType* type = lastTypeValue;
 	if( !currClass->AddMethod( methodDecl->Id(), type ) ) {
-		std::cout << "table builder: duplicated definition in " << methodDecl->yylineno << std::endl;
+		throw CMiniJException( "table builder: duplicated method definition in " + std::to_string( methodDecl->yylineno ) );
 	} else {
 		currMethod = currClass->GetMethod( methodDecl->Id() );
 		if( methodDecl->FormalList() ) {
@@ -249,10 +251,10 @@ void CSymbTableBuilder::visit( const CVarDecl* varDecl )
 	const std::string id = varDecl->Id();
 	if( currMethod == nullptr ) {
 		if( !currClass->AddVariable( id, type ) ) {
-			std::cout << "table builder: duplicated definition in class in " << varDecl->yylineno << std::endl;
+			throw CMiniJException( "table builder: duplicated definition in class in " + std::to_string( varDecl->yylineno ) );
 		}
 	} else if( !currMethod->AddLocalVariable( id, type ) ) {
-		std::cout << "table builder: duplicated definition in method in " << varDecl->yylineno << std::endl;
+		throw CMiniJException( "table builder: duplicated definition in method in " + std::to_string( varDecl->yylineno ) );
 	}
 }
 
@@ -278,10 +280,10 @@ void CSymbTableBuilder::visit( const CFormalRest* formalRest )
 	CType* type = lastTypeValue;
 
 	if( !currMethod ) {
-		std::cout << "table builder: no such method " << formalRest->yylineno << std::endl;
+		throw CMiniJException( "table builder: no such method in " + std::to_string( formalRest->yylineno ));
 	} else {
 		if( !currMethod->AddArgument( formalRest->Id(), type ) ) {
-			std::cout << "table builder: duplicated definition " << formalRest->yylineno << std::endl;
+			throw CMiniJException( "table builder: duplicated definition in " + std::to_string( formalRest->yylineno) );
 		}
 	}
 }

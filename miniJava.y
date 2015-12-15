@@ -8,7 +8,10 @@ extern int yylineno;
 void yyerror( CProgram*& root, const char* );
 %}
 
-%code requires { #include "Common.h"}
+%code requires { #include "Common.h"
+#include "CMiniJException.h"
+#include <string>
+}
 
 /* Параметры функции парсера. */
 %parse-param { CProgram*& root }
@@ -284,5 +287,6 @@ ExpRest:
 /* Функция обработки ошибки. */
 void yyerror( CProgram*& root, const char* str )
 {
-	std::cout << str << " in " << yylineno << " line" << std::endl;
+	std::string error =  std::string(str) + " in " + std::to_string(yylineno) + " line";
+	throw CMiniJException(error);
 }

@@ -1,5 +1,7 @@
 #include "CTypeChecker.h"
 #include "StaticVariables.h"
+#include "CMiniJException.h"
+#include <string>
 
 #ifndef CTYPECHECKER_CPP_INCLUDED
 #define CTYPECHECKER_CPP_INCLUDED
@@ -34,7 +36,7 @@ void CTypeChecker::visit( const CClassDecl* classDecl )
 		const CClassInfo *currentPredecessor = symbolTable->GetClass( classDecl->ExtendedClassId() );
 		while( currentPredecessor != nullptr ) {
 			if( currentPredecessor->ExtendedClassSymbol()->String() == classDecl->ClassId() ) {
-				std::cout << classDecl->yylineno << "Cyclic dependance" << std::endl;
+				throw CMiniJException( std::to_string(classDecl->yylineno) + " Cyclic dependance" );
 				errorOccured = true;
 				break;
 			}
@@ -106,13 +108,13 @@ void CTypeChecker::visit( const CExpMethodCall* expMethodCall )
 	expMethodCall->Exp()->Accept( this ); // exp - for object
 	std::string expName = lastTypeValue;
 	if( isPODName( expName ) ) {
-		std::cout << expMethodCall->yylineno << "Can't call method with pod type" << std::endl;
+		throw CMiniJException( std::to_string( expMethodCall->yylineno) + " Can't call method with pod type" );
 		errorOccured = true;
 	}
 	std::string methodName = expMethodCall->Id();
 	const CClassInfo* expInfo = symbolTable->GetClass( expName );
 	if( expInfo->GetMethod( methodName ) == nullptr ) {
-		std::cout << expMethodCall->yylineno << "No method with such name" << std::endl;
+		throw CMiniJException( std::to_string( expMethodCall->yylineno) + " No method with such name" );
 		errorOccured = true;
 	}
 	currMethodCall.push( expInfo->GetMethod( methodName ) );
@@ -132,14 +134,14 @@ void CTypeChecker::visit( const CExpBinOperation* expBinOperation )
 	std::string secondExpType = lastTypeValue;
 	if( operation == "&&" ) {
 		if( !( firstExpType == "boolean" && secondExpType == "boolean" ) ) {
-			std::cout << expBinOperation->yylineno << "Bad type" << std::endl;
+			throw CMiniJException( std::to_string( expBinOperation->yylineno) + " Bad type" );
 			errorOccured = true;
 		}
 
 		lastTypeValue = "boolean"; // «апомнием последний тип
 	} else if( operation == "-" || operation == "+" || operation == "*" || operation == "/" || operation == "<" ) {
 		if( !( firstExpType == "int" && secondExpType == "int" ) ) {
-			std::cout << expBinOperation->yylineno << "Bad type" << std::endl;
+			throw CMiniJException( std::to_string( expBinOperation->yylineno) + " Bad type" );
 			errorOccured = true;
 		}
 
@@ -155,7 +157,7 @@ void CTypeChecker::visit( const CExpNewIntArray* expNewIntArray )
 {
 	expNewIntArray->Exp()->Accept( this );
 	if( lastTypeValue != "int" ) {
-		std::cout << expNewIntArray->yylineno << "Bad type" << std::endl;
+		throw CMiniJException( std::to_string( expNewIntArray->yylineno) + " Bad type" );
 		errorOccured = true;
 	}
 	lastTypeValue = "int []"; // «апомнием последний тип
@@ -166,7 +168,7 @@ void CTypeChecker::visit( const CExpNewCustomType* expNewCustomType )
 	expNewCustomType->Type()->Accept( this );
 
 	if( symbolTable->GetClass( lastTypeValue ) == nullptr ) {
-		std::cout << expNewCustomType->yylineno << "Bad type" << std::endl;
+		throw CMiniJException( std::to_string( expNewCustomType->yylineno) + " Bad type" );
 		errorOccured = true;
 	}
 }
@@ -175,12 +177,12 @@ void CTypeChecker::visit( const CExpSquareBrackets* expSquareBrackets )
 {
 	expSquareBrackets->FirstExp()->Accept( this );
 	if( lastTypeValue != "int []" ) {
-		std::cout << expSquareBrackets->yylineno << "Bad type" << std::endl;
+		throw CMiniJException( std::to_string( expSquareBrackets->yylineno) + " Bad type" );
 		errorOccured = true;
 	}
 	expSquareBrackets->SecondExp()->Accept( this );
 	if( lastTypeValue != "int" ) {
-		std::cout << expSquareBrackets->yylineno << "Bad type" << std::endl;
+		throw CMiniJException( std::to_string( expSquareBrackets->yylineno) + " Bad type" );
 		errorOccured = true;
 	}
 }
@@ -194,7 +196,7 @@ void CTypeChecker::visit( const CExpNot* expNot )
 {
 	expNot->Exp()->Accept( this );
 	if( lastTypeValue != "boolean" ) {
-		std::cout << expNot->yylineno << "Bad type" << std::endl;
+		throw CMiniJException( std::to_string( expNot->yylineno) + " Bad type" );
 		errorOccured = true;
 	}
 	lastTypeValue = "boolean";
@@ -214,7 +216,7 @@ void CTypeChecker::visit( const CExpId* expId )
 	} else if( currClass->GetVariable( expId->Id() ) != nullptr ) {
 		lastTypeValue = currClass->GetVariable( expId->Id() )->Type()->GetTypeName();
 	} else {
-		std::cout << expId->yylineno << "Undeclared variable" << std::endl;
+		throw CMiniJException( std::to_string( expId->yylineno) + " Undeclared variable" );
 		errorOccured = true;
 	}
 }
@@ -232,7 +234,7 @@ void CTypeChecker::visit( const CExpLength* expLength )
 {
 	expLength->Exp()->Accept( this );
 	if( lastTypeValue != "string" && lastTypeValue != "int []" ) {
-		std::cout << expLength->yylineno << "Must be string" << std::endl;
+		throw CMiniJException( std::to_string( expLength->yylineno) + " Must be string" );
 		errorOccured = true;
 	}
 	lastTypeValue = "int";
@@ -243,11 +245,13 @@ void CTypeChecker::visit( const CExpList* expList ) // јргументы метода
 	if( expList->Exp() ) {
 		expList->Exp()->Accept( this );
 		if( currMethodCall.top()->GetArgument( numOfArgument.top() ) == nullptr ) { // сюда зашло, если хот€ бы 1 аргумент передали в метод
-			std::cout << expList->yylineno << "Type mismatch: " << numOfArgument.top() + 1 << " argument of " << currMethodCall.top()->MethodSymbol()->String() << std::endl;
+			throw CMiniJException( std::to_string( expList->yylineno) + " argument type mismatch in " + 
+								   currMethodCall.top()->MethodSymbol()->String() + ", argument #" + std::to_string( numOfArgument.top() + 1));
 			errorOccured = true;
 		} else
 			if( lastTypeValue != currMethodCall.top()->GetArgument( numOfArgument.top() )->Type()->GetTypeName() ) {
-				std::cout << expList->yylineno << "Type mismatch: " << numOfArgument.top() + 1 << " argument of " << currMethodCall.top()->MethodSymbol()->String() << std::endl;
+				throw CMiniJException( std::to_string( expList->yylineno ) + " argument type mismatch in " +
+									   currMethodCall.top()->MethodSymbol()->String() + ", argument #" + std::to_string( numOfArgument.top() + 1 ));
 				errorOccured = true;
 			}
 		int num = numOfArgument.top() + 1;
@@ -301,7 +305,7 @@ void CTypeChecker::visit( const CStatement* statement )
 	} else if( statement->GetStatementType() == "IfStatement" ) {
 		statement->FirstExpression()->Accept( this );
 		if( lastTypeValue != "boolean" ) {
-			std::cout << statement->yylineno << "Wrong type in condition" << std::endl;
+			throw CMiniJException( std::to_string( statement->yylineno )+ " Wrong type in condition");
 			errorOccured = true;
 		}
 		statement->FirstStatement()->Accept( this );
@@ -309,7 +313,7 @@ void CTypeChecker::visit( const CStatement* statement )
 	} else if( statement->GetStatementType() == "WhileStatement" ) {
 		statement->FirstExpression()->Accept( this );
 		if( lastTypeValue != "boolean" ) {
-			std::cout << statement->yylineno << "Wrong type in condition" << std::endl;
+			throw CMiniJException( std::to_string( statement->yylineno) + " Wrong type in condition" );
 			errorOccured = true;
 		}
 		statement->FirstStatement()->Accept( this );
@@ -317,7 +321,7 @@ void CTypeChecker::visit( const CStatement* statement )
 		statement->FirstExpression()->Accept( this );
 
 		if( lastTypeValue != "int" ) {
-			std::cout << statement->yylineno << "Wrong type in println" << std::endl;
+			throw CMiniJException( std::to_string( statement->yylineno) + " Wrong type in println" );
 			errorOccured = true;
 		}
 	} else if( statement->GetStatementType() == "AssignStatement" ) {
@@ -330,7 +334,7 @@ void CTypeChecker::visit( const CStatement* statement )
 		} else if( currClass->GetVariable( statement->Id() ) != nullptr ) {
 			idType = currClass->GetVariable( statement->Id() )->Type();
 		} else {
-			std::cout << statement->yylineno << "Undeclared variable" << std::endl;
+			throw CMiniJException( std::to_string( statement->yylineno )+ " Undeclared variable" );
 			errorOccured = true;
 			return; // instead of exception - just for now
 		}
@@ -338,7 +342,7 @@ void CTypeChecker::visit( const CStatement* statement )
 		statement->FirstExpression()->Accept( this );
 
 		if( idType->GetTypeName() != lastTypeValue ) {
-			std::cout << statement->yylineno << "Type mismatch" << std::endl;
+			throw CMiniJException( std::to_string( statement->yylineno) + " Type mismatch" );
 			errorOccured = true;
 		}
 	} else if( statement->GetStatementType() == "ArrayAssignStatement" ) {
@@ -351,20 +355,20 @@ void CTypeChecker::visit( const CStatement* statement )
 		} else if( currClass->GetVariable( statement->Id() ) != nullptr ) {
 			idType = currClass->GetVariable( statement->Id() )->Type();
 		} else {
-			std::cout << statement->yylineno << "Undeclared variable" << std::endl;
+			throw CMiniJException( std::to_string( statement->yylineno) + " Undeclared variable" );
 			errorOccured = true;
 			return; // instead of exception - just for now
 		}
 
 		if( idType->GetTypeName() != "int []" ) {
-			std::cout << statement->yylineno << "The variable isn't an array" << std::endl;
+			throw CMiniJException( std::to_string( statement->yylineno) + " The variable isn't an array" );
 			errorOccured = true;
 		}
 
 		statement->FirstExpression()->Accept( this );
 
 		if( lastTypeValue != "int" ) {
-			std::cout << statement->yylineno << "Wrong index type" << std::endl;
+			throw CMiniJException( std::to_string( statement->yylineno) + " Wrong index type" );
 			errorOccured = true;
 		}
 
@@ -372,7 +376,7 @@ void CTypeChecker::visit( const CStatement* statement )
 		statement->SecondExpression()->Accept( this );
 
 		if( lastTypeValue != "int" ) {
-			std::cout << statement->yylineno << "Type mismatch" << std::endl;
+			throw CMiniJException( std::to_string( statement->yylineno) + " Type mismatch" );
 			errorOccured = true;
 		}
 	}
@@ -398,7 +402,7 @@ void CTypeChecker::visit( const CVarDecl* varDecl )
 	if( !isPODName( lastTypeValue ) &&
 		symbolTable->GetClass( lastTypeValue ) == nullptr
 		) {
-		std::cout << varDecl->yylineno << "Undefined type" << std::endl;
+		throw CMiniJException( std::to_string( varDecl->yylineno) + " Undefined type" );
 		errorOccured = true;
 	}
 }

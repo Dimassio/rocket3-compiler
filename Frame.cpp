@@ -49,12 +49,6 @@ int CFrame::FormalCount() const
 	return formals.size();
 }
 
-const IAccess* CFrame::Formal( size_t index ) const
-{
-	// todo:: unordered_map?
-	return nullptr; // todo
-}
-
 const Temp::CTemp* CFrame::GetFP() const
 {
 	return FP;

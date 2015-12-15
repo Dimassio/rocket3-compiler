@@ -12,7 +12,8 @@ namespace IRTree
 		  MEM( Exp exp )
 		  CALL( Exp func, ExpList args )
 		  ESEQ( Stm stm, Exp exp )*/
-		virtual ~IIRExp() {
+		virtual ~IIRExp()
+		{
 		}
 	};
 
@@ -24,7 +25,8 @@ namespace IRTree
 			CJUMP(int relop, Exp left, Exp right, Label iftrue, Label iffalse)
 			SEQ(Stm left, Stm right)
 			LABEL(Label label)*/
-		virtual ~IIRStm() {
+		virtual ~IIRStm()
+		{
 		}
 	};
 
