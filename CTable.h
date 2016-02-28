@@ -6,9 +6,9 @@
 
 class CTable {
 public:
-	bool AddClass(const std::string &classId, const std::string &extendedClassId);
-	CClassInfo* GetClass(const std::string &classId);
-	const CClassInfo* GetClass(const std::string &classId) const;
+	bool AddClass( const std::string &classId, const std::string &extendedClassId );
+	CClassInfo* GetClass( const std::string &classId );
+	const CClassInfo* GetClass( const std::string &classId ) const;
 
 private:
 	std::map<const Symbols::CSymbol*, CClassInfo> classes;

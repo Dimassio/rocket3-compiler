@@ -5,10 +5,10 @@
 
 using namespace IRTree;
 
+// Вызов фунции exp, от параметров expList
 class CIRCall: public IIRExp {
 public:
-	CIRCall(const  IIRExp* _exp, const CIRExpList* _expList);
-
+	CIRCall( const  IIRExp* _exp, const CIRExpList* _expList );
 	~CIRCall();
 
 private:
@@ -16,9 +16,11 @@ private:
 	const CIRExpList* expList;
 };
 
+
+// Представление константы value
 class CIRConst: public IIRExp {
 public:
-	CIRConst(const int _value);
+	CIRConst( const int _value );
 
 	~CIRConst();
 
@@ -26,9 +28,10 @@ private:
 	const int value;
 };
 
+// Обычная бинарная операция
 class CIRBinOp: public IIRExp {
 public:
-	CIRBinOp(const EOperation binop, const IIRExp* _left, const IIRExp* _right);
+	CIRBinOp( const EOperation binop, const IIRExp* _left, const IIRExp* _right );
 
 	~CIRBinOp();
 
@@ -38,9 +41,10 @@ private:
 	const IIRExp* right;
 };
 
+// stm evaluated for side effects, then exp is valuated for result
 class CIRESeq: public IIRExp {
 public:
-	CIRESeq(const IIRStm* _stm, const IIRExp* _exp);
+	CIRESeq( const IIRStm* _stm, const IIRExp* _exp );
 
 	~CIRESeq();
 
@@ -49,9 +53,11 @@ private:
 	const IIRStm* stm;
 };
 
+
+// Получение адрес exp
 class CIRMem: public IIRExp {
 public:
-	CIRMem(const IIRExp* _exp);
+	CIRMem( const IIRExp* _exp );
 
 	~CIRMem();
 
@@ -59,19 +65,20 @@ private:
 	const IIRExp* exp;
 };
 
-class CIRName: public IIRExp {
+// Представляет собой Label
+class CIRName: public IIRExp { 
 public:
-	CIRName(const Temp::CLabel* _label);
-
+	CIRName( const Temp::CLabel* _label );
 	~CIRName();
 
 private:
 	const Temp::CLabel* label;
 };
 
+// Temprorary
 class CIRTemp: public IIRExp {
 public:
-	CIRTemp(const Temp::CTemp* _temp);
+	CIRTemp( const Temp::CTemp* _temp );
 
 	~CIRTemp();
 

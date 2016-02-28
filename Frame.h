@@ -1,3 +1,5 @@
+// Page 118
+
 #pragma once
 #include <vector>
 #include "IRTree.h"
@@ -14,7 +16,7 @@ namespace Frame
 
 	class CInFrame: public IAccess { // In frame: at fp + k
 	public:
-		CInFrame(int _offset);
+		CInFrame( int _offset );
 
 		const IRTree::IIRExp* CInFrame::GetExp( const Temp::CTemp* framePtr ) const;
 	private:
@@ -23,7 +25,7 @@ namespace Frame
 
 	class CInReg: public IAccess { // Var in reg
 	public:
-		CInReg(Temp::CTemp _temp);
+		CInReg( Temp::CTemp _temp );
 
 		const IRTree::IIRExp* GetExp( const Temp::CTemp* framePtr ) const;
 
@@ -33,7 +35,7 @@ namespace Frame
 
 	class CFrame {
 	public:
-		CFrame( const std::string& name, int formalCount);
+		CFrame( const std::string& name, int formalCount );
 
 		~CFrame();
 
@@ -41,15 +43,17 @@ namespace Frame
 
 		const Temp::CTemp* GetFP() const;
 
-		const IAccess* GetVar( const std::string& id) const;
+		const IAccess* GetVar( const std::string& id ) const;
 
 		bool AddLocal( const Symbols::CSymbol* symbol );
 
 		bool AddTemprorary( const Symbols::CSymbol* symbol );
 
 		void HangToRoot( const IIRStm* stm );
+
 		// Размер ячейки
 		static const int wordSize = 4;
+
 	private:
 		std::map<const Symbols::CSymbol*, IAccess*> formals; // аргументы функции
 		std::map<const Symbols::CSymbol*, IAccess*> locals; // локальные переменные

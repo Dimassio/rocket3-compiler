@@ -6,7 +6,7 @@
 
 class CIRTreeBuilder: IVisitor {
 public:
-	CIRTreeBuilder(const CTable* _symbTable);
+	CIRTreeBuilder( const CTable* _symbTable );
 
 	void visit( const CProgram* program );
 
@@ -67,19 +67,19 @@ public:
 	void visit( const CExpRest* expRest );
 
 private:
-	const CTable* symbolTable;
+	const CTable* symbolTable; // Symbols::CSymbol* ---> CClassInfo --->CMethodInfo...
 
-	std::vector<Frame::CFrame*> frames; 
+	std::vector<Frame::CFrame*> frames;
 
 	IRTree::IIRExp* lastNodeExp;
 	IRTree::IIRStm* lastNodeStm;
 
 	Frame::CFrame* currFrame;
-
-	IRTree::CIRExpList* currExpList;
 	const CClassInfo* currClass;
 	const CMethodInfo* currMethod;
 
+	// ??? below
+	IRTree::CIRExpList* currExpList;
 	void buildIfStatement( const IRTree::IIRExp* condition, const IRTree::IIRStm* trueStm, const IRTree::IIRStm* falseStm );
 	void buildWhileStatement( const IRTree::IIRExp* condition, const IRTree::IIRStm* body );
 };
