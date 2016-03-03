@@ -68,7 +68,7 @@ private:
 	const CIRLabel* iffalse;
 };
 
-// Связываем 2 stm: сначала идет left, потом right
+// Связываем 2 stm: сначала идет left stm, потом right stm
 class CIRSeq: public IIRStm {
 public:
 	CIRSeq( const IIRStm* _left, const IIRStm* _right );

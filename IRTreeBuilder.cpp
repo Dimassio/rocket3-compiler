@@ -5,6 +5,7 @@
 #include "Symbols.h"
 #include "StaticVariables.h"
 #include "Temp.h"
+#include "Translate.h"
 
 using namespace Frame;
 
@@ -27,10 +28,17 @@ void CIRTreeBuilder::visit( const CProgram* program )
 void CIRTreeBuilder::visit( const CMainClass* mainClass )
 {
 	CFrame* newFrame = new CFrame( "main", 0 );
+	frames.push_back( newFrame );
+	currFrame = newFrame; // we now in main
 	if( mainClass->Statement() ) {
 		mainClass->Statement()->Accept( this );
-		frames.push_back( newFrame );
 	}
+	// Для совместимости с Exp
+	// В Main всего один Statement, левое поддерево пусть будет пустое
+	CIRESeq* eseq = new CIRESeq( lastNodeStm, nullptr );
+	currFrame->HangToRoot( eseq );
+
+	currFrame = nullptr; // out of main
 }
 
 void CIRTreeBuilder::visit( const CClassDecl* classDecl )
@@ -81,7 +89,7 @@ void CIRTreeBuilder::visit( const CExp* exp )
 	}
 }
 
-void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall ) // ?
+void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall )
 {
 	expMethodCall->Exp()->Accept( this );
 	IIRExp* expForCall = lastNodeExp;
@@ -94,24 +102,33 @@ void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall ) // ?
 	lastNodeExp = newCall;
 }
 
-void CIRTreeBuilder::visit( const CExpNewIntArray* expNewIntArray ) // ?
+void CIRTreeBuilder::visit( const CExpNewIntArray* expNewIntArray )
 {
+	// a = new int[exp]
+	// malloc (exp * wordSize)
+	// memset(mallocExp, 0, exp)
 	expNewIntArray->Exp()->Accept( this );
-
-	IIRExp* count = lastNodeExp;
-	IIRExp* allocationSize = new CIRBinOp( PLUS, count, new CIRConst( 1 ) );
-	CIRTemp* tmp = new CIRTemp( new Temp::CTemp() );
-	IIRStm* first = new CIRMove( tmp, new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "malloc" ) ) ), new CIRExpList( allocationSize, nullptr ) ) );
-	IIRStm* second = new CIRExp( new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "memset" ) ) ), new CIRExpList( std::list< IIRExp* >{ new CIRConst( 0 ), allocationSize, tmp } ) ) );
-	IIRStm* third = new CIRMove( tmp, count );
-	second = new CIRSeq( second, third );
-
-	lastNodeExp = new CIRESeq( new CIRSeq( first, second ), tmp );
+	//malloc:
+	IIRExp* size = new CIRBinOp( PLUS, lastNodeExp, new CIRConst( 1 ) );
+	IIRExp* allocationSize = new CIRBinOp( MUL, size, new CIRConst( currFrame->wordSize ) );
+	IIRExp* mallocExp = new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "malloc" ) ) ), new CIRExpList( allocationSize, nullptr ) );
+	// memset:
+	CIRExpList* memsetArgs = new CIRExpList( mallocExp, nullptr );
+	memsetArgs->Add( new CIRConst( 0 ) );
+	memsetArgs->Add( size );
+	IIRExp* memsetCall = new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "memset" ) ) ), memsetArgs );
+	// making new ESEQ node:
+	Translate::CExpConverter expConverter( memsetCall );
+	lastNodeExp = new CIRESeq( expConverter.ToStm(), mallocExp ); // не смотри, что аргументы идут в таком порядке. Сначала должен Exp посещаться, а потом Statement
 }
 
-void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType ) // ?
+void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType )
 {
-	expNewCustomType->Type()->Accept( this ); // MyClass b;
+	expNewCustomType->Type()->Accept( this ); // b = new MyClass()
+	// malloc:
+	IIRExp* allocationSize = new CIRBinOp( MUL, new CIRConst( 1 ), new CIRConst( currFrame->wordSize ) );
+	IIRExp* mallocExp = new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "malloc" ) ) ), new CIRExpList( allocationSize, nullptr ) );
+	lastNodeExp = mallocExp;
 }
 
 void CIRTreeBuilder::visit( const CExpSquareBrackets* expSquareBrackets )
@@ -134,8 +151,9 @@ void CIRTreeBuilder::visit( const CExpRoundBrackets* expRoundBrackets ) // ?
 void CIRTreeBuilder::visit( const CExpNot* expNot )
 {
 	expNot->Exp()->Accept( this );
-	IRTree::IIRExp* exp = lastNodeExp;
-
+	IIRExp* exp = lastNodeExp;
+	// NOT exp
+	// запомнить! отрицание применяем ко второму аргументу
 	lastNodeExp = new CIRMem( new CIRBinOp( NOT, new CIRConst( 0 ), exp ) );
 }
 
@@ -149,8 +167,17 @@ void CIRTreeBuilder::visit( const CExpId* expId )
 	// nothing to do here
 }
 
-void CIRTreeBuilder::visit( const CExpSingle* expSingle )// ?
+void CIRTreeBuilder::visit( const CExpSingle* expSingle )
 {
+	if( expSingle->ExpName() == "this" ) {
+		lastNodeExp = new CIRName( new Temp::CLabel( currClass->ClassSymbol() ) );
+	}
+	if( expSingle->ExpName() == "True" ) {
+		lastNodeExp = new CIRConst( 1 );
+	}
+	if( expSingle->ExpName() == "False" ) {
+		lastNodeExp = new CIRConst( 0 );
+	}
 }
 
 void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
@@ -174,7 +201,7 @@ void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
 	}
 }
 
-void CIRTreeBuilder::visit( const CExpLength* expLength ) // ?
+void CIRTreeBuilder::visit( const CExpLength* expLength ) // todo: ? + qustion: всегда ли любое выражение мы должны помещать в CIRTemp??
 {
 	expLength->Exp()->Accept( this );
 	IIRExp* array = lastNodeExp;
@@ -212,7 +239,7 @@ void CIRTreeBuilder::visit( const CFormalList* formalList )// ?
 	}
 }
 
-void CIRTreeBuilder::visit( const CMethodDecl* methodDecl ) // ?
+void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
 {
 	currMethod = currClass->GetMethod( methodDecl->Id() );
 	( methodDecl->Type() )->Accept( this );
@@ -222,17 +249,24 @@ void CIRTreeBuilder::visit( const CMethodDecl* methodDecl ) // ?
 	}
 
 	CFrame* newFrame = new CFrame( methodDecl->Id(), currMethod->GetFormalsSize() );
+	frames.push_back( newFrame );
 	currFrame = newFrame;
 
 	if( methodDecl->VarDeclList() ) {
 		( methodDecl->VarDeclList() )->Accept( this );
 	}
 
+
 	if( methodDecl->StatementList() ) {
 		( methodDecl->StatementList() )->Accept( this );
 	}
-	( methodDecl->Exp() )->Accept( this ); // todo: return label
-	
+
+	IIRStm* lastStm = lastNodeStm;
+	( methodDecl->Exp() )->Accept( this ); // todo: make IIRExp::Name label. 2 parameter of constructor below
+										   // should be label for return statement
+	CIRESeq* eseq = new CIRESeq( lastStm, lastNodeExp );
+	currFrame->HangToRoot( eseq ); // подвесили дерево фрейма
+
 	currMethod = nullptr;
 	currFrame = nullptr;
 }
@@ -318,12 +352,19 @@ void CIRTreeBuilder::visit( const CStatement* statement )
 	}
 }
 
-void CIRTreeBuilder::visit( const CStatementList* statementList ) // ?
+void CIRTreeBuilder::visit( const CStatementList* statementList )
 {
 	if( statementList->StatementList() ) {
 		( statementList->StatementList() )->Accept( this );
 	}
+
+	IIRStm* firstStm = lastNodeStm;
+
 	( statementList->Statement() )->Accept( this );
+
+	IIRStm* secondStm = lastNodeStm;
+	CIRSeq* seq = new CIRSeq( firstStm, secondStm );
+	lastNodeStm = seq;
 }
 
 void CIRTreeBuilder::visit( const CType* type )
@@ -331,7 +372,7 @@ void CIRTreeBuilder::visit( const CType* type )
 	// nothing to do here
 }
 
-void CIRTreeBuilder::visit( const CVarDecl* varDecl ) // ?
+void CIRTreeBuilder::visit( const CVarDecl* varDecl )
 {
 	varDecl->Type()->Accept( this );
 	currFrame->AddLocal( new Symbols::CSymbol( varDecl->Id() ) );

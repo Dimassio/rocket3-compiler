@@ -54,9 +54,9 @@ const Temp::CTemp* CFrame::GetFP() const
 	return FP;
 }
 
-void CFrame::HangToRoot( const IIRStm* stm )
+void CFrame::HangToRoot( IIRExp* exp )
 {
-	root = stm;
+	root = exp;
 }
 
 const IAccess* CFrame::GetVar( const std::string& id ) const

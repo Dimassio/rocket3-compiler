@@ -9,6 +9,8 @@
 
 int yyparse( CProgram*& root );
 
+/* TODO: Don't forget to add definition of memset and malloc to symbol table!*/
+
 int main( int argc, char *argv[] )
 {
 	if( argc < 2 ) {

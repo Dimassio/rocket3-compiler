@@ -1,5 +1,3 @@
-// Page 118
-
 #pragma once
 #include <vector>
 #include "IRTree.h"
@@ -49,7 +47,7 @@ namespace Frame
 
 		bool AddTemprorary( const Symbols::CSymbol* symbol );
 
-		void HangToRoot( const IIRStm* stm );
+		void HangToRoot( IRTree::IIRExp* stm );
 
 		// Размер ячейки
 		static const int wordSize = 4;
@@ -60,7 +58,7 @@ namespace Frame
 		std::map<const Symbols::CSymbol*, IAccess*> temproraries; // временные переменные
 
 		Temp::CTemp* FP; // frame pointer
-		const IIRStm* root; // root of frame irtree
+		IRTree::IIRExp* root; // root of frame irtree, or it should be exp?
 
 		int offSet; // Относительно FP
 

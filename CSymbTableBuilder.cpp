@@ -8,6 +8,7 @@
 CSymbTableBuilder::CSymbTableBuilder():
 	symbTable( new CTable() )
 {
+	// TODO: add methods memset and malloc
 }
 
 void CSymbTableBuilder::visit( const CProgram* program )

@@ -41,7 +41,7 @@ private:
 	const IIRExp* right;
 };
 
-// stm evaluated for side effects, then exp is valuated for result
+// exp + stm => exp
 class CIRESeq: public IIRExp {
 public:
 	CIRESeq( const IIRStm* _stm, const IIRExp* _exp );
@@ -49,8 +49,8 @@ public:
 	~CIRESeq();
 
 private:
-	const IIRExp* exp;
-	const IIRStm* stm;
+	const IIRExp* exp; // left node expression
+	const IIRStm* stm; // right node statement
 };
 
 

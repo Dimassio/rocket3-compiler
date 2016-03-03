@@ -32,7 +32,7 @@ namespace IRTree
 
 	class CIRExpList {
 	public:
-		CIRExpList(IIRExp* head, CIRExpList* tail);
+		CIRExpList( IIRExp* head, CIRExpList* tail );
 		CIRExpList( const std::list<IIRExp*>& expList );
 		~CIRExpList();
 
@@ -43,9 +43,10 @@ namespace IRTree
 		std::list<IIRExp*> expList;  // first IIRExp to this
 	};
 
+	/*We don't need it?*/
 	class CIRStmList {
-	public:	
-		CIRStmList(IIRStm* head, CIRStmList* tail);
+	public:
+		CIRStmList( IIRStm* head, CIRStmList* tail );
 		~CIRStmList();
 
 		std::list<IIRStm*> GetStmList();

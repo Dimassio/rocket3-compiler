@@ -16,7 +16,7 @@ namespace Translate
 
 	class CExpConverter: public ISubtreeWrapper {
 	public:
-		CExpConverter(const IRTree::IIRExp* _exp);
+		CExpConverter( const IRTree::IIRExp* _exp );
 
 		~CExpConverter();
 
@@ -30,9 +30,9 @@ namespace Translate
 		const IRTree::IIRExp* exp;
 	};
 
-	class CStmConverter : public ISubtreeWrapper {
+	class CStmConverter: public ISubtreeWrapper {
 	public:
-		CStmConverter(const IRTree::IIRStm* _stm);
+		CStmConverter( const IRTree::IIRStm* _stm );
 
 		~CStmConverter();
 

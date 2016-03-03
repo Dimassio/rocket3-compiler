@@ -78,8 +78,8 @@ private:
 	const CClassInfo* currClass;
 	const CMethodInfo* currMethod;
 
-	// ??? below
-	IRTree::CIRExpList* currExpList;
+	IRTree::CIRExpList* currExpList; // Храняться аргументы метода (первый из них - this)
+	// todo: below
 	void buildIfStatement( const IRTree::IIRExp* condition, const IRTree::IIRStm* trueStm, const IRTree::IIRStm* falseStm );
 	void buildWhileStatement( const IRTree::IIRExp* condition, const IRTree::IIRStm* body );
 };
