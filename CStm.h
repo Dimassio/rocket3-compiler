@@ -79,14 +79,3 @@ private:
 	const IIRStm* left;
 	const IIRStm* right;
 };
-
-
-class CIRPrint: public IIRStm {
-public:
-	CIRPrint( const IIRExp* _exp );
-
-	~CIRPrint();
-
-private:
-	const IIRExp* exp;
-};

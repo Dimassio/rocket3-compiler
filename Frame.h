@@ -58,7 +58,7 @@ namespace Frame
 		std::map<const Symbols::CSymbol*, IAccess*> temproraries; // временные переменные
 
 		Temp::CTemp* FP; // frame pointer
-		IRTree::IIRExp* root; // root of frame irtree, or it should be exp?
+		IRTree::IIRExp* root; // eseq's in roots, because statemnets + return expr
 
 		int offSet; // Относительно FP
 

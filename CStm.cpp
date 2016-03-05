@@ -56,12 +56,3 @@ CIRLabel::CIRLabel( const Temp::CLabel* _label ):
 CIRLabel::~CIRLabel()
 {
 }
-
-CIRPrint::CIRPrint( const IIRExp* _exp ):
-	exp( _exp )
-{
-}
-
-CIRPrint::~CIRPrint()
-{
-}

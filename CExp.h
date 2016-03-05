@@ -41,7 +41,7 @@ private:
 	const IIRExp* right;
 };
 
-// exp + stm => exp
+// exp + stm => return exp
 class CIRESeq: public IIRExp {
 public:
 	CIRESeq( const IIRStm* _stm, const IIRExp* _exp );

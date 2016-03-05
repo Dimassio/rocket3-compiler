@@ -4,12 +4,12 @@
 using namespace IRTree;
 
 
-CIRExpList::CIRExpList(IIRExp* head, CIRExpList* tail)
+CIRExpList::CIRExpList( IIRExp* head, CIRExpList* tail )
 {
 	if( tail != nullptr ) {
 		expList = tail->GetExpList();
 	}
-	expList.push_front(head);
+	expList.push_front( head );
 }
 
 CIRExpList::~CIRExpList()
@@ -28,10 +28,10 @@ void CIRExpList::Add( IIRExp* exp )
 }
 
 
-CIRStmList::CIRStmList(IIRStm * head, CIRStmList * tail)
+CIRStmList::CIRStmList( IIRStm * head, CIRStmList * tail )
 {
 	stmList = tail->GetStmList();
-	stmList.push_front(head);
+	stmList.push_front( head );
 }
 
 CIRStmList::~CIRStmList()
@@ -51,6 +51,6 @@ void CIRStmList::Add( IIRStm* exp )
 
 
 CIRExpList::CIRExpList( const std::list<IIRExp*>& _expList ):
-	expList(_expList)
+	expList( _expList )
 {
 }

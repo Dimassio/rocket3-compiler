@@ -1,5 +1,12 @@
 #include "Symbols.h"
 
+Symbols::CStorage::CStorage()
+{
+	// add methods memset and malloc, print, sizeofs - don't need.
+	// because while Get, we will create everything, that we don't have
+	// is it good?
+}
+
 Symbols::CSymbol::CSymbol(const std::string &_id) :
 	id(_id)
 {
