@@ -65,7 +65,7 @@ public:
 	void visit( const CExpRestList* expRestList );
 
 	void visit( const CExpRest* expRest );
-
+	
 private:
 	const CTable* symbolTable; // Symbols::CSymbol* ---> CClassInfo --->CMethodInfo...
 
@@ -79,4 +79,5 @@ private:
 	const CMethodInfo* currMethod;
 
 	IRTree::CIRExpList* currExpList; // Храняться аргументы метода (первый из них - this)
+	void buildWhileStatement( const IIRExp* condition, const IIRStm* body );
 };

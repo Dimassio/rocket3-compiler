@@ -29,13 +29,6 @@ const IRTree::IIRStm* CExpConverter::ToConditional( const Temp::CLabel* trueLabl
 	return nullptr;
 }
 
-const IRTree::IIRStm* CExpConverter::ToWhileStm( const Temp::CLabel* trueLabel, const Temp::CLabel* falseLabel ) const
-{
-	// stm to while stm
-	// todo 
-	return nullptr;
-}
-
 CStmConverter::CStmConverter( const IRTree::IIRStm * _stm ):
 	stm( _stm )
 {
@@ -59,13 +52,6 @@ const IRTree::IIRStm* CStmConverter::ToStm() const
 
 const IRTree::IIRStm* CStmConverter::ToConditional( const Temp::CLabel* trueLable, const Temp::CLabel* falseLable ) const
 {
-	assert( false );
-	return nullptr;
-}
-
-const IRTree::IIRStm* CStmConverter::ToWhileStm( const Temp::CLabel* trueLabel, const Temp::CLabel* falseLabel ) const
-{
-	// stm to while stm
 	assert( false );
 	return nullptr;
 }

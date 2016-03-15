@@ -12,7 +12,6 @@ namespace Translate
 		virtual const IRTree::IIRExp* ToExp() const = 0; // как Expr
 		virtual const IRTree::IIRStm* ToStm() const = 0; // как Stm
 		virtual const IRTree::IIRStm* ToConditional( const Temp::CLabel* trueLable, const Temp::CLabel* falseLable ) const = 0; // как if/jump
-		virtual const IRTree::IIRStm* ToWhileStm( const Temp::CLabel* trueLabel, const Temp::CLabel* falseLabel ) const = 0;
 	};
 
 	class CExpConverter: public ISubtreeWrapper {
@@ -26,8 +25,6 @@ namespace Translate
 		const IRTree::IIRStm* ToStm() const;
 
 		const IRTree::IIRStm* ToConditional( const Temp::CLabel* trueLable, const Temp::CLabel* falseLable ) const;
-
-		const IRTree::IIRStm* ToWhileStm( const Temp::CLabel* trueLabel, const Temp::CLabel* falseLabel ) const;
 
 	private:
 		const IRTree::IIRExp* exp;
@@ -44,8 +41,6 @@ namespace Translate
 		const IRTree::IIRStm* ToStm() const;
 
 		const IRTree::IIRStm* ToConditional( const Temp::CLabel* trueLable, const Temp::CLabel* falseLable ) const;
-
-		const IRTree::IIRStm* ToWhileStm( const Temp::CLabel* trueLabel, const Temp::CLabel* falseLabel ) const;
 
 	private:
 		const IRTree::IIRStm* stm;

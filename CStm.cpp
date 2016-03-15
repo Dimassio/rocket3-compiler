@@ -21,8 +21,8 @@ CIRExp::~CIRExp()
 {
 }
 
-CIRJump::CIRJump( const IIRExp* _exp, const Temp::CLabelList* _targets ):
-	targets( _targets ), exp( _exp )
+CIRJump::CIRJump( const Temp::CLabel* _target ):
+	target( _target )
 {
 }
 

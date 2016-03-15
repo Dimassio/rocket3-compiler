@@ -287,53 +287,58 @@ void CIRTreeBuilder::visit( const CMethodDeclList* methodDeclList )
 	}
 	methodDeclList->MethodDecl()->Accept( this );
 }
-/*
-void CIRTreeBuilder::buildIfStatement( const IIRExp* condition, const IIRStm* trueStm, const IIRStm* falseStm ) // todo: to Translate module
-{
-	CIRLabel* trueLabel = new CIRLabel( new Temp::CLabel() );
-	CIRLabel* falseLabel = new CIRLabel( new Temp::CLabel() );
-	CIRLabel* endLabel = new CIRLabel( new Temp::CLabel() );
 
-	// todo: what we gonna do with trueBLock, falseBlock
-	IIRStm* trueBlock = new CIRSeq( trueLabel, new CIRSeq( trueStm, endLabel ) ); // example: true_label; true_stm; end_label;
-	IIRStm* falseBlock = new CIRSeq( falseLabel, new CIRSeq( falseStm, endLabel ) );
-	lastNodeStm = new CIRCJump( NE, condition, new CIRConst( 0 ), trueLabel, falseLabel ); // if condition != 0 then trueLabel else falseLabel
+void CIRTreeBuilder::buildWhileStatement( const IIRExp* condition, const IIRStm* body )
+{
+
+
+	whileStatement.Exp()->Accept( *this );
+
+	
+	whileStatement.Statement()->Accept( *this );
+	
 }
 
-void CIRTreeBuilder::buildWhileStatement( const IIRExp* condition, const IIRStm* body ) // todo: to translate module
-{
-	CIRLabel* begin = new CIRLabel( new Temp::CLabel() );
-	CIRLabel* ifTrue = new CIRLabel( new Temp::CLabel() );
-	CIRLabel* end = new CIRLabel( new Temp::CLabel() );
-
-	IIRStm* cycleStep = new CIRSeq( ifTrue, body );
-	IIRStm* checkCondition = new CIRCJump( NE, condition, new CIRConst( 0 ), ifTrue, end );
-
-	//IIRStm* jumpToBegin = new CIRJump( nullptr,); // todo: first parameter - ??? and second is list i don't know how it works(
-
-	lastNodeStm = new CIRSeq( begin, new CIRSeq( checkCondition, new CIRSeq( cycleStep, jumpToBegin) ) );
-}
-*/
 void CIRTreeBuilder::visit( const CStatement* statement )
 {
 	if( statement->GetStatementType() == "BlockStatement" ) {
 		statement->Statements()->Accept( this );
-	} else if( statement->GetStatementType() == "IfStatement" ) { // todo
+	} else if( statement->GetStatementType() == "IfStatement" ) {
 		statement->FirstExpression()->Accept( this );
 		const IIRExp* condition = lastNodeExp;
+
+		CIRLabel* ifTrue = new CIRLabel( new Temp::CLabel() );
 		statement->FirstStatement()->Accept( this );
 		const IIRStm* trueStm = lastNodeStm;
+
+		CIRLabel* elselabel = new CIRLabel( new Temp::CLabel() );
 		statement->SecondStatement()->Accept( this );
 		const IIRStm* falseStm = lastNodeStm;
-		Translate::CExpConverter ifTranslator( condition );
-		lastNodeStm = const_cast< IIRStm* >( ifTranslator.ToConditional() );
-	} else if( statement->GetStatementType() == "WhileStatement" ) { // todo
-		statement->FirstExpression()->Accept( this );
-		IIRExp* condition = lastNodeExp;
-		statement->FirstStatement()->Accept( this );
-		IIRStm* body = lastNodeStm;
 
-		buildWhileStatement( condition, body );
+		CIRLabel* endlabel = new CIRLabel( new Temp::CLabel() );
+		CIRCJump* jump = new CIRCJump( NE, condition, new CIRConst( 0 ), ifTrue, elselabel );
+
+		lastNodeStm = new CIRSeq( jump, endlabel );
+	} else if( statement->GetStatementType() == "WhileStatement" ) { 
+		Temp::CLabel* beforeConditionLabelTemp = new Temp::CLabel();
+		Temp::CLabel* inLoopLabelTemp = new Temp::CLabel();
+		Temp::CLabel* endLabelTemp = new Temp::CLabel();
+		CIRLabel* beforeConditionLabel = new CIRLabel( beforeConditionLabelTemp );
+		CIRLabel* inLoopLabel = new CIRLabel( inLoopLabelTemp );
+		CIRLabel* endLabel = new CIRLabel( endLabelTemp );
+
+		statement->FirstExpression()->Accept( this );
+		Translate::CExpConverter expConverter( lastNodeExp );
+		const IIRStm* whileStm = expConverter.ToConditional( inLoopLabelTemp, endLabelTemp );
+		lastNodeExp = nullptr;
+		lastNodeStm = nullptr;
+		IIRStm* conditionStm = new CIRSeq( beforeConditionLabel, new CIRSeq( whileStm, inLoopLabel ) );
+
+		statement->FirstStatement()->Accept( this );
+		lastNodeStm = new CIRSeq( conditionStm, 
+								  new CIRSeq( lastNodeStm, 
+											  new CIRSeq( new CIRJump( beforeConditionLabelTemp ), endLabel ) ) );
+		lastNodeExp = nullptr;
 	} else if( statement->GetStatementType() == "PrintlnStatement" ) {
 		statement->FirstExpression()->Accept( this );
 		IIRExp* toPrint = lastNodeExp;

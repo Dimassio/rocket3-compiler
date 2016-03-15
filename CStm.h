@@ -32,13 +32,12 @@ private:
 
 class CIRJump: public IIRStm {
 public:
-	CIRJump( const IIRExp* _exp, const Temp::CLabelList* _targets );
+	CIRJump( const Temp::CLabel* _targets );
 
 	~CIRJump();
 
 private:
-	const IIRExp* exp;
-	const Temp::CLabelList* targets;
+	const Temp::CLabel* target;
 };
 
 
