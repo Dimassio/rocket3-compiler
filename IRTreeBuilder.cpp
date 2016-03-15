@@ -288,17 +288,6 @@ void CIRTreeBuilder::visit( const CMethodDeclList* methodDeclList )
 	methodDeclList->MethodDecl()->Accept( this );
 }
 
-void CIRTreeBuilder::buildWhileStatement( const IIRExp* condition, const IIRStm* body )
-{
-
-
-	whileStatement.Exp()->Accept( *this );
-
-	
-	whileStatement.Statement()->Accept( *this );
-	
-}
-
 void CIRTreeBuilder::visit( const CStatement* statement )
 {
 	if( statement->GetStatementType() == "BlockStatement" ) {
@@ -306,19 +295,34 @@ void CIRTreeBuilder::visit( const CStatement* statement )
 	} else if( statement->GetStatementType() == "IfStatement" ) {
 		statement->FirstExpression()->Accept( this );
 		const IIRExp* condition = lastNodeExp;
+		lastNodeExp = nullptr;
+		lastNodeStm = nullptr;
+		Temp::CLabel* trueLabelTemp = new Temp::CLabel();
+		Temp::CLabel* falseLabelTemp = new Temp::CLabel();
+		Temp::CLabel* endLabelTemp = new Temp::CLabel();
+		CIRLabel* trueLabel = new CIRLabel( trueLabelTemp );
+		CIRLabel* falseLabel = new CIRLabel( falseLabelTemp );
+		CIRLabel* endLabel = new CIRLabel( endLabelTemp );
+		CIRJump* trueJumpToEnd = new CIRJump( endLabelTemp ); // from if
+		CIRJump* falseJumpToEnd = new CIRJump( endLabelTemp ); // from false
 
-		CIRLabel* ifTrue = new CIRLabel( new Temp::CLabel() );
 		statement->FirstStatement()->Accept( this );
-		const IIRStm* trueStm = lastNodeStm;
-
-		CIRLabel* elselabel = new CIRLabel( new Temp::CLabel() );
-		statement->SecondStatement()->Accept( this );
-		const IIRStm* falseStm = lastNodeStm;
-
-		CIRLabel* endlabel = new CIRLabel( new Temp::CLabel() );
-		CIRCJump* jump = new CIRCJump( NE, condition, new CIRConst( 0 ), ifTrue, elselabel );
-
-		lastNodeStm = new CIRSeq( jump, endlabel );
+		IIRStm* trueStm = new CIRSeq( trueLabel, 
+									  new CIRSeq( lastNodeStm, trueJumpToEnd ) );
+		lastNodeExp = nullptr;
+		lastNodeStm = nullptr;
+		IIRStm* falseStm = 0;
+		if( statement->SecondStatement() != 0 ) {
+			statement->SecondStatement()->Accept( this );
+			falseStm = new CIRSeq( falseLabel, 
+								   new CIRSeq( lastNodeStm, falseJumpToEnd ) );
+			lastNodeExp = nullptr;
+			lastNodeStm = nullptr;
+		}	
+		Translate::CExpConverter converter( condition );
+		lastNodeStm = new CIRSeq( converter.ToConditional( trueLabelTemp, falseLabelTemp ), 
+								  new CIRSeq( trueStm, 
+											  new CIRSeq( falseStm, endLabel ) ) );
 	} else if( statement->GetStatementType() == "WhileStatement" ) { 
 		Temp::CLabel* beforeConditionLabelTemp = new Temp::CLabel();
 		Temp::CLabel* inLoopLabelTemp = new Temp::CLabel();

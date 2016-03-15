@@ -79,5 +79,4 @@ private:
 	const CMethodInfo* currMethod;
 
 	IRTree::CIRExpList* currExpList; // Храняться аргументы метода (первый из них - this)
-	void buildWhileStatement( const IIRExp* condition, const IIRStm* body );
 };
