@@ -9,8 +9,6 @@
 
 int yyparse( CProgram*& root );
 
-/* TODO: Don't forget to add definition of memset and malloc to symbol table!*/
-
 int main( int argc, char *argv[] )
 {
 	if( argc < 2 ) {
@@ -37,7 +35,7 @@ int main( int argc, char *argv[] )
 		typeChecker.visit( root );
 
 		CIRTreeBuilder irTreeBuilder( symbTableBuilder.GetSymbolTable() );
-		//irTreeBuilder.visit(root);
+		irTreeBuilder.visit(root);
 
 		fclose( yyin );
 	}
