@@ -1,4 +1,5 @@
 #pragma once
+#include "IIRTreeVisitor.h"
 #include <list>
 
 namespace IRTree
@@ -15,6 +16,8 @@ namespace IRTree
 		virtual ~IIRExp()
 		{
 		}
+
+		virtual void Accept(IIRTreeVisitor* visitor) const = 0;
 	};
 
 	class IIRStm {
@@ -28,6 +31,8 @@ namespace IRTree
 		virtual ~IIRStm()
 		{
 		}
+
+		virtual void Accept(IIRTreeVisitor* visitor) const = 0;
 	};
 
 	class CIRExpList {
@@ -36,23 +41,9 @@ namespace IRTree
 		CIRExpList( const std::list<IIRExp*>& expList );
 		~CIRExpList();
 
-		std::list<IIRExp*> GetExpList();
+		void Accept(IIRTreeVisitor* visitor) const;
 		void Add( IIRExp* exp );
 
-	private:
 		std::list<IIRExp*> expList;  // first IIRExp to this
-	};
-
-	/*We don't need it?*/
-	class CIRStmList {
-	public:
-		CIRStmList( IIRStm* head, CIRStmList* tail );
-		~CIRStmList();
-
-		std::list<IIRStm*> GetStmList();
-		void Add( IIRStm* exp );
-
-	private:
-		std::list<IIRStm*> stmList;
 	};
 }

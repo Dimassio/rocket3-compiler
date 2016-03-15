@@ -16,41 +16,16 @@ CIRExpList::~CIRExpList()
 {
 }
 
-std::list<IIRExp*> CIRExpList::GetExpList()
-{
-	return expList;
-}
-
-
 void CIRExpList::Add( IIRExp* exp )
 {
 	expList.push_back( exp );
 }
 
-
-CIRStmList::CIRStmList( IIRStm * head, CIRStmList * tail )
-{
-	stmList = tail->GetStmList();
-	stmList.push_front( head );
-}
-
-CIRStmList::~CIRStmList()
-{
-}
-
-std::list<IIRStm*> CIRStmList::GetStmList()
-{
-	return stmList;
-}
-
-
-void CIRStmList::Add( IIRStm* exp )
-{
-	stmList.push_back( exp );
-}
-
-
 CIRExpList::CIRExpList( const std::list<IIRExp*>& _expList ):
 	expList( _expList )
 {
+}
+
+void CIRExpList::Accept(IIRTreeVisitor* visitor) const {
+	visitor->visit(this);
 }

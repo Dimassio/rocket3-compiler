@@ -2,6 +2,7 @@
 #include "Temp.h"
 #include "IRTree.h"
 #include "EOperation.h"
+#include "IIRTreeVisitor.h"
 
 using namespace IRTree;
 
@@ -11,7 +12,8 @@ public:
 	CIRCall( const  IIRExp* _exp, const CIRExpList* _expList );
 	~CIRCall();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const IIRExp* exp;
 	const CIRExpList* expList;
 };
@@ -21,10 +23,10 @@ private:
 class CIRConst: public IIRExp {
 public:
 	CIRConst( const int _value );
-
 	~CIRConst();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const int value;
 };
 
@@ -32,10 +34,10 @@ private:
 class CIRBinOp: public IIRExp {
 public:
 	CIRBinOp( const EOperation binop, const IIRExp* _left, const IIRExp* _right );
-
 	~CIRBinOp();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const EOperation opId;
 	const IIRExp* left;
 	const IIRExp* right;
@@ -45,10 +47,10 @@ private:
 class CIRESeq: public IIRExp {
 public:
 	CIRESeq( const IIRStm* _stm, const IIRExp* _exp );
-
 	~CIRESeq();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const IIRExp* exp; // left node expression
 	const IIRStm* stm; // right node statement
 };
@@ -58,10 +60,10 @@ private:
 class CIRMem: public IIRExp {
 public:
 	CIRMem( const IIRExp* _exp );
-
 	~CIRMem();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const IIRExp* exp;
 };
 
@@ -71,7 +73,8 @@ public:
 	CIRName( const Temp::CLabel* _label );
 	~CIRName();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const Temp::CLabel* label;
 };
 
@@ -79,9 +82,9 @@ private:
 class CIRTemp: public IIRExp {
 public:
 	CIRTemp( const Temp::CTemp* _temp );
-
 	~CIRTemp();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const Temp::CTemp* temp;
 };

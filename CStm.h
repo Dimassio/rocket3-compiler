@@ -3,6 +3,7 @@
 #include "IRTree.h"
 #include "Temp.h"
 #include "EOperation.h"
+#include "IIRTreeVisitor.h"
 
 using namespace IRTree;
 
@@ -11,10 +12,10 @@ using namespace IRTree;
 class CIRMove: public IIRStm {
 public:
 	CIRMove( const IIRExp* _dst, const IIRExp* _src );
-
 	~CIRMove();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const IIRExp* dst;
 	const IIRExp* src;
 };
@@ -23,10 +24,10 @@ private:
 class CIRExp: public IIRStm {
 public:
 	CIRExp( const IIRExp* _exp );
-
 	~CIRExp();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const IIRExp* exp;
 };
 
@@ -45,10 +46,10 @@ private:
 class CIRLabel: public IIRStm {
 public:
 	CIRLabel( const Temp::CLabel* _label );
-
 	~CIRLabel();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const Temp::CLabel* label;
 };
 
@@ -56,10 +57,10 @@ private:
 class CIRCJump: public IIRStm {
 public:
 	CIRCJump( const EOperation op, const IIRExp* _left, const IIRExp* _right, const CIRLabel* _iftrue, const CIRLabel* _iffalse );
-
 	~CIRCJump();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const EOperation op;
 	const IIRExp* left;
 	const IIRExp* right;
@@ -71,10 +72,10 @@ private:
 class CIRSeq: public IIRStm {
 public:
 	CIRSeq( const IIRStm* _left, const IIRStm* _right );
-
 	~CIRSeq();
 
-private:
+	void Accept(IIRTreeVisitor* visitor) const;
+
 	const IIRStm* left;
 	const IIRStm* right;
 };

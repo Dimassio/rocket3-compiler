@@ -49,8 +49,12 @@ namespace Frame
 
 		void HangToRoot( IRTree::IIRExp* stm );
 
+		const std::string& GetFrameName() const;
+
 		// Размер ячейки
 		static const int wordSize = 4;
+
+		IRTree::IIRExp* root; // eseq's in roots, because statemnets + return expr
 
 	private:
 		std::map<const Symbols::CSymbol*, IAccess*> formals; // аргументы функции
@@ -58,7 +62,6 @@ namespace Frame
 		std::map<const Symbols::CSymbol*, IAccess*> temproraries; // временные переменные
 
 		Temp::CTemp* FP; // frame pointer
-		IRTree::IIRExp* root; // eseq's in roots, because statemnets + return expr
 
 		int offSet; // Относительно FP
 
