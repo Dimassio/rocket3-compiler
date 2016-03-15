@@ -44,6 +44,10 @@ CFrame::~CFrame()
 	delete FP;
 }
 
+const std::string& CFrame::GetFrameName() const {
+	return symbol->String();
+}
+
 int CFrame::FormalCount() const
 {
 	return formals.size();

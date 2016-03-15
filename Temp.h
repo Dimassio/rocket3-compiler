@@ -21,16 +21,6 @@ namespace Temp
 		std::string name;
 	};
 
-	class CLabelList {
-	public:
-		CLabelList( const CLabel* label );
-		~CLabelList();
-
-		void Add( const CLabel* label );
-	private:
-		std::list<const CLabel*> labels;
-	};
-
 	// Временная переменная
 	class CTemp {
 	public:

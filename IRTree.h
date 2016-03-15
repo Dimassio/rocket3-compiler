@@ -1,4 +1,5 @@
 #pragma once
+#include "IIRTreeVisitor.h"
 #include <list>
 
 namespace IRTree
@@ -15,6 +16,8 @@ namespace IRTree
 		virtual ~IIRExp()
 		{
 		}
+
+		virtual void Accept(IIRTreeVisitor* visitor) const = 0;
 	};
 
 	class IIRStm {
@@ -28,6 +31,8 @@ namespace IRTree
 		virtual ~IIRStm()
 		{
 		}
+
+		virtual void Accept(IIRTreeVisitor* visitor) const = 0;
 	};
 
 	class CIRExpList {
