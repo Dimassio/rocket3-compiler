@@ -1,8 +1,6 @@
 #include "CStm.h"
 #include "IRTree.h"
 
-using namespace IRTree;
-
 CIRMove::CIRMove( const IIRExp* _dst, const IIRExp* _src ):
 	dst( _dst ), src( _src )
 {

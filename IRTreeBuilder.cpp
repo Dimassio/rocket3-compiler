@@ -143,10 +143,10 @@ void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType )
 void CIRTreeBuilder::visit( const CExpSquareBrackets* expSquareBrackets )
 {
 	expSquareBrackets->FirstExp()->Accept( this );
-	IRTree::IIRExp* firstExp = lastNodeExp;
+	IIRExp* firstExp = lastNodeExp;
 
 	expSquareBrackets->SecondExp()->Accept( this );
-	IRTree::IIRExp* secondExp = lastNodeExp;
+	IIRExp* secondExp = lastNodeExp;
 
 	IIRExp* offset = new CIRBinOp( MUL, secondExp, new CIRConst( CFrame::wordSize ) );
 	lastNodeExp = new CIRMem( new CIRBinOp( PLUS, firstExp, offset ) );
@@ -192,10 +192,10 @@ void CIRTreeBuilder::visit( const CExpSingle* expSingle )
 void CIRTreeBuilder::visit( const CExpBinOperation* expBinOperation )
 {
 	expBinOperation->FirstExp()->Accept( this );
-	IRTree::IIRExp* firstExp = lastNodeExp;
+	IIRExp* firstExp = lastNodeExp;
 
 	expBinOperation->SecondExp()->Accept( this );
-	IRTree::IIRExp* secondExp = lastNodeExp;
+	IIRExp* secondExp = lastNodeExp;
 
 	if( expBinOperation->ExpName() == "+" ) {
 		lastNodeExp = new CIRMem( new CIRBinOp( PLUS, firstExp, secondExp ) );

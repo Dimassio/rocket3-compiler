@@ -5,8 +5,6 @@
 #include "EOperation.h"
 #include "IIRTreeVisitor.h"
 
-using namespace IRTree;
-
 // 1. Move(Temp(t), e) - перенести e в temprorary t
 // 2. Move(Mem(e1), e2) - закинуть результат e2 в память. начиная с адреса Mem(e1)
 class CIRMove: public IIRStm {
@@ -33,12 +31,12 @@ public:
 
 class CIRJump: public IIRStm {
 public:
-	CIRJump( const Temp::CLabel* _targets );
-
+	CIRJump( const Temp::CLabel* _label );
 	~CIRJump();
 
-private:
-	const Temp::CLabel* target;
+	void Accept(IIRTreeVisitor* visitor) const;
+
+	const Temp::CLabel* label;
 };
 
 

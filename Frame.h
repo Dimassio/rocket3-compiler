@@ -9,14 +9,14 @@ namespace Frame
 	class IAccess {
 	public:
 		virtual ~IAccess();
-		virtual const IRTree::IIRExp* GetExp( const Temp::CTemp* framePtr ) const = 0;
+		virtual const IIRExp* GetExp( const Temp::CTemp* framePtr ) const = 0;
 	};
 
 	class CInFrame: public IAccess { // In frame: at fp + k
 	public:
 		CInFrame( int _offset );
 
-		const IRTree::IIRExp* CInFrame::GetExp( const Temp::CTemp* framePtr ) const;
+		const IIRExp* CInFrame::GetExp( const Temp::CTemp* framePtr ) const;
 	private:
 		int offset;
 	};
@@ -25,7 +25,7 @@ namespace Frame
 	public:
 		CInReg( Temp::CTemp _temp );
 
-		const IRTree::IIRExp* GetExp( const Temp::CTemp* framePtr ) const;
+		const IIRExp* GetExp( const Temp::CTemp* framePtr ) const;
 
 	private:
 		Temp::CTemp temp;
@@ -47,14 +47,14 @@ namespace Frame
 
 		bool AddTemprorary( const Symbols::CSymbol* symbol );
 
-		void HangToRoot( IRTree::IIRExp* stm );
+		void HangToRoot( IIRExp* stm );
 
 		const std::string& GetFrameName() const;
 
 		// Размер ячейки
 		static const int wordSize = 4;
 
-		IRTree::IIRExp* root; // eseq's in roots, because statemnets + return expr
+		IIRExp* root; // eseq's in roots, because statemnets + return expr
 
 	private:
 		std::map<const Symbols::CSymbol*, IAccess*> formals; // аргументы функции

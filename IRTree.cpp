@@ -1,13 +1,10 @@
 #include <list>
 #include "IRTree.h"
 
-using namespace IRTree;
-
-
 CIRExpList::CIRExpList( IIRExp* head, CIRExpList* tail )
 {
 	if( tail != nullptr ) {
-		expList = tail->GetExpList();
+		expList = tail->expList;
 	}
 	expList.push_front( head );
 }

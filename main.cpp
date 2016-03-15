@@ -39,7 +39,7 @@ int main( int argc, char *argv[] )
 		irTreeBuilder.visit(root);
 
 		for (const auto& frame : irTreeBuilder.frames) {
-			IRTree::CIRTreeToGraphConverter irTreeToGraphConverter(
+			CIRTreeToGraphConverter irTreeToGraphConverter(
 				std::string("IRTree_") + frame->GetFrameName() + std::string(".dot"));
 
 			frame->root->Accept(&irTreeToGraphConverter);

@@ -1,8 +1,6 @@
 #include "CExp.h"
 #include "IRTree.h"
 
-using namespace IRTree;
-
 CIRCall::CIRCall(const  IIRExp* _exp, const CIRExpList* _expList) :
 	exp(_exp), expList(_expList)
 {

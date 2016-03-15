@@ -72,12 +72,12 @@ public:
 private:
 	const CTable* symbolTable; // Symbols::CSymbol* ---> CClassInfo --->CMethodInfo...
 
-	IRTree::IIRExp* lastNodeExp;
-	IRTree::IIRStm* lastNodeStm;
+	IIRExp* lastNodeExp;
+	IIRStm* lastNodeStm;
 
 	Frame::CFrame* currFrame;
 	const CClassInfo* currClass;
 	const CMethodInfo* currMethod;
 
-	IRTree::CIRExpList* currExpList; // Храняться аргументы метода (первый из них - this)
+	CIRExpList* currExpList; // Храняться аргументы метода (первый из них - this)
 };

@@ -4,8 +4,6 @@
 #include "EOperation.h"
 #include "IIRTreeVisitor.h"
 
-using namespace IRTree;
-
 // Вызов фунции exp, от параметров expList
 class CIRCall: public IIRExp {
 public:

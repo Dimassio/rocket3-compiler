@@ -10,12 +10,12 @@ IAccess::~IAccess()
 {
 }
 
-const IRTree::IIRExp* CInFrame::GetExp( const Temp::CTemp* framePtr ) const
+const IIRExp* CInFrame::GetExp( const Temp::CTemp* framePtr ) const
 {
 	return new CIRMem( new CIRBinOp( PLUS, new CIRTemp( framePtr ), new CIRConst( offset ) ) );
 }
 
-const IRTree::IIRExp* CInReg::GetExp( const Temp::CTemp* framePtr ) const
+const IIRExp* CInReg::GetExp( const Temp::CTemp* framePtr ) const
 {
 	return new CIRTemp( framePtr );
 }
