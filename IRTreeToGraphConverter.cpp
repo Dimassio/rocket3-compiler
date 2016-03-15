@@ -89,7 +89,7 @@ namespace IRTree {
 	void CIRTreeToGraphConverter::visit(const CIRBinOp* node)
 	{
 		node->left->Accept(this);
-		//string leftString = lastNodeName;
+		string leftString = lastNodeName;
 		node->right->Accept(this);
 		string rightString = lastNodeName;
 		//graphviz отказывается работать с символами типа + *
@@ -147,7 +147,7 @@ namespace IRTree {
 	{
 		node->exp->Accept(this);
 		string funcString = lastNodeName;
-		node->args.Accept(this);
+		node->expList->Accept(this);
 		string argsString = lastNodeName;
 		nextNameWithId("call");
 		treeRepresentation.AddEdge(lastNodeName, funcString, "func");
@@ -165,27 +165,16 @@ namespace IRTree {
 		treeRepresentation.AddEdge(lastNodeName, stmString, "stm");
 	}
 
-	void CIRTreeToGraphConverter::visit(const CExpList* node)
+	void CIRTreeToGraphConverter::visit(const CIRExpList* node)
 	{
-		if (node->head != nullptr) {
-			node->head->Accept(*this);
-			string headString = lastNodeName;
-			if (node->tail != nullptr) {
-				node->tail->Accept(*this);
-				string tailString = lastNodeName;
-				nextNameWithId("expList");
-				treeRepresentation.AddEdge(lastNodeName, headString, "head");
-				treeRepresentation.AddEdge(lastNodeName, tailString, "tail");
-			}
-			else {
-				nextNameWithId("expList");
-				treeRepresentation.AddEdge(lastNodeName, headString, "head");
-			}
-		}
-		else {
-			nextNameWithId("expList");
-		}
+		nextNameWithId("expList");
+		string previousExpName = lastNodeName;
 
+		for (auto exp : node->expList) {
+			exp->Accept(this);
+			treeRepresentation.AddEdge(lastNodeName, previousExpName, "expListElement");
+			string previousExpName = lastNodeName;
+		}
 	}
 
 	void CIRTreeToGraphConverter::visit(const CIRLabel* node)

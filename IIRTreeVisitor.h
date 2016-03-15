@@ -32,7 +32,7 @@ namespace IRTree {
 
 		virtual void visit(const CIRESeq* node) = 0;
 
-		virtual void visit(const CExpList* node) = 0;
+		virtual void visit(const CIRExpList* node) = 0;
 
 		virtual void visit(const CIRLabel* node) = 0;
 	};

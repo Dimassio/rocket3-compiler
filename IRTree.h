@@ -41,23 +41,9 @@ namespace IRTree
 		CIRExpList( const std::list<IIRExp*>& expList );
 		~CIRExpList();
 
-		std::list<IIRExp*> GetExpList();
+		void Accept(IIRTreeVisitor* visitor) const;
 		void Add( IIRExp* exp );
 
-	private:
 		std::list<IIRExp*> expList;  // first IIRExp to this
-	};
-
-	/*We don't need it?*/
-	class CIRStmList {
-	public:
-		CIRStmList( IIRStm* head, CIRStmList* tail );
-		~CIRStmList();
-
-		std::list<IIRStm*> GetStmList();
-		void Add( IIRStm* exp );
-
-	private:
-		std::list<IIRStm*> stmList;
 	};
 }
