@@ -13,7 +13,7 @@ const std::string& Symbols::CSymbol::String() const {
 	return id;
 }
 
-const Symbols::CSymbol* Symbols::CStorage::Get(const std::string &id) {
+const Symbols::CSymbol* Symbols::CStorage::Get(const std::string id) {
 	if (symbols.find(id) == symbols.end()) {
 		symbols[id] = new CSymbol(id);
 	}

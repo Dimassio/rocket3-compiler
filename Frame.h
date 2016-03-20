@@ -45,6 +45,8 @@ namespace Frame
 
 		bool AddLocal( const Symbols::CSymbol* symbol );
 
+		bool AddFormal(const Symbols::CSymbol* symbol);
+
 		bool AddTemprorary( const Symbols::CSymbol* symbol );
 
 		void HangToRoot( IIRExp* stm );

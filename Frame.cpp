@@ -89,6 +89,17 @@ bool CFrame::AddLocal( const Symbols::CSymbol* symbol )
 	}
 }
 
+bool CFrame::AddFormal(const Symbols::CSymbol* symbol) {
+	if (formals.find(symbol) == formals.end()) {
+		formals[symbol] = new CInFrame(offSet);
+		offSet += wordSize;
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 bool CFrame::AddTemprorary( const Symbols::CSymbol* symbol )
 {
 	if( temproraries.find( symbol ) == temproraries.end() ) {

@@ -17,7 +17,7 @@ namespace Symbols
 	class CStorage {
 	public:
 		CStorage();
-		const CSymbol* Get( const std::string &id );
+		const CSymbol* Get( const std::string id );
 	private:
 		std::map<std::string, CSymbol*> symbols;
 	};

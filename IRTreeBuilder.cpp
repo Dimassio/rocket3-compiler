@@ -241,6 +241,11 @@ void CIRTreeBuilder::visit( const CFormalList* formalList )
 	}
 
 	formalList->Type()->Accept( this );
+
+	if (currFrame != nullptr) {
+		currFrame->AddFormal(new Symbols::CSymbol(formalList->Id()));
+	}
+
 	if( formalList->FormalRestList() ) {
 		formalList->FormalRestList()->Accept( this );
 
@@ -392,7 +397,10 @@ void CIRTreeBuilder::visit( const CType* type )
 void CIRTreeBuilder::visit( const CVarDecl* varDecl )
 {
 	varDecl->Type()->Accept( this );
-	currFrame->AddLocal( new Symbols::CSymbol( varDecl->Id() ) );
+
+	if (currFrame != nullptr) {
+		currFrame->AddLocal(new Symbols::CSymbol(varDecl->Id()));
+	}
 }
 
 void CIRTreeBuilder::visit( const CVarDeclList* varDeclList )
@@ -414,6 +422,10 @@ void CIRTreeBuilder::visit( const CFormalRestList* formalRestList )
 void CIRTreeBuilder::visit( const CFormalRest* formalRest )
 {
 	formalRest->Type()->Accept( this );
+
+	if (currFrame != nullptr) {
+		currFrame->AddFormal(new Symbols::CSymbol(formalRest->Id()));
+	}
 }
 
 void CIRTreeBuilder::visit( const CExpRestList* expRestList )
