@@ -36,15 +36,15 @@ int main( int argc, char *argv[] )
 		typeChecker.visit( root );
 
 		CIRTreeBuilder irTreeBuilder( symbTableBuilder.GetSymbolTable() );
-		irTreeBuilder.visit(root);
+		irTreeBuilder.visit( root );
 
-		for (const auto& frame : irTreeBuilder.frames) {
+		/*for( const auto& frame : irTreeBuilder.frames ) {
 			CIRTreeToGraphConverter irTreeToGraphConverter(
-				std::string("IRTree_") + frame->GetFrameName() + std::string(".dot"));
+				std::string( "IRTree_" ) + frame->GetFrameName() + std::string( ".dot" ) );
 
-			frame->root->Accept(&irTreeToGraphConverter);
+			frame->root->Accept( &irTreeToGraphConverter );
 			irTreeToGraphConverter.Flush();
-		}
+		}*/
 
 		fclose( yyin );
 	}

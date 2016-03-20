@@ -69,9 +69,9 @@ const IAccess* CFrame::GetVar( const std::string& id ) const
 
 	if( formals.find( symbol ) != formals.end() ) {
 		return formals.at( symbol );
-	} else if( locals.find( symbol ) != formals.end() ) {
+	} else if( locals.find( symbol ) != locals.end() ) {
 		return locals.at( symbol );
-	} else if( temproraries.find( symbol ) != formals.end() ) {
+	} else if( temproraries.find( symbol ) != temproraries.end() ) {
 		return temproraries.at( symbol );
 	} else {
 		return nullptr;
@@ -80,7 +80,7 @@ const IAccess* CFrame::GetVar( const std::string& id ) const
 
 bool CFrame::AddLocal( const Symbols::CSymbol* symbol )
 {
-	if( locals.find( symbol ) != locals.end() ) {
+	if( locals.find( symbol ) == locals.end() ) {
 		locals[symbol] = new CInFrame(offSet);
 		offSet += wordSize;
 		return true;
@@ -91,7 +91,7 @@ bool CFrame::AddLocal( const Symbols::CSymbol* symbol )
 
 bool CFrame::AddTemprorary( const Symbols::CSymbol* symbol )
 {
-	if( temproraries.find( symbol ) != temproraries.end() ) {
+	if( temproraries.find( symbol ) == temproraries.end() ) {
 		temproraries[symbol] = new CInFrame( offSet );
 		offSet += wordSize;
 		return true;

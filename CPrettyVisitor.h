@@ -1,5 +1,4 @@
-﻿#ifndef CPRETTYVISITOR_H_INCLUDED
-#define CPRETTYVISITOR_H_INCLUDED
+﻿#pragma once
 
 #include <iostream>
 #include <string>
@@ -73,5 +72,3 @@ private:
 
 	void printIdentation();
 };
-
-#endif

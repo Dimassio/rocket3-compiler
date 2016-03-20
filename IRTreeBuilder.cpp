@@ -27,7 +27,7 @@ void CIRTreeBuilder::visit( const CProgram* program )
 
 void CIRTreeBuilder::visit( const CMainClass* mainClass )
 {
-	currMethod = currClass->GetMethod( "main" );
+	// CurrClass and CurrMethod we do not set for main only
 	CFrame* newFrame = new CFrame( "main", 1 );
 	frames.push_back( newFrame );
 	currFrame = newFrame; // we now in main
@@ -40,7 +40,6 @@ void CIRTreeBuilder::visit( const CMainClass* mainClass )
 	currFrame->HangToRoot( new CIRESeq( lastNodeStm, nullptr ) );
 
 	currFrame = nullptr; // out of main
-	currMethod = nullptr;
 }
 
 void CIRTreeBuilder::visit( const CClassDecl* classDecl )
@@ -262,9 +261,8 @@ void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
 	currFrame = newFrame;
 
 	if( methodDecl->VarDeclList() ) {
-		( methodDecl->VarDeclList() )->Accept( this );
+		( methodDecl->VarDeclList() )->Accept( this ); //  adding locals HERE
 	}
-
 
 	if( methodDecl->StatementList() ) {
 		( methodDecl->StatementList() )->Accept( this );
@@ -307,23 +305,23 @@ void CIRTreeBuilder::visit( const CStatement* statement )
 		CIRJump* falseJumpToEnd = new CIRJump( endLabelTemp ); // from false
 
 		statement->FirstStatement()->Accept( this );
-		IIRStm* trueStm = new CIRSeq( trueLabel, 
+		IIRStm* trueStm = new CIRSeq( trueLabel,
 									  new CIRSeq( lastNodeStm, trueJumpToEnd ) );
 		lastNodeExp = nullptr;
 		lastNodeStm = nullptr;
 		IIRStm* falseStm = 0;
 		if( statement->SecondStatement() != 0 ) {
 			statement->SecondStatement()->Accept( this );
-			falseStm = new CIRSeq( falseLabel, 
+			falseStm = new CIRSeq( falseLabel,
 								   new CIRSeq( lastNodeStm, falseJumpToEnd ) );
 			lastNodeExp = nullptr;
 			lastNodeStm = nullptr;
-		}	
+		}
 		Translate::CExpConverter converter( condition );
-		lastNodeStm = new CIRSeq( converter.ToConditional( trueLabelTemp, falseLabelTemp ), 
-								  new CIRSeq( trueStm, 
+		lastNodeStm = new CIRSeq( converter.ToConditional( trueLabelTemp, falseLabelTemp ),
+								  new CIRSeq( trueStm,
 											  new CIRSeq( falseStm, endLabel ) ) );
-	} else if( statement->GetStatementType() == "WhileStatement" ) { 
+	} else if( statement->GetStatementType() == "WhileStatement" ) {
 		Temp::CLabel* beforeConditionLabelTemp = new Temp::CLabel();
 		Temp::CLabel* inLoopLabelTemp = new Temp::CLabel();
 		Temp::CLabel* endLabelTemp = new Temp::CLabel();
@@ -339,8 +337,8 @@ void CIRTreeBuilder::visit( const CStatement* statement )
 		IIRStm* conditionStm = new CIRSeq( beforeConditionLabel, new CIRSeq( whileStm, inLoopLabel ) );
 
 		statement->FirstStatement()->Accept( this );
-		lastNodeStm = new CIRSeq( conditionStm, 
-								  new CIRSeq( lastNodeStm, 
+		lastNodeStm = new CIRSeq( conditionStm,
+								  new CIRSeq( lastNodeStm,
 											  new CIRSeq( new CIRJump( beforeConditionLabelTemp ), endLabel ) ) );
 		lastNodeExp = nullptr;
 	} else if( statement->GetStatementType() == "PrintlnStatement" ) {

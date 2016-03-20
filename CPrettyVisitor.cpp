@@ -1,6 +1,3 @@
-#ifndef CPRETTYVISITOP_CPP_INCLUDED
-#define CPRETTYVISITOP_CPP_INCLUDED
-
 #include "CPrettyVisitor.h"
 
 // ќн выполн€ет вывод того, что находитс€ в узле дерева.
@@ -339,5 +336,3 @@ void CPrettyPrinterVisitor::visit( const CExpRest* expRest )
 	std::cout << ", ";
 	( expRest->Exp() )->Accept( this );
 }
-
-#endif
