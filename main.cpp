@@ -34,8 +34,12 @@ int main( int argc, char *argv[] )
 		CTypeChecker typeChecker( symbTableBuilder.GetSymbolTable() );
 		typeChecker.visit( root );
 
+		std::cout << "type checking done" << std::endl;
+
 		CIRTreeBuilder irTreeBuilder( symbTableBuilder.GetSymbolTable() );
 		irTreeBuilder.visit( root );
+
+		std::cout << "IRTree builder done" << std::endl;
 
 		for( const auto& frame : irTreeBuilder.frames ) {
 			CIRTreeToGraphConverter irTreeToGraphConverter(

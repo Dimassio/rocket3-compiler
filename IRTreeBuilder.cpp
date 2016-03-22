@@ -151,7 +151,7 @@ void CIRTreeBuilder::visit( const CExpSquareBrackets* expSquareBrackets )
 	lastNodeExp = new CIRMem( new CIRBinOp( PLUS, firstExp, offset ) );
 }
 
-void CIRTreeBuilder::visit( const CExpRoundBrackets* expRoundBrackets ) // ?
+void CIRTreeBuilder::visit( const CExpRoundBrackets* expRoundBrackets ) 
 {
 	expRoundBrackets->Exp()->Accept( this );
 }
