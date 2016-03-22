@@ -151,7 +151,7 @@ void CIRTreeBuilder::visit( const CExpSquareBrackets* expSquareBrackets )
 	lastNodeExp = new CIRMem( new CIRBinOp( PLUS, firstExp, offset ) );
 }
 
-void CIRTreeBuilder::visit( const CExpRoundBrackets* expRoundBrackets ) 
+void CIRTreeBuilder::visit( const CExpRoundBrackets* expRoundBrackets ) // ?
 {
 	expRoundBrackets->Exp()->Accept( this );
 }
@@ -172,7 +172,7 @@ void CIRTreeBuilder::visit( const CExpNumber* expNumber )
 
 void CIRTreeBuilder::visit( const CExpId* expId )
 {
-	// nothing to do here
+	lastNodeExp = const_cast<IIRExp*>(currFrame->GetVar( expId->Id() )->GetExp( currFrame->GetFP() ) );
 }
 
 void CIRTreeBuilder::visit( const CExpSingle* expSingle )
@@ -243,7 +243,7 @@ void CIRTreeBuilder::visit( const CFormalList* formalList )
 	formalList->Type()->Accept( this );
 
 	if (currFrame != nullptr) {
-		currFrame->AddFormal(new Symbols::CSymbol(formalList->Id()));
+		currFrame->AddFormal( symbolStorage.Get( formalList->Id() ) );
 	}
 
 	if( formalList->FormalRestList() ) {
@@ -255,16 +255,17 @@ void CIRTreeBuilder::visit( const CFormalList* formalList )
 void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
 {
 	currMethod = currClass->GetMethod( methodDecl->Id() );
-	( methodDecl->Type() )->Accept( this );
-
-	if( methodDecl->FormalList() ) {
-		methodDecl->FormalList()->Accept( this );
-	}
 
 	CFrame* newFrame = new CFrame( methodDecl->Id(), currMethod->GetFormalsSize() );
 	frames.push_back( newFrame );
 	currFrame = newFrame;
 
+	( methodDecl->Type() )->Accept( this );
+
+	if( methodDecl->FormalList() ) {
+		methodDecl->FormalList()->Accept( this );
+	}
+	
 	if( methodDecl->VarDeclList() ) {
 		( methodDecl->VarDeclList() )->Accept( this ); //  adding locals HERE
 	}

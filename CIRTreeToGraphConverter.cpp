@@ -155,13 +155,21 @@ void CIRTreeToGraphConverter::visit( const CIRESeq* node )
 {
 	node->stm->Accept( this );
 	string stmString = lastNodeName;
-	node->exp->Accept( this );
-	string expString = lastNodeName;
+
+	string expString;
+	if( node->exp != nullptr ) {
+		node->exp->Accept( this );
+		expString = lastNodeName;
+	}
+
 	nextNameWithId( "eseq" );
-	treeRepresentation.AddEdge( lastNodeName, expString, "exp" );
+
+	if( node->exp != nullptr ) {
+		treeRepresentation.AddEdge( lastNodeName, expString, "exp" );
+	}
+
 	treeRepresentation.AddEdge( lastNodeName, stmString, "stm" );
 }
-
 void CIRTreeToGraphConverter::visit( const CIRExpList* node )
 {
 	nextNameWithId( "expList" );
