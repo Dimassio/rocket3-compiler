@@ -155,9 +155,7 @@ void CIRTreeToGraphConverter::visit( const CIRESeq* node )
 {
 	node->stm->Accept( this );
 	string stmString = lastNodeName;
-	if( node->exp != nullptr ) {
-		node->exp->Accept( this );
-	}
+	node->exp->Accept( this );
 	string expString = lastNodeName;
 	nextNameWithId( "eseq" );
 	treeRepresentation.AddEdge( lastNodeName, expString, "exp" );
