@@ -1,6 +1,8 @@
 #include "CIRTreeToGraphConverter.h"
 #include "CStm.h"
 #include "CExp.h"
+#include <vector>
+#include <string>
 
 using namespace std;
 
@@ -29,8 +31,11 @@ void CIRTreeToGraphConverter::visit( const CIRExp* node )
 
 void CIRTreeToGraphConverter::visit( const CIRJump* node )
 {
+	// todo:
+	nextNameWithId( "label_LOL" );
+	string label = lastNodeName;
 	nextNameWithId( "jump" );
-	treeRepresentation.AddEdge( lastNodeName, node->label->Name(), "to_label" );
+	treeRepresentation.AddEdge( lastNodeName, label, "to_label" );
 }
 
 void CIRTreeToGraphConverter::visit( const CIRCJump* node )
@@ -172,13 +177,14 @@ void CIRTreeToGraphConverter::visit( const CIRESeq* node )
 }
 void CIRTreeToGraphConverter::visit( const CIRExpList* node )
 {
-	nextNameWithId( "expList" );
-	string previousExpName = lastNodeName;
-
-	for( auto exp : node->expList ) {
+	std::vector<std::string> vec;
+	for( auto exp : node->expList) {
 		exp->Accept( this );
-		treeRepresentation.AddEdge( lastNodeName, previousExpName, "expListElement" );
-		string previousExpName = lastNodeName;
+		vec.push_back( lastNodeName );
+	}
+	nextNameWithId( "expList" );
+	for( auto v : vec ) {
+		treeRepresentation.AddEdge( lastNodeName, v, "expListElement" );
 	}
 }
 
