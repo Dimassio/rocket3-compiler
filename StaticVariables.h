@@ -2,4 +2,4 @@
 
 #include "Symbols.h"
 
-static Symbols::CStorage symbolStorage;
+extern Symbols::CStorage symbolStorage;

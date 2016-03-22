@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{26516D5E-B286-4F5F-A38B-30FD8E93695E}</ProjectGuid>
+    <RootNamespace>compiler</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\win_flex_bison\custom_build_rules\win_flex_bison_custom_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="miniJava.l">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\win_flex_bison\win_flex.exe --wincompat -o"$(ProjectDir)miniJava.cpp" miniJava.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">compiling flex</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">miniJava.cpp</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CClassInfo.cpp" />
+    <ClCompile Include="CExp.cpp" />
+    <ClCompile Include="ClassDecl.cpp" />
+    <ClCompile Include="ClassDeclList.cpp" />
+    <ClCompile Include="CMethodInfo.cpp" />
+    <ClCompile Include="CMiniJException.cpp" />
+    <ClCompile Include="CPrettyVisitor.cpp" />
+    <ClCompile Include="CStm.cpp" />
+    <ClCompile Include="CSymbTableBuilder.cpp" />
+    <ClCompile Include="CTable.cpp" />
+    <ClCompile Include="CTypeChecker.cpp" />
+    <ClCompile Include="CVarInfo.cpp" />
+    <ClCompile Include="Exp.cpp" />
+    <ClCompile Include="ExpBinOperation.cpp" />
+    <ClCompile Include="ExpId.cpp" />
+    <ClCompile Include="ExpLength.cpp" />
+    <ClCompile Include="ExpList.cpp" />
+    <ClCompile Include="ExpMethodCall.cpp" />
+    <ClCompile Include="ExpNewCustomType.cpp" />
+    <ClCompile Include="ExpNewIntArray.cpp" />
+    <ClCompile Include="ExpNot.cpp" />
+    <ClCompile Include="ExpNumber.cpp" />
+    <ClCompile Include="ExpRest.cpp" />
+    <ClCompile Include="ExpRestList.cpp" />
+    <ClCompile Include="ExpRoundBrackets.cpp" />
+    <ClCompile Include="ExpSingle.cpp" />
+    <ClCompile Include="ExpSquareBrackets.cpp" />
+    <ClCompile Include="FormalList.cpp" />
+    <ClCompile Include="FormalRest.cpp" />
+    <ClCompile Include="FormalRestList.cpp" />
+    <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="IRTree.cpp" />
+    <ClCompile Include="IRTreeBuilder.cpp" />
+    <ClCompile Include="StaticVariable.cpp" />
+    <ClCompile Include="СIRTreeToGraphConverter.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainClass.cpp" />
+    <ClCompile Include="MethodDecl.cpp" />
+    <ClCompile Include="MethodDeclList.cpp" />
+    <ClCompile Include="miniJava.cpp" />
+    <ClCompile Include="miniJava.tab.cpp" />
+    <ClCompile Include="CPrettyVisitor.h" />
+    <ClCompile Include="Program.cpp" />
+    <ClCompile Include="Statement.cpp" />
+    <ClCompile Include="StatementList.cpp" />
+    <ClCompile Include="Symbols.cpp" />
+    <ClCompile Include="Temp.cpp" />
+    <ClCompile Include="Translate.cpp" />
+    <ClCompile Include="Type.cpp" />
+    <ClCompile Include="VarDecl.cpp" />
+    <ClCompile Include="VarDeclList.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="miniJava.y">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\win_flex_bison\win_bison.exe -o"miniJava.tab.cpp" miniJava.y -v –d</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">compiling bison</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">miniJava.tab.cpp;miniJava.tab.hpp;miniJava.output</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CClassInfo.h" />
+    <ClInclude Include="CExp.h" />
+    <ClInclude Include="ClassDecl.h" />
+    <ClInclude Include="ClassDeclList.h" />
+    <ClInclude Include="CMethodInfo.h" />
+    <ClInclude Include="CMiniJException.h" />
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="CStm.h" />
+    <ClInclude Include="CSymbTableBuilder.h" />
+    <ClInclude Include="CTable.h" />
+    <ClInclude Include="CTypeChecker.h" />
+    <ClInclude Include="CVarInfo.h" />
+    <ClInclude Include="EOperation.h" />
+    <ClInclude Include="Exp.h" />
+    <ClInclude Include="ExpBinOperation.h" />
+    <ClInclude Include="ExpId.h" />
+    <ClInclude Include="ExpLength.h" />
+    <ClInclude Include="ExpList.h" />
+    <ClInclude Include="ExpMethodCall.h" />
+    <ClInclude Include="ExpNewCustomType.h" />
+    <ClInclude Include="ExpNewIntArray.h" />
+    <ClInclude Include="ExpNot.h" />
+    <ClInclude Include="ExpNumber.h" />
+    <ClInclude Include="ExpRest.h" />
+    <ClInclude Include="ExpRestList.h" />
+    <ClInclude Include="ExpRoundBrackets.h" />
+    <ClInclude Include="ExpSingle.h" />
+    <ClInclude Include="ExpSquareBrackets.h" />
+    <ClInclude Include="FormalList.h" />
+    <ClInclude Include="FormalRest.h" />
+    <ClInclude Include="FormalRestList.h" />
+    <ClInclude Include="Frame.h" />
+    <ClInclude Include="Grammar.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="IRTree.h" />
+    <ClInclude Include="IRTreeBuilder.h" />
+    <ClInclude Include="CIRTreeToGraphConverter.h" />
+    <ClInclude Include="IIRTreeVisitor.h" />
+    <ClInclude Include="MainClass.h" />
+    <ClInclude Include="MethodDecl.h" />
+    <ClInclude Include="MethodDeclList.h" />
+    <ClInclude Include="miniJava.tab.hpp" />
+    <ClInclude Include="Program.h" />
+    <ClInclude Include="Statement.h" />
+    <ClInclude Include="StatementList.h" />
+    <ClInclude Include="StaticVariables.h" />
+    <ClInclude Include="Symbols.h" />
+    <ClInclude Include="Temp.h" />
+    <ClInclude Include="Translate.h" />
+    <ClInclude Include="Type.h" />
+    <ClInclude Include="VarDecl.h" />
+    <ClInclude Include="VarDeclList.h" />
+    <ClInclude Include="Visitor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="miniJava.output" />
+    <None Include="text.in" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\win_flex_bison\custom_build_rules\win_flex_bison_custom_build.targets" />
+  </ImportGroup>
+</Project>

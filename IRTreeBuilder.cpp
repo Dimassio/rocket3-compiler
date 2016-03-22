@@ -399,7 +399,7 @@ void CIRTreeBuilder::visit( const CVarDecl* varDecl )
 	varDecl->Type()->Accept( this );
 
 	if (currFrame != nullptr) {
-		currFrame->AddLocal(new Symbols::CSymbol(varDecl->Id()));
+		currFrame->AddLocal(symbolStorage.Get(varDecl->Id()));
 	}
 }
 
@@ -424,7 +424,7 @@ void CIRTreeBuilder::visit( const CFormalRest* formalRest )
 	formalRest->Type()->Accept( this );
 
 	if (currFrame != nullptr) {
-		currFrame->AddFormal(new Symbols::CSymbol(formalRest->Id()));
+		currFrame->AddFormal(symbolStorage.Get(formalRest->Id()));
 	}
 }
 
