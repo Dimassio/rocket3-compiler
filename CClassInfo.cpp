@@ -15,7 +15,7 @@ const Symbols::CSymbol* CClassInfo::ClassSymbol() const
 	return classSymbol;
 }
 
-const Symbols::CSymbol * CClassInfo::ExtendedClassSymbol() const
+const Symbols::CSymbol* CClassInfo::ExtendedClassSymbol() const
 {
 	return extendedClassSymbol;
 }
@@ -51,6 +51,10 @@ const CVarInfo* CClassInfo::GetVariable( const std::string& variableId ) const
 	} else {
 		return &variables.find( variableSymbol )->second;
 	}
+}
+
+const std::map<const Symbols::CSymbol*, CVarInfo>& CClassInfo::GetVariables() const {
+	return variables;
 }
 
 bool CClassInfo::AddMethod(const std::string& methodId, CType* type) {

@@ -2,8 +2,13 @@
 
 using namespace Temp;
 
-CLabel::CLabel()
+int CTemp::nextUniqueId = 0;
+int CLabel::nextUniqueId = 0;
+
+CLabel::CLabel():
+	name(std::to_string(nextUniqueId))
 {
+	++nextUniqueId;
 }
 
 CLabel::~CLabel()
@@ -20,8 +25,10 @@ const std::string& CLabel::Name() const
 	return name;
 }
 
-CTemp::CTemp()
+CTemp::CTemp() :
+	name(std::to_string(nextUniqueId))
 {
+	++nextUniqueId;
 }
 
 CTemp::~CTemp()

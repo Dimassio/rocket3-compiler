@@ -96,9 +96,11 @@ void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall )
 	IIRExp* expForCall = lastNodeExp;
 	currExpList = new CIRExpList( lastNodeExp, nullptr ); // adding "this"
 
-	expMethodCall->ExpList()->Accept( this ); // тут список будет расширяться
+	expMethodCall->ExpList()->Accept( this );
 
-	CIRCall* newCall = new CIRCall( expForCall, currExpList );
+	CIRName* functionName = new CIRName(new Temp::CLabel( symbolStorage.Get(expMethodCall->Id())) );
+
+	CIRCall* newCall = new CIRCall(functionName, currExpList );
 	CIRTemp* temp = new CIRTemp( new Temp::CTemp() );
 	IIRStm* move = new CIRMove( temp, newCall );
 	currExpList = nullptr;
@@ -259,6 +261,25 @@ void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
 	CFrame* newFrame = new CFrame( methodDecl->Id(), currMethod->GetFormalsSize() );
 	frames.push_back( newFrame );
 	currFrame = newFrame;
+
+	std::vector<const CClassInfo*> classNames;
+	const CClassInfo* currentClass = symbolTable->GetClass(currClass->ClassName());
+	while (currentClass != nullptr) {
+		classNames.push_back(currentClass);
+		if (currentClass->ExtendedClassSymbol() != nullptr) {
+			currentClass = symbolTable->GetClass(currentClass->ExtendedClassName());
+		}
+		else {
+			currentClass = nullptr;
+		}
+	}
+
+	// Добавляем поля класса к фрейму
+	for (int i = classNames.size() - 1; i >= 0; i--) {
+		for (const auto& variable : classNames.at(i)->GetVariables()) {
+			currFrame->AddFormal(variable.first);
+		}
+	}
 
 	( methodDecl->Type() )->Accept( this );
 

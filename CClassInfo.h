@@ -18,6 +18,7 @@ public:
 	bool AddVariable(const std::string& variableId, CType* type);
 	CVarInfo* GetVariable(const std::string& variableId);
 	const CVarInfo* GetVariable( const std::string& variableId ) const;
+	const std::map<const Symbols::CSymbol*, CVarInfo>& GetVariables() const;
 
 	bool AddMethod(const std::string& methodId, CType* type);
 	CMethodInfo* GetMethod(const std::string& methodId);

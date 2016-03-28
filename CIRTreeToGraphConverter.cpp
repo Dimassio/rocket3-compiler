@@ -31,11 +31,8 @@ void CIRTreeToGraphConverter::visit( const CIRExp* node )
 
 void CIRTreeToGraphConverter::visit( const CIRJump* node )
 {
-	// todo:
-	nextNameWithId( "label_LOL" );
-	string label = lastNodeName;
 	nextNameWithId( "jump" );
-	treeRepresentation.AddEdge( lastNodeName, label, "to_label" );
+	treeRepresentation.AddEdge( lastNodeName, "label_" + node->label->Name(), "to_label" );
 }
 
 void CIRTreeToGraphConverter::visit( const CIRCJump* node )
@@ -49,8 +46,8 @@ void CIRTreeToGraphConverter::visit( const CIRCJump* node )
 
 	treeRepresentation.AddEdge( lastNodeName, rightString, "right" );
 	treeRepresentation.AddEdge( lastNodeName, leftString, "left" );
-	treeRepresentation.AddEdge( lastNodeName, node->iftrue->label->Name(), "iftrue" );
-	treeRepresentation.AddEdge( lastNodeName, node->iffalse->label->Name(), "iffalse" );
+	treeRepresentation.AddEdge( lastNodeName, "label_" + node->iftrue->label->Name(), "iftrue" );
+	treeRepresentation.AddEdge( lastNodeName, "label_" + node->iffalse->label->Name(), "iffalse" );
 }
 
 void CIRTreeToGraphConverter::visit( const CIRSeq* node )
@@ -193,7 +190,7 @@ void CIRTreeToGraphConverter::visit( const CIRLabel* node )
 	if( node->label->Name() == "tempLabel1" ) {
 		int a = 1;
 	}
-	nextNameWithId( string( "label:" ) + node->label->Name() );
+	nextNameWithId( "label_" + node->label->Name() );
 }
 
 void CIRTreeToGraphConverter::nextNameWithId( const std::string& label )
