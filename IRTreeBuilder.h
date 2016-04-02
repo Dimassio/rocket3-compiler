@@ -66,11 +66,11 @@ public:
 
 	void visit( const CExpRest* expRest );
 
-
-	std::vector<Frame::CFrame*> frames;
-
+	std::vector<Frame::CFrame*> GetFrames() const;
+	
 private:
 	const CTable* symbolTable; // Symbols::CSymbol* ---> CClassInfo --->CMethodInfo...
+	std::vector<Frame::CFrame*> frames;
 
 	IIRExp* lastNodeExp;
 	IIRStm* lastNodeStm;

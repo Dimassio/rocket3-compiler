@@ -14,6 +14,11 @@ CIRTreeBuilder::CIRTreeBuilder( const CTable* _symbolTable ):
 {
 }
 
+std::vector<Frame::CFrame*> CIRTreeBuilder::GetFrames() const
+{
+	return frames;
+}
+
 void CIRTreeBuilder::visit( const CProgram* program )
 {
 	( program->MainClass() )->Accept( this );
@@ -136,7 +141,7 @@ void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType )
 {
 	expNewCustomType->Type()->Accept( this ); // b = new MyClass()
 	// malloc:
-	IIRExp* allocationSize = new CIRBinOp( MUL, new CIRConst( currFrame->GetFieldCount() ), new CIRConst( currFrame->wordSize ) );
+	IIRExp* allocationSize = new CIRBinOp( MUL, new CIRConst( currFrame->GetFieldCount() + 1 ), new CIRConst( currFrame->wordSize ) );
 	IIRExp* mallocExp = new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "malloc" ) ) ), new CIRExpList( allocationSize, nullptr ) );
 	IIRExp* temp = new CIRTemp( new Temp::CTemp() );
 	IIRStm* move = new CIRMove( temp, mallocExp ); // malloc result to Temp

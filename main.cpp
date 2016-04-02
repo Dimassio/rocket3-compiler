@@ -6,8 +6,28 @@
 #include "IRTreeBuilder.h"
 #include "CMiniJException.h"
 #include "CIRTreeToGraphConverter.h"
+#include "IRTreeCanonicalConverter.h"
 
 int yyparse( CProgram*& root );
+
+void PrintIRTree( const std::vector<Frame::CFrame*>& frames )
+{
+	for( const auto& frame : frames ) {
+		CIRTreeToGraphConverter irTreeToGraphConverter(
+			std::string( "IRTree_" ) + frame->GetFrameName() + std::string( ".dot" ) );
+
+		frame->root->Accept( &irTreeToGraphConverter );
+		irTreeToGraphConverter.Flush();
+	}
+}
+
+void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
+{
+	for( auto& frame : frames ) {
+		CIRTreeCanonicalConverter irTreeCanonConverter;
+		frame->root->Accept( &irTreeCanonConverter );
+	}
+}
 
 int main( int argc, char *argv[] )
 {
@@ -15,14 +35,14 @@ int main( int argc, char *argv[] )
 		printf( "Please, add <input file> parameter\n" );
 	}
 
-	extern FILE *yyin;
+	extern FILE* yyin;
 	yyin = fopen( argv[1], "r" );
 
 	CProgram* root;
 
 	try {
 		if( !yyparse( root ) ) {
-			std::cout << "syntax analysis: success" << std::endl;
+			std::cout << "Syntax analysis: success" << std::endl;
 		}
 
 		// CPrettyPrinterVisitor prettyVisitor;
@@ -30,20 +50,21 @@ int main( int argc, char *argv[] )
 
 		CSymbTableBuilder symbTableBuilder;
 		symbTableBuilder.visit( root );
+		std::cout << "Symbol table: success" << std::endl;
 
 		CTypeChecker typeChecker( symbTableBuilder.GetSymbolTable() );
 		typeChecker.visit( root );
+		std::cout << "Type checker: success" << std::endl;
 
 		CIRTreeBuilder irTreeBuilder( symbTableBuilder.GetSymbolTable() );
 		irTreeBuilder.visit( root );
+		std::cout << "IRTree builder: success" << std::endl;
 
-		for( const auto& frame : irTreeBuilder.frames ) {
-			CIRTreeToGraphConverter irTreeToGraphConverter(
-				std::string( "IRTree_" ) + frame->GetFrameName() + std::string( ".dot" ) );
+		PrintIRTree( irTreeBuilder.GetFrames() );
+		std::cout << "Printing frames: success" << std::endl;
 
-			frame->root->Accept( &irTreeToGraphConverter );
-			irTreeToGraphConverter.Flush();
-		}
+		CanonizeIRTree( irTreeBuilder.GetFrames() );
+		std::cout << "Canonizing IRTree: success" << std::endl;
 
 		fclose( yyin );
 	}
