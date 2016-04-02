@@ -52,21 +52,22 @@ void CIRTreeToGraphConverter::visit( const CIRCJump* node )
 
 void CIRTreeToGraphConverter::visit( const CIRSeq* node )
 {
+	string leftString = "";
+	string rightString = "";
 	if( node->left != nullptr ) {
 		node->left->Accept( this );
-		string leftString = lastNodeName;
-		if( node->right != nullptr ) {
-			node->right->Accept( this );
-			string rightString = lastNodeName;
-			nextNameWithId( "seq" );
-			treeRepresentation.AddEdge( lastNodeName, leftString, "left" );
-			treeRepresentation.AddEdge( lastNodeName, rightString, "right" );
-		} else {
-			nextNameWithId( "seq" );
-			treeRepresentation.AddEdge( lastNodeName, leftString, "left" );
-		}
-	} else {
-		nextNameWithId( "seq" );
+		leftString = lastNodeName;
+	}
+	if( node->right != nullptr ) {
+		node->right->Accept( this );
+		rightString = lastNodeName;
+	}
+	nextNameWithId( "seq" );
+	if( leftString != "" ) {
+		treeRepresentation.AddEdge( lastNodeName, leftString, "left" );
+	}
+	if( rightString != "" ) {
+		treeRepresentation.AddEdge( lastNodeName, rightString, "right" );
 	}
 }
 
@@ -175,7 +176,7 @@ void CIRTreeToGraphConverter::visit( const CIRESeq* node )
 void CIRTreeToGraphConverter::visit( const CIRExpList* node )
 {
 	std::vector<std::string> vec;
-	for( auto exp : node->expList) {
+	for( auto exp : node->expList ) {
 		exp->Accept( this );
 		vec.push_back( lastNodeName );
 	}
