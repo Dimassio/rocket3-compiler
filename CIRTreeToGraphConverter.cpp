@@ -156,8 +156,11 @@ void CIRTreeToGraphConverter::visit( const CIRCall* node )
 
 void CIRTreeToGraphConverter::visit( const CIRESeq* node )
 {
-	node->stm->Accept( this );
-	string stmString = lastNodeName;
+	string stmString;
+	if( node->stm != nullptr ) {
+		node->stm->Accept( this );
+		stmString = lastNodeName;
+	}
 
 	string expString;
 	if( node->exp != nullptr ) {

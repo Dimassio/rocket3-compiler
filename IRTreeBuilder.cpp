@@ -92,6 +92,8 @@ void CIRTreeBuilder::visit( const CExp* exp )
 
 void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall )
 {
+	CIRExpList* prevCurExpList = currExpList;
+
 	expMethodCall->Exp()->Accept( this );
 	IIRExp* expForCall = lastNodeExp;
 	currExpList = new CIRExpList( lastNodeExp, nullptr ); // adding "this"
@@ -103,7 +105,7 @@ void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall )
 	CIRCall* newCall = new CIRCall( functionName, currExpList );
 	CIRTemp* temp = new CIRTemp( new Temp::CTemp() );
 	IIRStm* move = new CIRMove( temp, newCall );
-	currExpList = nullptr;
+	currExpList = prevCurExpList;
 	lastNodeExp = new CIRESeq( move, temp );
 }
 
