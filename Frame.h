@@ -45,13 +45,17 @@ namespace Frame
 
 		bool AddLocal( const Symbols::CSymbol* symbol );
 
-		bool AddFormal(const Symbols::CSymbol* symbol);
+		bool AddFormal( const Symbols::CSymbol* symbol );
 
 		bool AddTemprorary( const Symbols::CSymbol* symbol );
 
 		void HangToRoot( IIRExp* stm );
 
 		const std::string& GetFrameName() const;
+
+		void SetFieldCount( const int counter );
+
+		int GetFieldCount() const;
 
 		// Размер ячейки
 		static const int wordSize = 4;
@@ -62,6 +66,7 @@ namespace Frame
 		std::map<const Symbols::CSymbol*, IAccess*> formals; // аргументы функции
 		std::map<const Symbols::CSymbol*, IAccess*> locals; // локальные переменные
 		std::map<const Symbols::CSymbol*, IAccess*> temproraries; // временные переменные
+		int fieldCounter;
 
 		Temp::CTemp* FP; // frame pointer
 

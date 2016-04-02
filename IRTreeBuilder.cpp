@@ -98,9 +98,9 @@ void CIRTreeBuilder::visit( const CExpMethodCall* expMethodCall )
 
 	expMethodCall->ExpList()->Accept( this );
 
-	CIRName* functionName = new CIRName(new Temp::CLabel( symbolStorage.Get(expMethodCall->Id())) );
+	CIRName* functionName = new CIRName( new Temp::CLabel( symbolStorage.Get( expMethodCall->Id() ) ) );
 
-	CIRCall* newCall = new CIRCall(functionName, currExpList );
+	CIRCall* newCall = new CIRCall( functionName, currExpList );
 	CIRTemp* temp = new CIRTemp( new Temp::CTemp() );
 	IIRStm* move = new CIRMove( temp, newCall );
 	currExpList = nullptr;
@@ -134,7 +134,7 @@ void CIRTreeBuilder::visit( const CExpNewCustomType* expNewCustomType )
 {
 	expNewCustomType->Type()->Accept( this ); // b = new MyClass()
 	// malloc:
-	IIRExp* allocationSize = new CIRBinOp( MUL, new CIRConst( 1 ), new CIRConst( currFrame->wordSize ) );
+	IIRExp* allocationSize = new CIRBinOp( MUL, new CIRConst( currFrame->GetFieldCount() ), new CIRConst( currFrame->wordSize ) );
 	IIRExp* mallocExp = new CIRCall( new CIRName( new Temp::CLabel( symbolStorage.Get( "malloc" ) ) ), new CIRExpList( allocationSize, nullptr ) );
 	IIRExp* temp = new CIRTemp( new Temp::CTemp() );
 	IIRStm* move = new CIRMove( temp, mallocExp ); // malloc result to Temp
@@ -174,7 +174,7 @@ void CIRTreeBuilder::visit( const CExpNumber* expNumber )
 
 void CIRTreeBuilder::visit( const CExpId* expId )
 {
-	lastNodeExp = const_cast<IIRExp*>(currFrame->GetVar( expId->Id() )->GetExp( currFrame->GetFP() ) );
+	lastNodeExp = const_cast< IIRExp* >( currFrame->GetVar( expId->Id() )->GetExp( currFrame->GetFP() ) );
 }
 
 void CIRTreeBuilder::visit( const CExpSingle* expSingle )
@@ -244,7 +244,7 @@ void CIRTreeBuilder::visit( const CFormalList* formalList )
 
 	formalList->Type()->Accept( this );
 
-	if (currFrame != nullptr) {
+	if( currFrame != nullptr ) {
 		currFrame->AddFormal( symbolStorage.Get( formalList->Id() ) );
 	}
 
@@ -263,34 +263,38 @@ void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
 	currFrame = newFrame;
 
 	std::vector<const CClassInfo*> classNames;
-	const CClassInfo* currentClass = symbolTable->GetClass(currClass->ClassName());
-	while (currentClass != nullptr) {
-		classNames.push_back(currentClass);
-		if (currentClass->ExtendedClassSymbol() != nullptr) {
-			currentClass = symbolTable->GetClass(currentClass->ExtendedClassName());
-		}
-		else {
+	const CClassInfo* currentClass = symbolTable->GetClass( currClass->ClassName() );
+	while( currentClass != nullptr ) {
+		classNames.push_back( currentClass );
+		if( currentClass->ExtendedClassSymbol() != nullptr ) {
+			currentClass = symbolTable->GetClass( currentClass->ExtendedClassName() );
+		} else {
 			currentClass = nullptr;
 		}
 	}
 
 	// Добавляем поля класса к фрейму
-	for (int i = classNames.size() - 1; i >= 0; i--) {
-		for (const auto& variable : classNames.at(i)->GetVariables()) {
-			currFrame->AddFormal(variable.first);
+	int counter = 0;
+	for( int i = classNames.size() - 1; i >= 0; i-- ) {
+		for( const auto& variable : classNames.at( i )->GetVariables() ) {
+			currFrame->AddFormal( variable.first );
+			++counter;
 		}
 	}
+	currFrame->SetFieldCount( counter );
 
 	( methodDecl->Type() )->Accept( this );
 
 	if( methodDecl->FormalList() ) {
 		methodDecl->FormalList()->Accept( this );
 	}
-	
+
 	if( methodDecl->VarDeclList() ) {
 		( methodDecl->VarDeclList() )->Accept( this ); //  adding locals HERE
 	}
 
+	lastNodeStm = nullptr;
+	lastNodeExp = nullptr;
 	if( methodDecl->StatementList() ) {
 		( methodDecl->StatementList() )->Accept( this );
 	}
@@ -407,8 +411,7 @@ void CIRTreeBuilder::visit( const CStatementList* statementList )
 	( statementList->Statement() )->Accept( this );
 
 	IIRStm* secondStm = lastNodeStm;
-	CIRSeq* seq = new CIRSeq( firstStm, secondStm );
-	lastNodeStm = seq;
+	lastNodeStm = new CIRSeq( firstStm, secondStm );
 }
 
 void CIRTreeBuilder::visit( const CType* type )
@@ -420,8 +423,8 @@ void CIRTreeBuilder::visit( const CVarDecl* varDecl )
 {
 	varDecl->Type()->Accept( this );
 
-	if (currFrame != nullptr) {
-		currFrame->AddLocal(symbolStorage.Get(varDecl->Id()));
+	if( currFrame != nullptr ) {
+		currFrame->AddLocal( symbolStorage.Get( varDecl->Id() ) );
 	}
 }
 
@@ -445,8 +448,8 @@ void CIRTreeBuilder::visit( const CFormalRest* formalRest )
 {
 	formalRest->Type()->Accept( this );
 
-	if (currFrame != nullptr) {
-		currFrame->AddFormal(symbolStorage.Get(formalRest->Id()));
+	if( currFrame != nullptr ) {
+		currFrame->AddFormal( symbolStorage.Get( formalRest->Id() ) );
 	}
 }
 

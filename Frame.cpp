@@ -63,6 +63,16 @@ void CFrame::HangToRoot( IIRExp* exp )
 	root = exp;
 }
 
+void CFrame::SetFieldCount( const int counter )
+{
+	fieldCounter = counter;
+}
+
+int CFrame::GetFieldCount() const
+{
+	return fieldCounter;
+}
+
 const IAccess* CFrame::GetVar( const std::string& id ) const
 {
 	const Symbols::CSymbol* symbol = symbolStorage.Get( id );

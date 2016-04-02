@@ -1,7 +1,7 @@
 digraph {
 name_print__id_0 [ label="name_print" ]; 
 temp_2__id_1 [ label="temp_2" ]; 
-name_Start__id_2 [ label="name_Start" ]; 
+name_ComputeFac__id_2 [ label="name_ComputeFac" ]; 
 temp_1__id_3 [ label="temp_1" ]; 
 name_malloc__id_4 [ label="name_malloc" ]; 
 const_1__id_5 [ label="const_1" ]; 
@@ -26,7 +26,7 @@ expList__id_14 [ label="expList" ];
 expList__id_14 -> eseq__id_12 [ label="expListElement"] ; 
 expList__id_14 -> const_10__id_13 [ label="expListElement"] ; 
 call__id_15 [ label="call" ]; 
-call__id_15 -> name_Start__id_2 [ label="func"] ; 
+call__id_15 -> name_ComputeFac__id_2 [ label="func"] ; 
 call__id_15 -> expList__id_14 [ label="args"] ; 
 move__id_16 [ label="move" ]; 
 move__id_16 -> temp_2__id_1 [ label="dest"] ; 
