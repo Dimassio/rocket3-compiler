@@ -23,6 +23,7 @@ CIRExpList::CIRExpList( const std::list<IIRExp*>& _expList ):
 {
 }
 
-void CIRExpList::Accept(IIRTreeVisitor* visitor) const {
-	visitor->visit(this);
+void CIRExpList::Accept( IIRTreeVisitor* visitor ) const
+{
+	visitor->visit( this );
 }

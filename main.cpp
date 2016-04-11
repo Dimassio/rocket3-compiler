@@ -27,6 +27,7 @@ void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
 		CIRTreeCanonicalConverter irTreeCanonConverter;
 		frame->root->Accept( &irTreeCanonConverter );
 	}
+	// todo: + add  Calls + add Linearizing; + 2 new visitors
 }
 
 int main( int argc, char *argv[] )

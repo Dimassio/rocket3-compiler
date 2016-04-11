@@ -14,6 +14,8 @@ public:
 
 	void Accept(IIRTreeVisitor* visitor) const;
 
+	void Accept( IIRTreeConvertVisitor* visitor );
+
 	const IIRExp* dst;
 	const IIRExp* src;
 };
@@ -26,6 +28,8 @@ public:
 
 	void Accept(IIRTreeVisitor* visitor) const;
 
+	void Accept( IIRTreeConvertVisitor* visitor );
+
 	const IIRExp* exp;
 };
 
@@ -35,6 +39,8 @@ public:
 	~CIRJump();
 
 	void Accept(IIRTreeVisitor* visitor) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const Temp::CLabel* label;
 };
@@ -48,6 +54,8 @@ public:
 
 	void Accept(IIRTreeVisitor* visitor) const;
 
+	void Accept( IIRTreeConvertVisitor* visitor );
+
 	const Temp::CLabel* label;
 };
 
@@ -58,6 +66,8 @@ public:
 	~CIRCJump();
 
 	void Accept(IIRTreeVisitor* visitor) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const EOperation op;
 	const IIRExp* left;
@@ -73,6 +83,8 @@ public:
 	~CIRSeq();
 
 	void Accept(IIRTreeVisitor* visitor) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const IIRStm* left;
 	const IIRStm* right;

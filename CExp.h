@@ -10,7 +10,9 @@ public:
 	CIRCall( const  IIRExp* _exp, const CIRExpList* _expList );
 	~CIRCall();
 
-	void Accept(IIRTreeVisitor* visitor) const;
+	void Accept( IIRTreeVisitor* visitor ) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const IIRExp* exp;
 	const CIRExpList* expList;
@@ -23,7 +25,9 @@ public:
 	CIRConst( const int _value );
 	~CIRConst();
 
-	void Accept(IIRTreeVisitor* visitor) const;
+	void Accept( IIRTreeVisitor* visitor ) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const int value;
 };
@@ -34,7 +38,9 @@ public:
 	CIRBinOp( const EOperation binop, const IIRExp* _left, const IIRExp* _right );
 	~CIRBinOp();
 
-	void Accept(IIRTreeVisitor* visitor) const;
+	void Accept( IIRTreeVisitor* visitor ) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const EOperation opId;
 	const IIRExp* left;
@@ -47,7 +53,9 @@ public:
 	CIRESeq( const IIRStm* _stm, const IIRExp* _exp );
 	~CIRESeq();
 
-	void Accept(IIRTreeVisitor* visitor) const;
+	void Accept( IIRTreeVisitor* visitor ) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const IIRExp* exp; // left node expression
 	const IIRStm* stm; // right node statement
@@ -60,18 +68,22 @@ public:
 	CIRMem( const IIRExp* _exp );
 	~CIRMem();
 
-	void Accept(IIRTreeVisitor* visitor) const;
+	void Accept( IIRTreeVisitor* visitor ) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const IIRExp* exp;
 };
 
 // Представляет собой Label
-class CIRName: public IIRExp { 
+class CIRName: public IIRExp {
 public:
 	CIRName( const Temp::CLabel* _label );
 	~CIRName();
 
-	void Accept(IIRTreeVisitor* visitor) const;
+	void Accept( IIRTreeVisitor* visitor ) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const Temp::CLabel* label;
 };
@@ -82,7 +94,9 @@ public:
 	CIRTemp( const Temp::CTemp* _temp );
 	~CIRTemp();
 
-	void Accept(IIRTreeVisitor* visitor) const;
+	void Accept( IIRTreeVisitor* visitor ) const;
+
+	void Accept( IIRTreeConvertVisitor* visitor );
 
 	const Temp::CTemp* temp;
 };
