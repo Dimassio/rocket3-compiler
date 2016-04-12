@@ -69,6 +69,8 @@ void CIRTreeCallConverter::visit( const CIRMem* node )
 
 void CIRTreeCallConverter::visit( const CIRCall* node )
 {
+	CIRESeq* eseq = new CIRESeq( new CIRMove( new CIRTemp( new Temp::CTemp() ), node ),
+								 new CIRTemp( new Temp::CTemp() ) );
 	node->exp->Accept( this );
 	node->expList->Accept( this );
 }

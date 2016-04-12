@@ -32,7 +32,10 @@ void ConvertIRTree( std::vector<Frame::CFrame*>& frames )
 	}
 	std::cout << "	Canocicolize: done" << std::endl;
 	// Move calls to top level
-	// .....
+	for( auto& frame : frames ) {
+		CIRTreeCallConverter irTreeCallConverter( frame->root );
+		frame->root->Accept( &irTreeCallConverter );
+	}
 	std::cout << "	Calls->TopLevel: done" << std::endl;
 	// Linearize
 	for( auto& frame : frames ) {
