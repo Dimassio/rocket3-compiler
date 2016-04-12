@@ -5,6 +5,8 @@
 
 class CIRTreeCanonicalConverter: public IIRTreeVisitor {
 public:
+	CIRTreeCanonicalConverter(IIRExp*);
+
 	void visit( const CIRMove* node );
 
 	void visit( const CIRExp* node );
@@ -32,4 +34,11 @@ public:
 	void visit( const CIRExpList* node );
 
 	void visit( const CIRLabel* node );
+
+	IIRStm* lastNodeStm;
+	IIRExp* lastNodeExp;
+	CIRExpList* lastNodeExpList;
+
+	IIRExp* frameRoot;
+
 };

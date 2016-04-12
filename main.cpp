@@ -24,7 +24,8 @@ void PrintIRTree( const std::vector<Frame::CFrame*>& frames )
 void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
 {
 	for( auto& frame : frames ) {
-		CIRTreeCanonicalConverter irTreeCanonConverter;
+		CIRTreeCanonicalConverter irTreeCanonConverter(frame->root);
+		frame->root = irTreeCanonConverter.frameRoot;
 		frame->root->Accept( &irTreeCanonConverter );
 	}
 	// todo: + add  Calls + add Linearizing; + 2 new visitors
@@ -61,11 +62,11 @@ int main( int argc, char *argv[] )
 		irTreeBuilder.visit( root );
 		std::cout << "IRTree builder: success" << std::endl;
 
-		PrintIRTree( irTreeBuilder.GetFrames() );
-		std::cout << "Printing frames: success" << std::endl;
-
 		CanonizeIRTree( irTreeBuilder.GetFrames() );
 		std::cout << "Canonizing IRTree: success" << std::endl;
+
+		PrintIRTree(irTreeBuilder.GetFrames());
+		std::cout << "Printing frames: success" << std::endl;
 
 		fclose( yyin );
 	}

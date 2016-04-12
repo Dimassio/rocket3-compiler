@@ -1,6 +1,6 @@
-#line 2 "C:\\Users\\USER\\megatron-compiler\\compiler\\compiler\\miniJava.cpp"
+#line 2 "C:\\8semester\\Compilers\\compiler\\compiler\\miniJava.cpp"
 
-#line 4 "C:\\Users\\USER\\megatron-compiler\\compiler\\compiler\\miniJava.cpp"
+#line 4 "C:\\8semester\\Compilers\\compiler\\compiler\\miniJava.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -553,7 +553,7 @@ char *yytext;
 #include <cstring>
 #include "miniJava.tab.hpp"
 #define YY_DECL extern "C" int yylex()
-#line 557 "C:\\Users\\USER\\megatron-compiler\\compiler\\compiler\\miniJava.cpp"
+#line 557 "C:\\8semester\\Compilers\\compiler\\compiler\\miniJava.cpp"
 
 #define INITIAL 0
 
@@ -734,7 +734,7 @@ YY_DECL
     
 #line 21 "miniJava.l"
 
-#line 738 "C:\\Users\\USER\\megatron-compiler\\compiler\\compiler\\miniJava.cpp"
+#line 738 "C:\\8semester\\Compilers\\compiler\\compiler\\miniJava.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -975,7 +975,7 @@ YY_RULE_SETUP
 #line 51 "miniJava.l"
 ECHO;
 	YY_BREAK
-#line 979 "C:\\Users\\USER\\megatron-compiler\\compiler\\compiler\\miniJava.cpp"
+#line 979 "C:\\8semester\\Compilers\\compiler\\compiler\\miniJava.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
