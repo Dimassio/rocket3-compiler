@@ -26,6 +26,9 @@ CIRTreeCanonicalConverter::CIRTreeCanonicalConverter(IIRExp* root)
 
 void CIRTreeCanonicalConverter::visit( const CIRMove* node )
 {
+	if (IsInstanceOf<CIRCall>(node->src)) {
+		// todo:
+	}
 	node->dst->Accept( this );
 	IIRExp* dst = lastNodeExp;
 	node->src->Accept( this );
@@ -119,8 +122,20 @@ void CIRTreeCanonicalConverter::visit( const CIRSeq* node )
 {
 	IIRStm* left = nullptr;
 	IIRStm* right = nullptr;
-
+	
 	if( node->left != nullptr ) {
+		if (IsInstanceOf<CIRSeq>(const_cast< IIRStm* >(node->left))) {
+			CIRSeq* seq = dynamic_cast< CIRSeq* >(const_cast< IIRStm* >(node->left));
+			// new vertex:
+			CIRSeq* newSeq = new CIRSeq(seq->left, new CIRSeq(seq->right, node->right));
+			newSeq->left->Accept(this);
+			IIRStm* left = lastNodeStm;
+			newSeq->right->Accept(this);
+
+			lastNodeExp = nullptr;
+			lastNodeStm = new CIRSeq(left, lastNodeStm);
+			return;
+		}
 		node->left->Accept( this );
 		left = lastNodeStm;
 	}
@@ -242,12 +257,16 @@ void CIRTreeCanonicalConverter::visit( const CIRMem* node )
 
 void CIRTreeCanonicalConverter::visit( const CIRCall* node )
 {
-	node->exp->Accept( this );
-	IIRExp* exp = lastNodeExp;
-	node->expList->Accept( this );
+	CIRESeq* eseq = new CIRESeq(new CIRMove(new CIRTemp(new Temp::CTemp()), node),
+								new CIRTemp(new Temp::CTemp()));
 
+	eseq->stm->Accept(this);
+	IIRStm* stm = lastNodeStm;
+	eseq->exp->Accept(this);
+	IIRExp* exp = lastNodeExp;
+
+	lastNodeExp = new CIRESeq(stm, exp);
 	lastNodeStm = nullptr;
-	lastNodeExp = new CIRCall(exp, lastNodeExpList);
 }
 
 void CIRTreeCanonicalConverter::visit( const CIRESeq* node )
@@ -257,7 +276,6 @@ void CIRTreeCanonicalConverter::visit( const CIRESeq* node )
 
 	if (IsInstanceOf<CIRESeq>(const_cast<IIRExp*>(node->exp))) {
 		CIRESeq* eseq = dynamic_cast<CIRESeq*>(const_cast<IIRExp*>(node->exp));
-		// new vertex here - eseq:
 		CIRESeq* newEseq = new CIRESeq(new CIRSeq(node->stm, eseq->stm), eseq->exp);
 
 		newEseq->stm->Accept(this);
