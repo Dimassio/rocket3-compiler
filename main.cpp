@@ -7,6 +7,8 @@
 #include "CMiniJException.h"
 #include "CIRTreeToGraphConverter.h"
 #include "IRTreeCanonicalConverter.h"
+#include "IRTreeLinearConverter.h"
+#include "IRTreeCallConverter.h"
 
 int yyparse( CProgram*& root );
 
@@ -21,14 +23,27 @@ void PrintIRTree( const std::vector<Frame::CFrame*>& frames )
 	}
 }
 
-void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
+void ConvertIRTree( std::vector<Frame::CFrame*>& frames )
 {
+	// Canocicalize
 	for( auto& frame : frames ) {
 		CIRTreeCanonicalConverter irTreeCanonConverter(frame->root);
 		frame->root = irTreeCanonConverter.frameRoot;
 		frame->root->Accept( &irTreeCanonConverter );
 	}
-	// todo: + add  Calls + add Linearizing; + 2 new visitors
+	std::cout << "	Canocicolize: done" << std::endl;
+	// Move calls to top level
+	for( auto& frame : frames ) {
+		CIRTreeCallConverter irTreeCallConverter( frame->root );
+		frame->root->Accept( &irTreeCallConverter );
+	}
+	std::cout << "	Calls->TopLevel: done" << std::endl;
+	// Linearize
+	for( auto& frame : frames ) {
+		CIRTreeLinearConverter irTreeLinearConverter( frame->root );
+		frame->root->Accept( &irTreeLinearConverter );
+	}
+	std::cout << "	Linearize: done" << std::endl;
 }
 
 int main( int argc, char *argv[] )
