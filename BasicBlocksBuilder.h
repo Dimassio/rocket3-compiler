@@ -39,6 +39,9 @@ public:
 
 	std::vector<CBasicBlock> GetBasicBlocks() const;
 
+	// Нужно вызывать каждый раз, после составления блоков по функции
+	void PutDoneLabel();
+
 private:
 	CBasicBlock* currBlock;
 	std::vector<CBasicBlock> blocks;

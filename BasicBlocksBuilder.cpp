@@ -15,6 +15,11 @@ std::vector<CBasicBlock> CBasicBlocksBuilder::GetBasicBlocks() const
 	return blocks;
 }
 
+void CBasicBlocksBuilder::PutDoneLabel()
+{
+	blocks.back().Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( "done" ) ) ) );
+}
+
 void CBasicBlocksBuilder::addStm( const IIRStm* stm )
 {
 	if( currBlock == nullptr ) {
