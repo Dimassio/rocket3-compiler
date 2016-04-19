@@ -5,7 +5,7 @@
 class CBasicBlock {
 public:
 	CBasicBlock();
-	CBasicBlock( const std::list<IIRStm*>& );
+	CBasicBlock( const std::list<const IIRStm*>& );
 	~CBasicBlock();
 
 	void Add( const IIRStm* stm );

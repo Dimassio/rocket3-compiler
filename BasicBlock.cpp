@@ -4,7 +4,7 @@ CBasicBlock::CBasicBlock()
 {
 }
 
-CBasicBlock::CBasicBlock( const std::list<IIRStm*>& _stms ):
+CBasicBlock::CBasicBlock( const std::list<const IIRStm*>& _stms ):
 	statements( _stms )
 {
 }
@@ -13,7 +13,7 @@ CBasicBlock::~CBasicBlock()
 {
 }
 
-void CBasicBlock::Add( IIRStm* stm )
+void CBasicBlock::Add( const IIRStm* stm )
 {
 	statements.push_back( stm );
 }
