@@ -45,6 +45,7 @@ public:
 private:
 	CBasicBlock* currBlock;
 	std::vector<CBasicBlock> blocks;
+	size_t numCurrBlock;
 
 	// Добавляем Stm. Если до этого блок не был начат, то начинаем его меткой 
 	// вида <номер_блока label>. И добавляем туда Stm. 

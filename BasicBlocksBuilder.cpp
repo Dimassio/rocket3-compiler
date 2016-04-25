@@ -3,8 +3,6 @@
 #include "CExp.h"
 #include <string>
 
-// todo: when in exp, we mush finish block, or what?
-
 CBasicBlocksBuilder::CBasicBlocksBuilder()
 {
 	currBlock = nullptr;
@@ -17,7 +15,7 @@ std::vector<CBasicBlock> CBasicBlocksBuilder::GetBasicBlocks() const
 
 void CBasicBlocksBuilder::PutDoneLabel()
 {
-	blocks.back().Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( "done" ) ) ) );
+	blocks.back().Add( new CIRJump( new Temp::CLabel( new Symbols::CSymbol( "done" ) ) ) );
 }
 
 void CBasicBlocksBuilder::addStm( const IIRStm* stm )
@@ -35,6 +33,7 @@ void CBasicBlocksBuilder::finishBlock()
 	if( currBlock != nullptr ) {
 		blocks.push_back( *currBlock );
 		delete currBlock;
+		currBlock = nullptr;
 	}
 }
 
