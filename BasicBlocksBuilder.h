@@ -10,7 +10,7 @@ class CBasicBlocksBuilder {
 public:
 	CBasicBlocksBuilder();
 
-	void BuildBlocks( const CIRSeq* node );
+	void BuildBlocks( const IIRStm* node );
 
 	void SortBlocks();
 

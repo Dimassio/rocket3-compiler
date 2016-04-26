@@ -7,6 +7,7 @@
 #include "CMiniJException.h"
 #include "CIRTreeToGraphConverter.h"
 #include "IRTreeCanonicalConverter.h"
+#include "BasicBlocksBuilder.h"
 
 int yyparse( CProgram*& root );
 
@@ -29,6 +30,15 @@ void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
 		frame->root->Accept( &irTreeCanonConverter );
 		frame->root = irTreeCanonConverter.frameRoot; // не канонический корень
 		frame->canonRoot = irTreeCanonConverter.frameCanonRoot; // канонический!!!
+	}
+}
+
+void BuildBasicBlocks( std::vector<Frame::CFrame*>& frames )
+{
+	for( auto& frame : frames ) {
+		CBasicBlocksBuilder blockBuilder;
+		blockBuilder.BuildBlocks( frame->canonRoot );
+		blockBuilder;
 	}
 }
 
@@ -68,6 +78,10 @@ int main( int argc, char *argv[] )
 
 		PrintIRTree( irTreeBuilder.GetFrames() );
 		std::cout << "Printing frames: success" << std::endl;
+
+		BuildBasicBlocks( irTreeBuilder.GetFrames() );
+		std::cout << "Building basic blocks: success" << std::endl;
+
 
 		fclose( yyin );
 	}

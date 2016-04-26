@@ -19,9 +19,9 @@ bool IsInstanceOf( S* exp )
 	return dynamic_cast< T* >( exp ) == 0 ? false : true;
 }
 
-void CBasicBlocksBuilder::BuildBlocks( const CIRSeq* node )
+void CBasicBlocksBuilder::BuildBlocks( const IIRStm* node )
 {
-	const CIRSeq* currStm = node;
+	const CIRSeq* currStm = dynamic_cast< const CIRSeq* >( node );
 	int numCurrBlock = -1;
 	while( currStm != nullptr ) {
 		// Начинаем новый блок
@@ -29,15 +29,15 @@ void CBasicBlocksBuilder::BuildBlocks( const CIRSeq* node )
 		numCurrBlock = blocks.size() - 1;
 		// Block -> Position
 		blockToPosition[blocks.back()] = numCurrBlock;
-		if( IsInstanceOf<CIRLabel>( const_cast< IIRStm* >( node->left ) ) ) {
-			blocks[numCurrBlock].Add( dynamic_cast< const CIRLabel* >( node->left ) );
+		if( IsInstanceOf<CIRLabel>( const_cast< IIRStm* >( currStm->left ) ) ) {
+			blocks[numCurrBlock].Add( dynamic_cast< const CIRLabel* >( currStm->left ) );
 			// Label -> Block
 			labelToBlock[getLabel( numCurrBlock )->label] = blocks[numCurrBlock];
 		} else {
 			blocks[numCurrBlock].Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( std::to_string( blocks.size() ) + " block_label" ) ) ) );
 			// Label -> Block
 			labelToBlock[getLabel( numCurrBlock )->label] = blocks[numCurrBlock];
-			blocks[numCurrBlock].Add( node->left );
+			blocks[numCurrBlock].Add( currStm->left );
 		}
 		if( firstLabel == nullptr ) {
 			firstLabel = dynamic_cast< const CIRLabel* >( blocks[numCurrBlock].First() );
@@ -51,7 +51,7 @@ void CBasicBlocksBuilder::BuildBlocks( const CIRSeq* node )
 				currStm = dynamic_cast< const CIRSeq* >( currStm->right );
 			} else if( currStm != nullptr && IsInstanceOf<CIRLabel>( const_cast< IIRStm* >( currStm->left ) ) ) {
 				// Заканчиваем "силой" блок, и ставим Джам на начало следующего
-				blocks[numCurrBlock].Add( new CIRJump( dynamic_cast< const CIRLabel* >( currStm )->label ) );
+				blocks[numCurrBlock].Add( new CIRJump( dynamic_cast< const CIRLabel* >( currStm->left )->label ) );
 				endOfBlock = true;
 			} else if( currStm == nullptr || currStm->left == nullptr ) {
 				// Дерево закончилось
