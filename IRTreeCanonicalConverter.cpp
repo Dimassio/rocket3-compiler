@@ -26,48 +26,48 @@ CIRTreeCanonicalConverter::CIRTreeCanonicalConverter( IIRExp* root )
 
 void CIRTreeCanonicalConverter::visit( const CIRMove* node )
 {
-	node->dst->Accept(this);
+	node->dst->Accept( this );
 	IIRExp* dst = lastNodeExp;
-	IIRExp* src = const_cast<IIRExp*>(node->src);
+	IIRExp* src = const_cast< IIRExp* >( node->src );
 
-	if ( IsInstanceOf<CIRCall>( const_cast<IIRExp*>(src) ) ) {
-		const CIRCall* call = dynamic_cast<const CIRCall*>(src);
-		call->AcceptToSiftUpEseqs(this);
+	if( IsInstanceOf<CIRCall>( const_cast< IIRExp* >( src ) ) ) {
+		const CIRCall* call = dynamic_cast< const CIRCall* >( src );
+		call->AcceptToSiftUpEseqs( this );
 		src = lastNodeExp;
 	}
 
-	if ( IsInstanceOf<CIRCall>( const_cast<IIRExp*>( src ) ) ) {
+	if( IsInstanceOf<CIRCall>( const_cast< IIRExp* >( src ) ) ) {
 		const CIRCall* call = dynamic_cast< const CIRCall* >( src );
 
-		call->exp->Accept(this);
+		call->exp->Accept( this );
 		IIRExp* exp = lastNodeExp;
-		call->expList->Accept(this);
+		call->expList->Accept( this );
 		CIRExpList* expList = lastNodeExpList;
 
 		lastNodeExp = nullptr;
-		lastNodeStm = new CIRMove(dst, new CIRCall(exp, expList));
+		lastNodeStm = new CIRMove( dst, new CIRCall( exp, expList ) );
 		return;
 	}
 
-	if (IsInstanceOf<CIRESeq>(const_cast<IIRExp*>(src))) {
-		const CIRESeq* eseq = dynamic_cast< const CIRESeq* >(src);
+	if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >( src ) ) ) {
+		const CIRESeq* eseq = dynamic_cast< const CIRESeq* >( src );
 
-		CIRSeq* seq = new CIRSeq(eseq->stm, new CIRMove(dst, eseq->exp));
+		CIRSeq* seq = new CIRSeq( eseq->stm, new CIRMove( dst, eseq->exp ) );
 
-		seq->Accept(this);
+		seq->Accept( this );
 		return;
 	}
 
-	if (IsInstanceOf<CIRESeq>(const_cast<IIRExp*>(dst))) {
-		const CIRESeq* eseq = dynamic_cast< const CIRESeq* >(dst);
+	if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >( dst ) ) ) {
+		const CIRESeq* eseq = dynamic_cast< const CIRESeq* >( dst );
 
-		CIRSeq* seq = new CIRSeq(eseq->stm, new CIRMove(eseq->exp, src));
+		CIRSeq* seq = new CIRSeq( eseq->stm, new CIRMove( eseq->exp, src ) );
 
-		seq->Accept(this);
+		seq->Accept( this );
 		return;
 	}
 
-	src->Accept(this);
+	src->Accept( this );
 	src = lastNodeExp;
 
 	lastNodeExp = nullptr;
@@ -78,7 +78,7 @@ void CIRTreeCanonicalConverter::visit( const CIRExp* node )
 {
 	node->exp->Accept( this );
 
-	lastNodeStm = new CIRExp(lastNodeExp);
+	lastNodeStm = new CIRExp( lastNodeExp );
 	lastNodeExp = nullptr;
 }
 
@@ -90,17 +90,17 @@ void CIRTreeCanonicalConverter::visit( const CIRJump* node )
 
 void CIRTreeCanonicalConverter::visit( const CIRCJump* node )
 {
-	node->right->Accept(this);
+	node->right->Accept( this );
 	IIRExp* right = lastNodeExp;
-	node->left->Accept(this);
+	node->left->Accept( this );
 	IIRExp* left = lastNodeExp;
 
 	if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >( left ) ) ) {
 		const CIRESeq* eseq = dynamic_cast< const CIRESeq* >( left );
 
-		CIRSeq* seq = new CIRSeq(eseq->stm, new CIRCJump(node->op, left, right, node->iftrue, node->iffalse));
+		CIRSeq* seq = new CIRSeq( eseq->stm, new CIRCJump( node->op, left, right, node->iftrue, node->iffalse ) );
 
-		seq->Accept(this);
+		seq->Accept( this );
 		return;
 	}
 
@@ -108,26 +108,25 @@ void CIRTreeCanonicalConverter::visit( const CIRCJump* node )
 		const CIRESeq* eseq = dynamic_cast< const CIRESeq* >( right );
 
 		CIRSeq* seq = new CIRSeq( new CIRMove( new CIRTemp( new Temp::CTemp() ), left ),
-									 new CIRSeq( eseq->stm,
-												 new CIRCJump( node->op,
-															   new CIRTemp( new Temp::CTemp() ), eseq->exp, node->iftrue, node->iffalse ) ) );
+								  new CIRSeq( eseq->stm,
+											  new CIRCJump( node->op,
+															new CIRTemp( new Temp::CTemp() ), eseq->exp, node->iftrue, node->iffalse ) ) );
 
-		seq->Accept(this);
+		seq->Accept( this );
 		return;
 	}
 
 	if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >( right ) ) ) {
 		const CIRESeq* eseq = dynamic_cast< const CIRESeq* >( right );
 
-		if (IsCommute(const_cast<IIRStm*>(eseq->stm), const_cast<IIRExp*>( left )))
-		{
-			CIRSeq* seq = new CIRSeq(eseq->stm,
-				new CIRCJump(node->op, left, eseq->exp, node->iftrue, node->iffalse));
+		if( IsCommute( const_cast< IIRStm* >( eseq->stm ), const_cast< IIRExp* >( left ) ) ) {
+			CIRSeq* seq = new CIRSeq( eseq->stm,
+									  new CIRCJump( node->op, left, eseq->exp, node->iftrue, node->iffalse ) );
 
 
-			seq->Accept(this);
-			return;		
-		}		
+			seq->Accept( this );
+			return;
+		}
 	}
 
 	lastNodeExp = nullptr;
@@ -139,40 +138,40 @@ void CIRTreeCanonicalConverter::visit( const CIRSeq* node )
 	IIRStm* left = nullptr;
 	IIRStm* right = nullptr;
 
-	if (node->left != nullptr) {
-		node->left->Accept(this);
+	if( node->left != nullptr ) {
+		node->left->Accept( this );
 		left = lastNodeStm;
 	}
 
-	if (node->right != nullptr) {
-		node->right->Accept(this);
+	if( node->right != nullptr ) {
+		node->right->Accept( this );
 		right = lastNodeStm;
 	}
 
-	if (left == nullptr && right != nullptr) {
-		CIRSeq* seq = new CIRSeq(right, nullptr);
-		seq->Accept(this);
+	if( left == nullptr && right != nullptr ) {
+		CIRSeq* seq = new CIRSeq( right, nullptr );
+		seq->Accept( this );
 		return;
 	}
-	
-	if( left != nullptr) {
-		if (IsInstanceOf<CIRSeq>(const_cast< IIRStm* >( left ))) {
-			if (right == nullptr) {
+
+	if( left != nullptr ) {
+		if( IsInstanceOf<CIRSeq>( const_cast< IIRStm* >( left ) ) ) {
+			if( right == nullptr ) {
 				lastNodeExp = nullptr;
 				lastNodeStm = left;
 				return;
 			}
 
 			const CIRSeq* seq = dynamic_cast< const CIRSeq* >( left );
-			
-			CIRSeq* newSeq = new CIRSeq(seq->left, new CIRSeq(seq->right, right));
-			newSeq->Accept(this);
+
+			CIRSeq* newSeq = new CIRSeq( seq->left, new CIRSeq( seq->right, right ) );
+			newSeq->Accept( this );
 			return;
 		}
 
-		if ( right != nullptr && !IsInstanceOf<CIRSeq>(const_cast<IIRStm*>(right))) {
+		if( right != nullptr && !IsInstanceOf<CIRSeq>( const_cast< IIRStm* >( right ) ) ) {
 			lastNodeExp = nullptr;
-			lastNodeStm = new CIRSeq(left, new CIRSeq(right, nullptr));
+			lastNodeStm = new CIRSeq( left, new CIRSeq( right, nullptr ) );
 			return;
 		}
 	}
@@ -201,17 +200,17 @@ void CIRTreeCanonicalConverter::visit( const CIRTemp* node )
 
 void CIRTreeCanonicalConverter::visit( const CIRBinOp* node )
 {
-	node->right->Accept(this);
+	node->right->Accept( this );
 	IIRExp* right = lastNodeExp;
 
-	node->left->Accept(this);
+	node->left->Accept( this );
 	IIRExp* left = lastNodeExp;
 
 	if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >( left ) ) ) {
 		const CIRESeq* eseq = dynamic_cast< const CIRESeq* >( left );
-		CIRESeq* newEseq = new CIRESeq(eseq->stm, new CIRBinOp(node->opId, eseq->exp, right));
+		CIRESeq* newEseq = new CIRESeq( eseq->stm, new CIRBinOp( node->opId, eseq->exp, right ) );
 
-		newEseq->Accept(this);
+		newEseq->Accept( this );
 		return;
 	}
 
@@ -223,7 +222,7 @@ void CIRTreeCanonicalConverter::visit( const CIRBinOp* node )
 													 new CIRBinOp( node->opId,
 																   new CIRTemp( new Temp::CTemp() ), eseq->exp ) ) );
 
-		newEseq->Accept(this);
+		newEseq->Accept( this );
 		return;
 	}
 
@@ -234,62 +233,63 @@ void CIRTreeCanonicalConverter::visit( const CIRBinOp* node )
 
 			CIRESeq* newEseq = new CIRESeq( eseq->stm,
 											new CIRBinOp( node->opId, left, eseq->exp ) );
-			
-			newEseq->Accept(this);
+
+			newEseq->Accept( this );
 			return;
 		}
 	}
 
 	lastNodeStm = nullptr;
-	lastNodeExp = new CIRBinOp(node->opId, left, right);
+	lastNodeExp = new CIRBinOp( node->opId, left, right );
 }
 
 void CIRTreeCanonicalConverter::visit( const CIRMem* node )
 {
-	node->exp->Accept(this);
+	node->exp->Accept( this );
 	IIRExp* exp = lastNodeExp;
 
-	if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >(exp) ) ) {
-		CIRESeq* eseq = dynamic_cast< CIRESeq* >(const_cast< IIRExp* >(exp));
-		CIRESeq* newEseq = new CIRESeq(eseq->stm, new CIRMem(eseq->exp));
+	if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >( exp ) ) ) {
+		CIRESeq* eseq = dynamic_cast< CIRESeq* >( const_cast< IIRExp* >( exp ) );
+		CIRESeq* newEseq = new CIRESeq( eseq->stm, new CIRMem( eseq->exp ) );
 
-		newEseq->Accept(this);
+		newEseq->Accept( this );
 
 		return;
 	}
 
 	lastNodeStm = nullptr;
-	lastNodeExp = new CIRMem(exp);
+	lastNodeExp = new CIRMem( exp );
 }
 
-void CIRTreeCanonicalConverter::siftUpEseqs(const CIRCall* node) {
-	CIRExpList* expList = const_cast<CIRExpList*>(node->expList);
-	for (int i = 0; i < expList->expList.size(); ++i) {
-		if (IsInstanceOf<CIRESeq>(const_cast<IIRExp*>(expList->expList[i]))) {
-			const CIRESeq* eseq = dynamic_cast< const CIRESeq* >(expList->expList[i]);
-			expList->expList[i] = const_cast<IIRExp*>(eseq->exp);
+void CIRTreeCanonicalConverter::siftUpEseqs( const CIRCall* node )
+{
+	CIRExpList* expList = const_cast< CIRExpList* >( node->expList );
+	for( int i = 0; i < expList->expList.size(); ++i ) {
+		if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >( expList->expList[i] ) ) ) {
+			const CIRESeq* eseq = dynamic_cast< const CIRESeq* >( expList->expList[i] );
+			expList->expList[i] = const_cast< IIRExp* >( eseq->exp );
 
-			CIRCall* call = new CIRCall(node->exp, expList);
-			call->AcceptToSiftUpEseqs(this);
+			CIRCall* call = new CIRCall( node->exp, expList );
+			call->AcceptToSiftUpEseqs( this );
 
-			lastNodeExp = new CIRESeq(eseq->stm, lastNodeExp);
+			lastNodeExp = new CIRESeq( eseq->stm, lastNodeExp );
 			lastNodeStm = nullptr;
 			return;
 		}
 	}
 
-	lastNodeExp = const_cast<CIRCall*>(node);
+	lastNodeExp = const_cast< CIRCall* >( node );
 	lastNodeStm = nullptr;
 }
 
 void CIRTreeCanonicalConverter::visit( const CIRCall* node )
 {
-	node->expList->Accept(this);
+	node->expList->Accept( this );
 
-	CIRESeq* eseq = new CIRESeq(new CIRMove(new CIRTemp(new Temp::CTemp()), new CIRCall(node->exp, lastNodeExpList)),
-		new CIRTemp(new Temp::CTemp()));
+	CIRESeq* eseq = new CIRESeq( new CIRMove( new CIRTemp( new Temp::CTemp() ), new CIRCall( node->exp, lastNodeExpList ) ),
+								 new CIRTemp( new Temp::CTemp() ) );
 
-	eseq->Accept(this);
+	eseq->Accept( this );
 }
 
 void CIRTreeCanonicalConverter::visit( const CIRESeq* node )
@@ -297,23 +297,23 @@ void CIRTreeCanonicalConverter::visit( const CIRESeq* node )
 	IIRExp* exp = nullptr;
 	IIRStm* stm = nullptr;
 
-	if (node->stm != nullptr) {
-		node->stm->Accept(this);
+	if( node->stm != nullptr ) {
+		node->stm->Accept( this );
 		stm = lastNodeStm;
 	}
 
-	if (node->exp != nullptr) {
-		node->exp->Accept(this);
+	if( node->exp != nullptr ) {
+		node->exp->Accept( this );
 		exp = lastNodeExp;
 	}
 
-	if (IsInstanceOf<CIRESeq>(const_cast<IIRExp*>( exp ))) {
-		const CIRESeq* eseq = dynamic_cast< const CIRESeq*>( exp );
+	if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >( exp ) ) ) {
+		const CIRESeq* eseq = dynamic_cast< const CIRESeq* >( exp );
 
-		CIRSeq* seq = new CIRSeq(stm, eseq->stm);
-		seq->Accept(this);
+		CIRSeq* seq = new CIRSeq( stm, eseq->stm );
+		seq->Accept( this );
 
-		lastNodeExp = new CIRESeq(lastNodeStm, eseq->exp);
+		lastNodeExp = new CIRESeq( lastNodeStm, eseq->exp );
 		lastNodeStm = nullptr;
 		return;
 	}
@@ -323,6 +323,11 @@ void CIRTreeCanonicalConverter::visit( const CIRESeq* node )
 
 	if( node == frameRoot ) {
 		frameRoot = lastNodeExp;
+		frameCanonRoot = const_cast< IIRStm* >( dynamic_cast< CIRESeq* >( lastNodeExp )->stm );
+		if( IsInstanceOf<CIRExp>( frameCanonRoot ) ) {
+			CIRExp* currRoot = dynamic_cast< CIRExp* >( frameCanonRoot );
+			frameCanonRoot = const_cast< IIRStm* >( dynamic_cast< const CIRESeq* >( currRoot->exp )->stm );
+		}
 	}
 }
 

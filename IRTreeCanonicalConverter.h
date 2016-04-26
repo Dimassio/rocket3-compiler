@@ -42,5 +42,6 @@ public:
 	CIRExpList* lastNodeExpList;
 
 	IIRExp* frameRoot;
+	IIRStm* frameCanonRoot;
 
 };

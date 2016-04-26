@@ -16,7 +16,7 @@ void PrintIRTree( const std::vector<Frame::CFrame*>& frames )
 		CIRTreeToGraphConverter irTreeToGraphConverter(
 			std::string( "IRTree_" ) + frame->GetFrameName() + std::string( ".dot" ) );
 
-		frame->root->Accept( &irTreeToGraphConverter );
+		frame->canonRoot->Accept( &irTreeToGraphConverter );
 		irTreeToGraphConverter.Flush();
 	}
 }
@@ -25,9 +25,10 @@ void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
 {
 	// Canonicalize
 	for( auto& frame : frames ) {
-		CIRTreeCanonicalConverter irTreeCanonConverter(frame->root);
+		CIRTreeCanonicalConverter irTreeCanonConverter( frame->root );
 		frame->root->Accept( &irTreeCanonConverter );
-		frame->root = irTreeCanonConverter.frameRoot;
+		frame->root = irTreeCanonConverter.frameRoot; // не канонический корень
+		frame->canonRoot = irTreeCanonConverter.frameCanonRoot; // канонический!!!
 	}
 }
 
@@ -62,10 +63,10 @@ int main( int argc, char *argv[] )
 		irTreeBuilder.visit( root );
 		std::cout << "IRTree builder: success" << std::endl;
 
-		//CanonizeIRTree( irTreeBuilder.GetFrames() );
+		CanonizeIRTree( irTreeBuilder.GetFrames() );
 		std::cout << "Canonizing IRTree: success" << std::endl;
 
-		PrintIRTree(irTreeBuilder.GetFrames());
+		PrintIRTree( irTreeBuilder.GetFrames() );
 		std::cout << "Printing frames: success" << std::endl;
 
 		fclose( yyin );
