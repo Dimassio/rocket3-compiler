@@ -17,3 +17,18 @@ void CBasicBlock::Add( const IIRStm* stm )
 {
 	statements.push_back( stm );
 }
+
+const IIRStm* CBasicBlock::First() const
+{
+	return statements.front();
+}
+
+const IIRStm* CBasicBlock::Last() const
+{
+	return statements.back();
+}
+
+bool CBasicBlock::operator<( const CBasicBlock& other ) const
+{
+	return true;
+}
