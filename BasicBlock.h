@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IRTree.h"
+#include <list>
 
 class CBasicBlock {
 public:

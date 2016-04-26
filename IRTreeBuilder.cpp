@@ -310,7 +310,7 @@ void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
 	// return:
 	( methodDecl->Exp() )->Accept( this );
 	CIRTemp* returnValue = new CIRTemp( new Temp::CTemp( new Symbols::CSymbol( "ReturnValue" ) ) );
-	CIRESeq* eseq = new CIRESeq( new CIRMove( returnValue, lastNodeExp ), returnValue );
+	CIRESeq* eseq = new CIRESeq( lastStm, lastNodeExp );
 	currFrame->HangToRoot( eseq ); // подвесили дерево фрейма
 
 	currMethod = nullptr;
