@@ -308,13 +308,15 @@ void CIRTreeBuilder::visit( const CMethodDecl* methodDecl )
 
 	IIRStm* lastStm = lastNodeStm;
 	// return:
-	( methodDecl->Exp() )->Accept( this ); // todo: нужно ли делать метку на return?
-	CIRESeq* eseq = new CIRESeq( lastStm, lastNodeExp );
+	( methodDecl->Exp() )->Accept( this );
+	CIRTemp* returnValue = new CIRTemp( new Temp::CTemp( new Symbols::CSymbol( "ReturnValue" ) ) );
+	CIRESeq* eseq = new CIRESeq( new CIRMove( returnValue, lastNodeExp ), returnValue );
 	currFrame->HangToRoot( eseq ); // подвесили дерево фрейма
 
 	currMethod = nullptr;
 	currFrame = nullptr;
 }
+
 
 void CIRTreeBuilder::visit( const CMethodDeclList* methodDeclList )
 {

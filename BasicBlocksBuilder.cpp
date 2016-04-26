@@ -3,39 +3,14 @@
 #include "CExp.h"
 #include <string>
 
-// todo: when in exp, we mush finish block, or what?
-
 CBasicBlocksBuilder::CBasicBlocksBuilder()
 {
-	currBlock = nullptr;
+	firstLabel = nullptr;
 }
 
 std::vector<CBasicBlock> CBasicBlocksBuilder::GetBasicBlocks() const
 {
 	return blocks;
-}
-
-void CBasicBlocksBuilder::PutDoneLabel()
-{
-	blocks.back().Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( "done" ) ) ) );
-}
-
-void CBasicBlocksBuilder::addStm( const IIRStm* stm )
-{
-	if( currBlock == nullptr ) {
-		currBlock = new CBasicBlock();
-		// Создаем метку вида: <номер_блока label>
-		currBlock->Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( std::to_string( blocks.size() ) + " label" ) ) ) );
-	}
-	currBlock->Add( stm );
-}
-
-void CBasicBlocksBuilder::finishBlock()
-{
-	if( currBlock != nullptr ) {
-		blocks.push_back( *currBlock );
-		delete currBlock;
-	}
 }
 
 template<class T, class S>
@@ -44,106 +19,77 @@ bool IsInstanceOf( S* exp )
 	return dynamic_cast< T* >( exp ) == 0 ? false : true;
 }
 
-void CBasicBlocksBuilder::visit( const CIRMove* node )
+void CBasicBlocksBuilder::BuildBlocks( const CIRSeq* node )
 {
-	addStm( node );
-	node->dst->Accept( this );
-	node->src->Accept( this );
-}
-
-void CBasicBlocksBuilder::visit( const CIRExp* node )
-{
-	addStm( node );
-	node->exp->Accept( this );
-}
-
-void CBasicBlocksBuilder::visit( const CIRJump* node )
-{
-	addStm( node );
-	finishBlock();
-}
-
-void CBasicBlocksBuilder::visit( const CIRCJump* node )
-{
-	addStm( node );
-	finishBlock();
-
-	node->right->Accept( this );
-	node->left->Accept( this );
-}
-
-void CBasicBlocksBuilder::visit( const CIRSeq* node )
-{
-	addStm( node );
-	if( node->left != nullptr ) {
-		node->left->Accept( this );
-	}
-	if( node->right != nullptr ) {
-		node->right->Accept( this );
-	}
-}
-
-void CBasicBlocksBuilder::visit( const CIRConst* node )
-{
-	finishBlock();
-}
-
-void CBasicBlocksBuilder::visit( const CIRName* node )
-{
-	finishBlock();
-}
-
-void CBasicBlocksBuilder::visit( const CIRTemp* node )
-{
-	finishBlock();
-}
-
-void CBasicBlocksBuilder::visit( const CIRBinOp* node )
-{
-	finishBlock();
-	node->left->Accept( this );
-	node->right->Accept( this );
-}
-
-void CBasicBlocksBuilder::visit( const CIRMem* node )
-{
-	finishBlock();
-	node->exp->Accept( this );
-}
-
-void CBasicBlocksBuilder::visit( const CIRCall* node )
-{
-	finishBlock();
-	node->exp->Accept( this );
-	node->expList->Accept( this );
-}
-
-void CBasicBlocksBuilder::visit( const CIRESeq* node )
-{
-	// Ничего не делаем, так как это корень
-	if( node->stm != nullptr ) {
-		node->stm->Accept( this );
-	}
-	if( node->exp != nullptr ) {
-		node->exp->Accept( this );
+	const CIRSeq* currStm = node;
+	int numCurrBlock = -1;
+	while( currStm != nullptr ) {
+		// Начинаем новый блок
+		blocks.push_back( CBasicBlock() );
+		numCurrBlock = blocks.size() - 1;
+		// Block -> Position
+		blockToPosition[blocks.back()] = numCurrBlock;
+		if( IsInstanceOf<CIRLabel>( const_cast< IIRStm* >( node->left ) ) ) {
+			blocks[numCurrBlock].Add( dynamic_cast< const CIRLabel* >( node->left ) );
+			// Label -> Block
+			labelToBlock[getLabel( numCurrBlock )->label] = blocks[numCurrBlock];
+		} else {
+			blocks[numCurrBlock].Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( std::to_string( blocks.size() ) + " block_label" ) ) ) );
+			// Label -> Block
+			labelToBlock[getLabel( numCurrBlock )->label] = blocks[numCurrBlock];
+			blocks[numCurrBlock].Add( node->left );
+		}
+		if( firstLabel == nullptr ) {
+			firstLabel = dynamic_cast< const CIRLabel* >( blocks[numCurrBlock].First() );
+		}
+		bool endOfBlock = false;
+		currStm = dynamic_cast< const CIRSeq* >( currStm->right );
+		while( !endOfBlock ) {
+			if( currStm != nullptr && ( IsInstanceOf<CIRJump>( const_cast< IIRStm* >( currStm->left ) ) || IsInstanceOf<CIRCJump>( const_cast< IIRStm* >( currStm->left ) ) ) ) {
+				blocks[numCurrBlock].Add( currStm->left );
+				endOfBlock = true;
+				currStm = dynamic_cast< const CIRSeq* >( currStm->right );
+			} else if( currStm != nullptr && IsInstanceOf<CIRLabel>( const_cast< IIRStm* >( currStm->left ) ) ) {
+				// Заканчиваем "силой" блок, и ставим Джам на начало следующего
+				blocks[numCurrBlock].Add( new CIRJump( dynamic_cast< const CIRLabel* >( currStm )->label ) );
+				endOfBlock = true;
+			} else if( currStm == nullptr || currStm->left == nullptr ) {
+				// Дерево закончилось
+				blocks[numCurrBlock].Add( putDoneLabel() );
+				endOfBlock = true;
+			} else {
+				blocks[numCurrBlock].Add( currStm->left );
+				endOfBlock = false;
+				currStm = dynamic_cast< const CIRSeq* >( currStm->right );
+			}
+		}
 	}
 }
 
-void CBasicBlocksBuilder::visit( const CIRExpList* node )
+void CBasicBlocksBuilder::SortBlocks()
 {
-	finishBlock();
-	for( auto exp : node->expList ) {
-		exp->Accept( this );
+	assert( blocks.size() > 0 );
+	std::vector<CBasicBlock> sortedBlocks;
+	std::vector<bool> used( blocks.size(), false );
+	CBasicBlock currBlock = labelToBlock[firstLabel->label];
+	int position = blockToPosition[currBlock];
+	used[position] = true;
+	const IIRStm* jump = currBlock.Last();
+	while( true ) {
+		if( IsInstanceOf<CIRJump>( const_cast< IIRStm* >( jump ) ) ) {
+			sortedBlocks.push_back( currBlock );
+			// todo:Temp::CLabel to = dynamic_cast< CIRJump* >( jump );
+
+		}
 	}
 }
 
-void CBasicBlocksBuilder::visit( const CIRLabel* node )
+IIRStm* CBasicBlocksBuilder::putDoneLabel()
 {
-	// Нужно прерывать идущий блок, создание нового джампа на эту метку
-	if( currBlock != nullptr ) {
-		currBlock->Add( new CIRJump( node->label ) );
-		finishBlock();
-	}
-	currBlock = new CBasicBlock();
-	currBlock->Add( node );
+	return new CIRJump( new Temp::CLabel( new Symbols::CSymbol( "done" ) ) );
+}
+
+const CIRLabel* CBasicBlocksBuilder::getLabel( int numBlock )
+{
+	return dynamic_cast< const CIRLabel* >( blocks[numBlock].First() );
 }

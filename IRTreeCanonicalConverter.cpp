@@ -86,8 +86,6 @@ void CIRTreeCanonicalConverter::visit( const CIRJump* node )
 {
 	lastNodeExp = nullptr;
 	lastNodeStm = const_cast< CIRJump* >( node );
-
-	// todo: jump(eseq(s, e1)) -> seq(s, jump(e1)) ?
 }
 
 void CIRTreeCanonicalConverter::visit( const CIRCJump* node )

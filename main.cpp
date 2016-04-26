@@ -62,7 +62,7 @@ int main( int argc, char *argv[] )
 		irTreeBuilder.visit( root );
 		std::cout << "IRTree builder: success" << std::endl;
 
-		CanonizeIRTree( irTreeBuilder.GetFrames() );
+		//CanonizeIRTree( irTreeBuilder.GetFrames() );
 		std::cout << "Canonizing IRTree: success" << std::endl;
 
 		PrintIRTree(irTreeBuilder.GetFrames());
