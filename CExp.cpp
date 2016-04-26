@@ -20,6 +20,10 @@ void CIRCall::Accept( IIRTreeConvertVisitor* visitor )
 	visitor->visit( this );
 }
 
+void CIRCall::AcceptToSiftUpEseqs(CIRTreeCanonicalConverter* visitor) const {
+	visitor->siftUpEseqs(this);
+}
+
 CIRConst::CIRConst( const int _value ):
 	value( _value )
 {

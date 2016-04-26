@@ -1,6 +1,6 @@
 #pragma once
 #include "IIRTreeVisitor.h"
-#include <list>
+#include <vector>
 #include <cassert>
 
 class IIRExp {
@@ -45,12 +45,12 @@ public:
 class CIRExpList {
 public:
 	CIRExpList( IIRExp* head, CIRExpList* tail );
-	CIRExpList( const std::list<IIRExp*>& expList );
+	CIRExpList( const std::vector<IIRExp*>& expList );
 	~CIRExpList();
 
 	void Accept( IIRTreeVisitor* visitor ) const;
 	void Accept( IIRTreeConvertVisitor* visitor ) const;
 	void Add( IIRExp* exp );
 
-	std::list<IIRExp*> expList;  // first IIRExp to this
+	std::vector<IIRExp*> expList;  // first IIRExp to this
 };

@@ -35,6 +35,8 @@ public:
 
 	void visit( const CIRLabel* node );
 
+	void siftUpEseqs(const CIRCall* node);
+
 	IIRStm* lastNodeStm;
 	IIRExp* lastNodeExp;
 	CIRExpList* lastNodeExpList;

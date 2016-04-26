@@ -3,6 +3,7 @@
 #include "IRTree.h"
 #include "EOperation.h"
 #include "IIRTreeVisitor.h"
+#include "IRTreeCanonicalConverter.h"
 
 // Вызов фунции exp, от параметров expList
 class CIRCall: public IIRExp {
@@ -13,6 +14,8 @@ public:
 	void Accept( IIRTreeVisitor* visitor ) const;
 
 	void Accept( IIRTreeConvertVisitor* visitor );
+
+	void AcceptToSiftUpEseqs( CIRTreeCanonicalConverter* visitor) const;
 
 	const IIRExp* exp;
 	const CIRExpList* expList;
