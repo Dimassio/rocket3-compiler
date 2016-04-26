@@ -78,7 +78,7 @@ void CBasicBlocksBuilder::SortBlocks()
 	while( true ) {
 		if( IsInstanceOf<CIRJump>( const_cast< IIRStm* >( jump ) ) ) {
 			sortedBlocks.push_back( currBlock );
-			//Temp::CLabel to = dynamic_cast< CIRJump* >( jump );
+			// todo:Temp::CLabel to = dynamic_cast< CIRJump* >( jump );
 
 		}
 	}

@@ -61,7 +61,6 @@ namespace Frame
 		static const int wordSize = 4;
 
 		IIRExp* root; // eseq's in roots, because statemnets + return expr
-
 	private:
 		std::map<const Symbols::CSymbol*, IAccess*> formals; // аргументы функции
 		std::map<const Symbols::CSymbol*, IAccess*> locals; // локальные переменные
