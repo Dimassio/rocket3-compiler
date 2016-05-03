@@ -38,7 +38,8 @@ void BuildBasicBlocks( std::vector<Frame::CFrame*>& frames )
 	for( auto& frame : frames ) {
 		CBasicBlocksBuilder blockBuilder;
 		blockBuilder.BuildBlocks( frame->canonRoot );
-		blockBuilder;
+		blockBuilder.SortBlocks();
+		// todo: для каждого фрейма соритировать блоки? и что делать с тем долбанный компаратором. Посмотреть какой мэп у Полины
 	}
 }
 

@@ -28,22 +28,22 @@ void CBasicBlocksBuilder::BuildBlocks( const IIRStm* node )
 		blocks.push_back( CBasicBlock() );
 		numCurrBlock = blocks.size() - 1;
 		// Block -> Position
-		blockToPosition[blocks.back()] = numCurrBlock;
+		//blockToPosition[blocks.back()] = numCurrBlock;
 		if( IsInstanceOf<CIRLabel>( const_cast< IIRStm* >( currStm->left ) ) ) {
 			blocks[numCurrBlock].Add( dynamic_cast< const CIRLabel* >( currStm->left ) );
 			// Label -> Block
-			labelToBlock[getLabel( numCurrBlock )->label] = blocks[numCurrBlock];
+			labelToBlock[getLabel( numCurrBlock )->label] = &blocks[numCurrBlock];
+			currStm = dynamic_cast< const CIRSeq* >( currStm->right );
 		} else {
 			blocks[numCurrBlock].Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( std::to_string( blocks.size() ) + " block_label" ) ) ) );
 			// Label -> Block
-			labelToBlock[getLabel( numCurrBlock )->label] = blocks[numCurrBlock];
-			blocks[numCurrBlock].Add( currStm->left );
+			labelToBlock[getLabel( numCurrBlock )->label] = &blocks[numCurrBlock];
 		}
 		if( firstLabel == nullptr ) {
+			// чтобы знать с какого блока начинать
 			firstLabel = dynamic_cast< const CIRLabel* >( blocks[numCurrBlock].First() );
 		}
 		bool endOfBlock = false;
-		currStm = dynamic_cast< const CIRSeq* >( currStm->right );
 		while( !endOfBlock ) {
 			if( currStm != nullptr && ( IsInstanceOf<CIRJump>( const_cast< IIRStm* >( currStm->left ) ) || IsInstanceOf<CIRCJump>( const_cast< IIRStm* >( currStm->left ) ) ) ) {
 				blocks[numCurrBlock].Add( currStm->left );
@@ -55,7 +55,7 @@ void CBasicBlocksBuilder::BuildBlocks( const IIRStm* node )
 				endOfBlock = true;
 			} else if( currStm == nullptr || currStm->left == nullptr ) {
 				// Дерево закончилось
-				blocks[numCurrBlock].Add( putDoneLabel() );
+				blocks[numCurrBlock].Add( getDoneLabel() );
 				endOfBlock = true;
 			} else {
 				blocks[numCurrBlock].Add( currStm->left );
@@ -70,26 +70,56 @@ void CBasicBlocksBuilder::SortBlocks()
 {
 	assert( blocks.size() > 0 );
 	std::vector<CBasicBlock> sortedBlocks;
-	std::vector<bool> used( blocks.size(), false );
-	CBasicBlock currBlock = labelToBlock[firstLabel->label];
-	int position = blockToPosition[currBlock];
-	used[position] = true;
+	/*// 1 label L in 1 block
+	// 1 jump to label L may be in N blocks*/
+	// TODO: в моих предположения зачем нужен тогда ysed?
+	//std::vector<bool> used( blocks.size(), false );
+	CBasicBlock currBlock = *labelToBlock[firstLabel->label];
+	sortedBlocks.push_back( currBlock );
+	//int position = blockToPosition[currBlock];
+	//used[position] = true;
 	const IIRStm* jump = currBlock.Last();
 	while( true ) {
 		if( IsInstanceOf<CIRJump>( const_cast< IIRStm* >( jump ) ) ) {
+			// За ним просто должен идти блок с меткой, куда прыгаем
+			const Temp::CLabel* nextLabel = getNextLabel( jump );
+			if( nextLabel->Name() == "done_label" ) {
+				break;
+			}
+			currBlock = *labelToBlock[nextLabel];
 			sortedBlocks.push_back( currBlock );
-			// todo:Temp::CLabel to = dynamic_cast< CIRJump* >( jump );
-
+		} else if( IsInstanceOf<CIRCJump>( const_cast< IIRStm* >( jump ) ) ) {
+			// За ним должен идти блок с начальнйо меткой на false
+			const Temp::CLabel* nextLabel = getNextConditionalLabel( jump );
+			if( nextLabel->Name() == "done_label" ) {
+				break;
+			}
+			currBlock = *labelToBlock[nextLabel];
+			sortedBlocks.push_back( currBlock );
+		} else {
+			assert( false );
 		}
 	}
 }
 
-IIRStm* CBasicBlocksBuilder::putDoneLabel()
+const Temp::CLabel* CBasicBlocksBuilder::getNextLabel( const IIRStm* stm ) const
 {
-	return new CIRJump( new Temp::CLabel( new Symbols::CSymbol( "done" ) ) );
+	const CIRJump* jump = dynamic_cast< const CIRJump* >( stm );
+	return jump->label;
 }
 
-const CIRLabel* CBasicBlocksBuilder::getLabel( int numBlock )
+const Temp::CLabel* CBasicBlocksBuilder::getNextConditionalLabel( const IIRStm* stm ) const
+{
+	const CIRCJump* jump = dynamic_cast< const CIRCJump* >( stm );
+	return jump->iffalse->label;
+}
+
+IIRStm* CBasicBlocksBuilder::getDoneLabel() const
+{
+	return new CIRJump( new Temp::CLabel( new Symbols::CSymbol( "done_label" ) ) );
+}
+
+const CIRLabel* CBasicBlocksBuilder::getLabel( int numBlock ) const
 {
 	return dynamic_cast< const CIRLabel* >( blocks[numBlock].First() );
 }
