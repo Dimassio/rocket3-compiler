@@ -39,7 +39,7 @@ void BuildBasicBlocks( std::vector<Frame::CFrame*>& frames )
 		CBasicBlocksBuilder blockBuilder;
 		blockBuilder.BuildBlocks( frame->canonRoot );
 		blockBuilder.SortBlocks();
-		// todo: для каждого фрейма соритировать блоки? и что делать с тем долбанный компаратором. Посмотреть какой мэп у Полины
+		// todo: have to get sorted blocks here( vector<CBasicBlock>)
 	}
 }
 

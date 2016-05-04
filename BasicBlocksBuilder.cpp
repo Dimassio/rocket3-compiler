@@ -32,12 +32,12 @@ void CBasicBlocksBuilder::BuildBlocks( const IIRStm* node )
 		if( IsInstanceOf<CIRLabel>( const_cast< IIRStm* >( currStm->left ) ) ) {
 			blocks[numCurrBlock].Add( dynamic_cast< const CIRLabel* >( currStm->left ) );
 			// Label -> Block
-			labelToBlock[getLabel( numCurrBlock )->label] = &blocks[numCurrBlock];
+			labelToBlock[getLabel( numCurrBlock )->label] = numCurrBlock;
 			currStm = dynamic_cast< const CIRSeq* >( currStm->right );
 		} else {
 			blocks[numCurrBlock].Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( std::to_string( blocks.size() ) + " block_label" ) ) ) );
 			// Label -> Block
-			labelToBlock[getLabel( numCurrBlock )->label] = &blocks[numCurrBlock];
+			labelToBlock[getLabel( numCurrBlock )->label] = numCurrBlock;
 		}
 		if( firstLabel == nullptr ) {
 			// чтобы знать с какого блока начинать
@@ -74,9 +74,8 @@ void CBasicBlocksBuilder::SortBlocks()
 	// 1 jump to label L may be in N blocks*/
 	// TODO: в моих предположения зачем нужен тогда ysed?
 	//std::vector<bool> used( blocks.size(), false );
-	CBasicBlock currBlock = *labelToBlock[firstLabel->label];
+	CBasicBlock currBlock = blocks[labelToBlock[firstLabel->label]];
 	sortedBlocks.push_back( currBlock );
-	//int position = blockToPosition[currBlock];
 	//used[position] = true;
 	const IIRStm* jump = currBlock.Last();
 	while( true ) {
@@ -86,7 +85,7 @@ void CBasicBlocksBuilder::SortBlocks()
 			if( nextLabel->Name() == "done_label" ) {
 				break;
 			}
-			currBlock = *labelToBlock[nextLabel];
+			currBlock = blocks[labelToBlock[nextLabel]];
 			sortedBlocks.push_back( currBlock );
 		} else if( IsInstanceOf<CIRCJump>( const_cast< IIRStm* >( jump ) ) ) {
 			// За ним должен идти блок с начальнйо меткой на false
@@ -94,11 +93,12 @@ void CBasicBlocksBuilder::SortBlocks()
 			if( nextLabel->Name() == "done_label" ) {
 				break;
 			}
-			currBlock = *labelToBlock[nextLabel];
+			currBlock = blocks[labelToBlock[nextLabel]];
 			sortedBlocks.push_back( currBlock );
 		} else {
 			assert( false );
 		}
+		jump = currBlock.Last();
 	}
 }
 
@@ -122,4 +122,9 @@ IIRStm* CBasicBlocksBuilder::getDoneLabel() const
 const CIRLabel* CBasicBlocksBuilder::getLabel( int numBlock ) const
 {
 	return dynamic_cast< const CIRLabel* >( blocks[numBlock].First() );
+}
+
+std::vector<CBasicBlock> CBasicBlocksBuilder::GetSortedBlocks() const
+{
+	return sortedBlocks;
 }

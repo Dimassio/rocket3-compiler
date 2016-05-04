@@ -16,11 +16,14 @@ public:
 
 	std::vector<CBasicBlock> GetBasicBlocks() const;
 
+	std::vector<CBasicBlock> GetSortedBlocks() const;
+
 private:
 	std::vector<CBasicBlock> blocks;
-	std::map<const Temp::CLabel*, CBasicBlock*> labelToBlock;
+	std::vector<CBasicBlock> sortedBlocks;
+	std::map<const Temp::CLabel*, int> labelToBlock;
 	// В пределах одного фрейма, метка L может встретиться только в 1 блоке
-	std::map<const Temp::CLabel*, int> blockToPosition;
+	//std::map<const Temp::CLabel*, int> blockToPosition;
 	const CIRLabel* firstLabel;
 
 	// Кончился фрейм -> помещаем джамп на метку DONE
