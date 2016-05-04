@@ -22,13 +22,12 @@ private:
 	std::vector<CBasicBlock> blocks;
 	std::vector<CBasicBlock> sortedBlocks;
 	std::map<const Temp::CLabel*, int> labelToBlock;
-	// В пределах одного фрейма, метка L может встретиться только в 1 блоке
-	//std::map<const Temp::CLabel*, int> blockToPosition;
 	const CIRLabel* firstLabel;
 
-	// Кончился фрейм -> помещаем джамп на метку DONE
+	// Кончился фрейм -> помещаем джамп на метку done_label
 	IIRStm* getDoneLabel() const;
 	const CIRLabel* getLabel( int numBlock ) const;
 	const Temp::CLabel* getNextLabel( const IIRStm* stm ) const;
 	const Temp::CLabel* getNextConditionalLabel( const IIRStm* stm ) const;
+	bool getNextFreeBlock( const std::vector<bool>& used, CBasicBlock& currBlock, int& position ) const;
 };

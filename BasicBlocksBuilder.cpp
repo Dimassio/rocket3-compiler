@@ -27,8 +27,6 @@ void CBasicBlocksBuilder::BuildBlocks( const IIRStm* node )
 		// Начинаем новый блок
 		blocks.push_back( CBasicBlock() );
 		numCurrBlock = blocks.size() - 1;
-		// Block -> Position
-		//blockToPosition[blocks.back()] = numCurrBlock;
 		if( IsInstanceOf<CIRLabel>( const_cast< IIRStm* >( currStm->left ) ) ) {
 			blocks[numCurrBlock].Add( dynamic_cast< const CIRLabel* >( currStm->left ) );
 			// Label -> Block
@@ -69,37 +67,72 @@ void CBasicBlocksBuilder::BuildBlocks( const IIRStm* node )
 void CBasicBlocksBuilder::SortBlocks()
 {
 	assert( blocks.size() > 0 );
-	std::vector<CBasicBlock> sortedBlocks;
-	/*// 1 label L in 1 block
-	// 1 jump to label L may be in N blocks*/
-	// TODO: в моих предположения зачем нужен тогда ysed?
-	//std::vector<bool> used( blocks.size(), false );
+	std::vector<bool> used( blocks.size(), false );
 	CBasicBlock currBlock = blocks[labelToBlock[firstLabel->label]];
+	used[labelToBlock[firstLabel->label]] = true;
 	sortedBlocks.push_back( currBlock );
-	//used[position] = true;
 	const IIRStm* jump = currBlock.Last();
-	while( true ) {
+	size_t numOfFreeBlocks = used.size() - 1;
+	while( numOfFreeBlocks > 0 ) {
 		if( IsInstanceOf<CIRJump>( const_cast< IIRStm* >( jump ) ) ) {
 			// За ним просто должен идти блок с меткой, куда прыгаем
 			const Temp::CLabel* nextLabel = getNextLabel( jump );
-			if( nextLabel->Name() == "done_label" ) {
-				break;
+			if( nextLabel->Name() == "done_label" || used[labelToBlock[nextLabel]] ) {
+				// Если блок конца фрейма, или же след ведет в посещенный блок
+				// Значит нужно взять непосещенный и с ним строить след
+				int position = 0;
+				if( getNextFreeBlock( used, currBlock, position ) ) {
+					sortedBlocks.push_back( currBlock );
+					used[position] = true;
+					--numOfFreeBlocks;
+					jump = currBlock.Last();
+					continue;
+				} else {
+					// Свободных блоков не осталось
+					break;
+				}
 			}
 			currBlock = blocks[labelToBlock[nextLabel]];
 			sortedBlocks.push_back( currBlock );
+			used[labelToBlock[nextLabel]] = true;
+			--numOfFreeBlocks;
 		} else if( IsInstanceOf<CIRCJump>( const_cast< IIRStm* >( jump ) ) ) {
-			// За ним должен идти блок с начальнйо меткой на false
+			// За ним должен идти блок с меткой на false
 			const Temp::CLabel* nextLabel = getNextConditionalLabel( jump );
-			if( nextLabel->Name() == "done_label" ) {
-				break;
+			if( nextLabel->Name() == "done_label" || used[labelToBlock[nextLabel]] ) {
+				int position = 0;
+				if( getNextFreeBlock( used, currBlock, position ) ) {
+					sortedBlocks.push_back( currBlock );
+					used[position] = true;
+					--numOfFreeBlocks;
+					jump = currBlock.Last();
+					continue;
+				} else {
+					// Свободных блоков не осталось
+					break;
+				}
 			}
 			currBlock = blocks[labelToBlock[nextLabel]];
 			sortedBlocks.push_back( currBlock );
+			used[labelToBlock[nextLabel]] = true;
+			--numOfFreeBlocks;
 		} else {
 			assert( false );
 		}
 		jump = currBlock.Last();
 	}
+}
+
+bool CBasicBlocksBuilder::getNextFreeBlock( const std::vector<bool>& used, CBasicBlock& currBlock, int& position ) const
+{
+	for( size_t i = 0; i < used.size(); ++i ) {
+		if( !used[i] ) {
+			currBlock = blocks[i];
+			position = i;
+			return true;
+		}
+	}
+	return false;
 }
 
 const Temp::CLabel* CBasicBlocksBuilder::getNextLabel( const IIRStm* stm ) const
