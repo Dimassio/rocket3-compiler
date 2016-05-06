@@ -17,7 +17,7 @@ void PrintIRTree( const std::vector<Frame::CFrame*>& frames )
 		CIRTreeToGraphConverter irTreeToGraphConverter(
 			std::string( "IRTree_" ) + frame->GetFrameName() + std::string( ".dot" ) );
 
-		frame->canonRoot->Accept( &irTreeToGraphConverter );
+		frame->root->Accept( &irTreeToGraphConverter );
 		irTreeToGraphConverter.Flush();
 	}
 }
@@ -28,7 +28,6 @@ void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
 	for( auto& frame : frames ) {
 		CIRTreeCanonicalConverter irTreeCanonConverter( frame->root );
 		frame->root->Accept( &irTreeCanonConverter );
-		frame->root = irTreeCanonConverter.frameRoot; // не канонический корень
 		frame->canonRoot = irTreeCanonConverter.frameCanonRoot; // канонический!!!
 	}
 }
