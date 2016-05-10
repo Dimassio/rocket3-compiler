@@ -3,9 +3,10 @@
 #include "CExp.h"
 #include <string>
 
-CBasicBlocksBuilder::CBasicBlocksBuilder()
+CBasicBlocksBuilder::CBasicBlocksBuilder( const std::string& _frameName )
 {
 	firstLabel = nullptr;
+	frameName = _frameName;
 }
 
 std::vector<CBasicBlock> CBasicBlocksBuilder::GetBasicBlocks() const
@@ -33,7 +34,7 @@ void CBasicBlocksBuilder::BuildBlocks( const IIRStm* node )
 			labelToBlock[getLabel( numCurrBlock )->label] = numCurrBlock;
 			currStm = dynamic_cast< const CIRSeq* >( currStm->right );
 		} else {
-			blocks[numCurrBlock].Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( std::to_string( blocks.size() ) + " block_label" ) ) ) );
+			blocks[numCurrBlock].Add( new CIRLabel( new Temp::CLabel( new Symbols::CSymbol( frameName + " block_label" ) ) ) );
 			// Label -> Block
 			labelToBlock[getLabel( numCurrBlock )->label] = numCurrBlock;
 		}

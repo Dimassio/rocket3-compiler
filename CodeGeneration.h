@@ -33,7 +33,7 @@ private:
 	const Temp::CTemp* munchExp( const CIRBinOp* exp );
 	const Temp::CTemp* munchExp( const CIRConst* exp );
 	const Temp::CTemp* munchExp( const CIRTemp* exp );
-	const Temp::CTemp* munchExp(  CIRName* exp );
+	const Temp::CTemp* munchExp( const CIRName* exp );
 	const Temp::CTemp* munchExp( const CIRCall* exp );
 	const Temp::CTemp* munchExp( const IIRExp* exp );
 

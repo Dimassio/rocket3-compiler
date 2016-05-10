@@ -8,7 +8,7 @@
 
 class CBasicBlocksBuilder {
 public:
-	CBasicBlocksBuilder();
+	CBasicBlocksBuilder( const std::string& frameName );
 
 	void BuildBlocks( const IIRStm* node );
 
@@ -23,6 +23,7 @@ private:
 	std::vector<CBasicBlock> sortedBlocks;
 	std::map<const Temp::CLabel*, int> labelToBlock;
 	const CIRLabel* firstLabel;
+	std::string frameName;
 
 	// Кончился фрейм -> помещаем джамп на метку done_label
 	IIRStm* getDoneLabel() const;

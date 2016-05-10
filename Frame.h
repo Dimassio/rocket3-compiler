@@ -3,6 +3,7 @@
 #include "IRTree.h"
 #include "Temp.h"
 #include "Symbols.h"
+#include "BasicBlock.h"
 
 namespace Frame
 {

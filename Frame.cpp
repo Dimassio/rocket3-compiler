@@ -34,7 +34,7 @@ CFrame::CFrame( const std::string& name, int formalCount ) :
 	symbol( symbolStorage.Get(name) )
 {
 	FP = new Temp::CTemp();
-	for( size_t i = 0; i < formalCount; ++i, offSet += wordSize ) {
+	for( int i = 0; i < formalCount; ++i, offSet += wordSize ) {
 		formals[symbol] = new CInFrame( offSet );
 	}
 }

@@ -19,7 +19,7 @@ void PrintIRTree( const std::vector<Frame::CFrame*>& frames )
 		CIRTreeToGraphConverter irTreeToGraphConverter(
 			std::string( "IRTree_" ) + frame->GetFrameName() + std::string( ".dot" ) );
 
-		frame->root->Accept( &irTreeToGraphConverter );
+		frame->canonRoot->Accept( &irTreeToGraphConverter );
 		irTreeToGraphConverter.Flush();
 	}
 }
@@ -37,7 +37,7 @@ void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
 void BuildBasicBlocks( std::vector<Frame::CFrame*>& frames )
 {
 	for( auto& frame : frames ) {
-		CBasicBlocksBuilder blockBuilder;
+		CBasicBlocksBuilder blockBuilder( frame->GetFrameName() );
 		blockBuilder.BuildBlocks( frame->canonRoot );
 		blockBuilder.SortBlocks();
 		frame->blocks = blockBuilder.GetSortedBlocks();
