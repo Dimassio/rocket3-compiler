@@ -38,4 +38,30 @@ namespace Temp
 		static int nextUniqueId;
 		std::string name;
 	};
+
+	class CTempList {
+	public:
+		CTempList(const CTemp* _head, const CTempList* _tail) :
+			tail(_tail), head(_head)
+		{}
+
+		const CTemp* Head() const;
+		const CTempList* Tail() const;
+
+	private:
+		const CTemp* head;
+		const CTempList* tail;
+	};
+
+	class CLabelList {
+	public:
+		CLabelList(const CLabel* _head, const CLabelList* _tail) :
+			tail(_tail), head(_head)
+		{}
+		const CLabel* Head() const;
+		const CLabelList* Tail() const;
+	private:
+		const CLabel* head;
+		const CLabelList* tail;
+	};
 }

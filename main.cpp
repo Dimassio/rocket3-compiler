@@ -8,6 +8,7 @@
 #include "CIRTreeToGraphConverter.h"
 #include "IRTreeCanonicalConverter.h"
 #include "BasicBlocksBuilder.h"
+#include "BaseInstruction.h"
 
 int yyparse( CProgram*& root );
 
@@ -17,7 +18,7 @@ void PrintIRTree( const std::vector<Frame::CFrame*>& frames )
 		CIRTreeToGraphConverter irTreeToGraphConverter(
 			std::string( "IRTree_" ) + frame->GetFrameName() + std::string( ".dot" ) );
 
-		frame->canonRoot->Accept( &irTreeToGraphConverter );
+		frame->root->Accept( &irTreeToGraphConverter );
 		irTreeToGraphConverter.Flush();
 	}
 }
@@ -28,7 +29,6 @@ void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
 	for( auto& frame : frames ) {
 		CIRTreeCanonicalConverter irTreeCanonConverter( frame->root );
 		frame->root->Accept( &irTreeCanonConverter );
-		frame->root = irTreeCanonConverter.frameRoot; // не канонический корень
 		frame->canonRoot = irTreeCanonConverter.frameCanonRoot; // канонический!!!
 	}
 }
@@ -39,9 +39,17 @@ void BuildBasicBlocks( std::vector<Frame::CFrame*>& frames )
 		CBasicBlocksBuilder blockBuilder;
 		blockBuilder.BuildBlocks( frame->canonRoot );
 		blockBuilder.SortBlocks();
-		// todo: have to get sorted blocks here( vector<CBasicBlock>)
+		frame->blocks = blockBuilder.GetSortedBlocks();
 	}
+	for b in blocks:
+	for stm in b:
+
 }
+
+/*Assembler::CBaseInstructionList* GenerateCode(CIRStmList* stmList) {
+	return CCodeGeneration(this).GenerateCode(stmList);
+}*/
+
 
 int main( int argc, char *argv[] )
 {
@@ -83,6 +91,7 @@ int main( int argc, char *argv[] )
 		BuildBasicBlocks( irTreeBuilder.GetFrames() );
 		std::cout << "Building basic blocks: success" << std::endl;
 
+		std::list<const Assembler::CBaseInstruction*> asmList = GenerateCode(/*statements*/);
 
 		fclose( yyin );
 	}

@@ -49,3 +49,23 @@ const std::string& CTemp::Name() const
 {
 	return name;
 }
+
+const CTemp* CTempList::Head() const
+{
+	return head;
+}
+
+const CTempList* CTempList::Tail() const
+{
+	return tail;
+}
+
+const CLabel* CLabelList::Head() const
+{
+	return head;
+}
+
+const CLabelList* CLabelList::Tail() const
+{
+	return tail;
+}

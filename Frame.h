@@ -62,6 +62,8 @@ namespace Frame
 
 		IIRExp* root; // root for non-canonized irtree
 		IIRStm* canonRoot;
+		std::vector<CBasicBlock> blocks;
+
 	private:
 		std::map<const Symbols::CSymbol*, IAccess*> formals; // аргументы функции
 		std::map<const Symbols::CSymbol*, IAccess*> locals; // локальные переменные
