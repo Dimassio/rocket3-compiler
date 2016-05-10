@@ -1,0 +1,412 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Rules">
+      <UniqueIdentifier>{4c9cf687-a063-43d4-8b2d-0ff5fdc418cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rules">
+      <UniqueIdentifier>{7a54f95f-d0d3-43e3-93b0-7cfeda425e47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Visitors">
+      <UniqueIdentifier>{89726d9c-1a8e-4c89-9e49-5a765fbfc901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IR">
+      <UniqueIdentifier>{194e9325-1ee9-4dc5-ae2d-3694ff9519a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IR">
+      <UniqueIdentifier>{80527668-db98-469e-9c62-5fe8c2cf0ebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Visitors">
+      <UniqueIdentifier>{21681448-77f1-48d3-9747-e24913498dcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IRTree Convert">
+      <UniqueIdentifier>{9b2034d0-f67b-44b7-a66f-42ae655fe187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\IRTreeConvert">
+      <UniqueIdentifier>{fb734c64-e082-40db-80bb-e67004341ea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Lex&amp;Syntax">
+      <UniqueIdentifier>{b4b223fe-9017-4d93-8b98-f720121401d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Code Generation">
+      <UniqueIdentifier>{e9f9864e-d0f6-4fa9-97ce-c32ee9e1078e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Code Generation">
+      <UniqueIdentifier>{fc2c8b94-0c58-4b56-87b4-00203ac7bd3e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="miniJava.l">
+      <Filter>Source Files\Lex&amp;Syntax</Filter>
+    </CustomBuild>
+    <CustomBuild Include="miniJava.y">
+      <Filter>Source Files\Lex&amp;Syntax</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FormalList.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="FormalRest.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="FormalRestList.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="MainClass.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="MethodDecl.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="MethodDeclList.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Program.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="StatementList.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Type.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="VarDecl.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="VarDeclList.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="Exp.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpList.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassDecl.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassDeclList.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpRest.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpRestList.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpBinOperation.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpId.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpLength.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpMethodCall.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpNewCustomType.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpNewIntArray.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpNot.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpNumber.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpRoundBrackets.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpSingle.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpSquareBrackets.cpp">
+      <Filter>Source Files\Rules</Filter>
+    </ClCompile>
+    <ClCompile Include="CTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CVarInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CMethodInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CClassInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CPrettyVisitor.h">
+      <Filter>Header Files\Visitors</Filter>
+    </ClCompile>
+    <ClCompile Include="IRTreeBuilder.cpp">
+      <Filter>Source Files\IR</Filter>
+    </ClCompile>
+    <ClCompile Include="CExp.cpp">
+      <Filter>Source Files\IR</Filter>
+    </ClCompile>
+    <ClCompile Include="CStm.cpp">
+      <Filter>Source Files\IR</Filter>
+    </ClCompile>
+    <ClCompile Include="Frame.cpp">
+      <Filter>Source Files\IR</Filter>
+    </ClCompile>
+    <ClCompile Include="IRTree.cpp">
+      <Filter>Source Files\IR</Filter>
+    </ClCompile>
+    <ClCompile Include="Temp.cpp">
+      <Filter>Source Files\IR</Filter>
+    </ClCompile>
+    <ClCompile Include="Translate.cpp">
+      <Filter>Source Files\IR</Filter>
+    </ClCompile>
+    <ClCompile Include="CMiniJException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graph.cpp">
+      <Filter>Source Files\IR</Filter>
+    </ClCompile>
+    <ClCompile Include="CIRTreeToGraphConverter.cpp">
+      <Filter>Source Files\IR</Filter>
+    </ClCompile>
+    <ClCompile Include="CPrettyVisitor.cpp">
+      <Filter>Source Files\Visitors</Filter>
+    </ClCompile>
+    <ClCompile Include="CSymbTableBuilder.cpp">
+      <Filter>Source Files\Visitors</Filter>
+    </ClCompile>
+    <ClCompile Include="CTypeChecker.cpp">
+      <Filter>Source Files\Visitors</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticVariable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="miniJava.cpp">
+      <Filter>Source Files\Lex&amp;Syntax</Filter>
+    </ClCompile>
+    <ClCompile Include="miniJava.tab.cpp">
+      <Filter>Source Files\Lex&amp;Syntax</Filter>
+    </ClCompile>
+    <ClCompile Include="IRTreeCanonicalConverter.cpp">
+      <Filter>Source Files\IRTree Convert</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicBlock.cpp">
+      <Filter>Source Files\IRTree Convert</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicBlocksBuilder.cpp">
+      <Filter>Source Files\IRTree Convert</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeGeneration.cpp">
+      <Filter>Source Files\Code Generation</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Visitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassDeclList.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Exp.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpList.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpRest.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpRestList.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="FormalList.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="FormalRest.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="FormalRestList.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="MainClass.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="MethodDeclList.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="MethodDecl.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Program.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="StatementList.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="VarDecl.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="VarDeclList.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassDecl.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpBinOperation.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpId.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpLength.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpMethodCall.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpNewCustomType.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpNewIntArray.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpNot.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpNumber.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpRoundBrackets.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpSingle.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpSquareBrackets.h">
+      <Filter>Header Files\Rules</Filter>
+    </ClInclude>
+    <ClInclude Include="CTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CVarInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticVariables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Symbols.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CMethodInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CClassInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CSymbTableBuilder.h">
+      <Filter>Header Files\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="CTypeChecker.h">
+      <Filter>Header Files\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="Temp.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="Translate.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="IRTree.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="CStm.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="CExp.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="IRTreeBuilder.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="EOperation.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="CMiniJException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="IIRTreeVisitor.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="CIRTreeToGraphConverter.h">
+      <Filter>Header Files\IR</Filter>
+    </ClInclude>
+    <ClInclude Include="miniJava.tab.hpp">
+      <Filter>Source Files\Lex&amp;Syntax</Filter>
+    </ClInclude>
+    <ClInclude Include="IRTreeCanonicalConverter.h">
+      <Filter>Header Files\IRTreeConvert</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicBlocksBuilder.h">
+      <Filter>Header Files\IRTreeConvert</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicBlock.h">
+      <Filter>Header Files\IRTreeConvert</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseInstruction.h">
+      <Filter>Header Files\Code Generation</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeGeneration.h">
+      <Filter>Header Files\Code Generation</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="text.in">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="miniJava.output">
+      <Filter>Source Files\Lex&amp;Syntax</Filter>
+    </None>
+  </ItemGroup>
+</Project>
