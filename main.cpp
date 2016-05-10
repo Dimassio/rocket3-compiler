@@ -9,6 +9,7 @@
 #include "IRTreeCanonicalConverter.h"
 #include "BasicBlocksBuilder.h"
 #include "BaseInstruction.h"
+#include "CodeGeneration.h"
 
 int yyparse( CProgram*& root );
 
@@ -41,15 +42,19 @@ void BuildBasicBlocks( std::vector<Frame::CFrame*>& frames )
 		blockBuilder.SortBlocks();
 		frame->blocks = blockBuilder.GetSortedBlocks();
 	}
-	for b in blocks:
-	for stm in b:
-
 }
 
-/*Assembler::CBaseInstructionList* GenerateCode(CIRStmList* stmList) {
-	return CCodeGeneration(this).GenerateCode(stmList);
-}*/
-
+std::vector<Assembler::CBaseInstructionList*> GenerateCode( const std::vector<Frame::CFrame*>& frames )
+{
+	std::vector<Assembler::CBaseInstructionList*> instructions;
+	CCodeGeneration generator;
+	for( auto& frame : frames ) {
+		for( auto& block : frame->blocks ) {
+			instructions.push_back( generator.GenerateCode( block.GetStatements() ) );
+		}
+	}
+	return instructions;
+}
 
 int main( int argc, char *argv[] )
 {
@@ -91,7 +96,9 @@ int main( int argc, char *argv[] )
 		BuildBasicBlocks( irTreeBuilder.GetFrames() );
 		std::cout << "Building basic blocks: success" << std::endl;
 
-		std::list<const Assembler::CBaseInstruction*> asmList = GenerateCode(/*statements*/);
+		// Каждая инструкция - move/label/exp
+		std::vector<Assembler::CBaseInstructionList*> instructions = GenerateCode( irTreeBuilder.GetFrames() );
+		std::cout << "Code generating : success" << std::endl;
 
 		fclose( yyin );
 	}

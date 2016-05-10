@@ -28,7 +28,7 @@ const IIRStm* CBasicBlock::Last() const
 	return statements.back();
 }
 
-bool CBasicBlock::operator<( const CBasicBlock& other ) const
+const std::list<const IIRStm*> CBasicBlock::GetStatements() const
 {
-	return true;
+	return statements;
 }

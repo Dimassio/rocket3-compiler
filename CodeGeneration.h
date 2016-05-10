@@ -3,20 +3,19 @@
 #include "CExp.h"
 #include "CStm.h"
 #include "BaseInstruction.h"
+#include "BasicBlock.h"
 
 class CCodeGeneration {
 public:
-	CCodeGeneration( const Frame::CFrame* _frame )
-		: frame( _frame )
-		, instructList( nullptr )
-		, last( nullptr )
+	CCodeGeneration():
+		instructList( nullptr ), 
+		last( nullptr )
 	{
 	}
 
-	Assembler::CBaseInstructionList* GenerateCode( CIRStmList* stmList );
+	Assembler::CBaseInstructionList* GenerateCode( const std::list<const IIRStm*>& statements );
 
 private:
-	const Frame::CFrame* frame;
 	Assembler::CBaseInstructionList* instructList;
 	Assembler::CBaseInstructionList* last;
 

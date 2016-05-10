@@ -7,15 +7,14 @@ bool IsInstanceOf(S* exp)
 	return dynamic_cast< T* >(exp) == 0 ? false : true;
 }
 
-Assembler::CBaseInstructionList* CCodeGeneration::GenerateCode( CIRStmList* stmList )
+Assembler::CBaseInstructionList* CCodeGeneration::GenerateCode( const std::list<const IIRStm*>& statements )
 {
 	Assembler::CBaseInstructionList* list;
-	while( stmList != nullptr ) {
-		auto stm = stmList->GetHead();
-		munchStm( stm );
-		stmList = stmList->GetTail();
+	for( auto statement : statements ) {
+		munchStm( statement );
 	}
 	list = instructList;
+	// Чтобы не создавать несколько экземпляров этого класса
 	instructList = last = nullptr;
 	return list;
 }
