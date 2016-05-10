@@ -119,7 +119,7 @@ void CCodeGeneration::munchStm(const CIRExp* stm)
 
 void CCodeGeneration::munchStm(const CIRJump* stm)
 {
-	emit( new Assembler::COper( "JMP 'j0\n", nullptr, nullptr, stm->GetTargets() ) );
+	emit( new Assembler::COper( "JMP 'j0\n", nullptr, nullptr, new Temp::CLabelList( stm->label, nullptr ) ) );
 }
 
 void CCodeGeneration::munchStm(const CIRCJump* stm)
@@ -134,7 +134,7 @@ void CCodeGeneration::munchStm(const CIRCJump* stm)
 		case EOperation::GE: oper = "JGE"; break;
 	}
 
-	emit( new Assembler::COper( oper + " 'l0\n", nullptr, nullptr, new Temp::CLabel( stm->iftrue, nullptr ) ) );
+	emit( new Assembler::COper( oper + " 'l0\n", nullptr, nullptr, new Temp::CLabelList( stm->iftrue->label, nullptr ) ) );
 }
 
 void CCodeGeneration::munchStm(const IIRStm* stm)
@@ -266,9 +266,9 @@ const Temp::CTemp* CCodeGeneration::munchExp(const CIRCall* exp)
 {
 	auto temporaries = munchArgs( exp->expList );
 	emit( new Assembler::COper( "CALL 'l0\n", nullptr, nullptr, 
-		new Temp::CLabelList( new Temp::CLabel( dynamic_cast<const CIRName*>(exp->exp)->label ), nullptr ) ) );
+		new Temp::CLabelList( new Temp::CLabel( dynamic_cast<const CIRName*>(exp->exp)->label->Name ), nullptr ) ) );
 
-	return new const Temp::CTemp>();
+	return new Temp::CTemp();
 }
 
 const Temp::CTemp* CCodeGeneration::munchExp(const IIRExp* exp)
@@ -295,16 +295,17 @@ const Temp::CTemp* CCodeGeneration::munchExp(const IIRExp* exp)
 
 const Temp::CTempList* CCodeGeneration::munchArgs(const CIRExpList* args)
 {
-	if( args == nullptr ) {
+	if( args->expList.size() == 0 ) {
 		return nullptr;
 	}
+
 	const Temp::CTempList* temporariesList;
-	while( args ) {
+
+	for (int i = 0; i < args->expList.size(); ++i) {
 		const Temp::CTemp* temp( new Temp::CTemp() );
-		emit( new Assembler::CMove( "MOV 'd0, 's0\n", temp, munchExp( args->GetHead() ) ) );
+		emit( new Assembler::CMove( "MOV 'd0, 's0\n", temp, munchExp( args->expList[i] ) ) );
 
 		temporariesList = new Temp::CTempList( temp, temporariesList );
-		args = args->GetTail();
 	}
 
 	return temporariesList;

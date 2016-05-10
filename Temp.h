@@ -58,6 +58,7 @@ namespace Temp
 		CLabelList(const CLabel* _head, const CLabelList* _tail) :
 			tail(_tail), head(_head)
 		{}
+
 		const CLabel* Head() const;
 		const CLabelList* Tail() const;
 	private:
