@@ -168,6 +168,7 @@
     <ClCompile Include="IRTree.cpp" />
     <ClCompile Include="IRTreeBuilder.cpp" />
     <ClCompile Include="IRTreeCanonicalConverter.cpp" />
+    <ClCompile Include="LifeTime.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainClass.cpp" />
     <ClCompile Include="MethodDecl.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="IRTree.h" />
     <ClInclude Include="IRTreeBuilder.h" />
     <ClInclude Include="IRTreeCanonicalConverter.h" />
+    <ClInclude Include="LifeTime.h" />
     <ClInclude Include="MainClass.h" />
     <ClInclude Include="MethodDecl.h" />
     <ClInclude Include="MethodDeclList.h" />

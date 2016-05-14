@@ -13,7 +13,9 @@ public:
 	{
 	}
 
-	Assembler::CBaseInstructionList* GenerateCode( const std::list<const IIRStm*>& statements );
+	void GenerateCode( const std::list<const IIRStm*>& statements, Assembler::CBaseInstructionList*& );
+
+	void GenerateCode( const std::list<const IIRStm*>& statements, std::list<const Assembler::CBaseInstruction*>& );
 
 private:
 	Assembler::CBaseInstructionList* instructList;

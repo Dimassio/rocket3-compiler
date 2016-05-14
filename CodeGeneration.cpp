@@ -7,16 +7,24 @@ bool IsInstanceOf(S* exp)
 	return dynamic_cast< T* >(exp) == 0 ? false : true;
 }
 
-Assembler::CBaseInstructionList* CCodeGeneration::GenerateCode( const std::list<const IIRStm*>& statements )
+ void CCodeGeneration::GenerateCode( const std::list<const IIRStm*>& statements, Assembler::CBaseInstructionList*& list )
 {
-	Assembler::CBaseInstructionList* list;
 	for( auto statement : statements ) {
 		munchStm( statement );
 	}
 	list = instructList;
 	// Чтобы не создавать несколько экземпляров этого класса
 	instructList = last = nullptr;
-	return list;
+}
+
+void CCodeGeneration::GenerateCode( const std::list<const IIRStm*>& statements, std::list<const Assembler::CBaseInstruction*>& instructionList )
+{
+	Assembler::CBaseInstructionList* list;
+	GenerateCode( statements, list );
+	while( list != nullptr && list->head != nullptr ) {
+		instructionList.push_back( list->head );
+		list = list->tail;
+	}
 }
 
 void CCodeGeneration::emit( Assembler::CBaseInstruction* instruct )
@@ -235,7 +243,7 @@ const Temp::CTemp* CCodeGeneration::munchExp(const CIRBinOp* exp)
 				new Temp::CTempList( munchExp( exp->right ), nullptr ) ) ) );
 		}
 	} else {
-		// TODO логические операции
+		// TODO логические операции. для наших примеров не нужны. мб потом
 	}
 	return temp;
 }

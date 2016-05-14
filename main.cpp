@@ -10,6 +10,7 @@
 #include "BasicBlocksBuilder.h"
 #include "BaseInstruction.h"
 #include "CodeGeneration.h"
+#include "LifeTime.h"
 
 int yyparse( CProgram*& root );
 
@@ -44,16 +45,24 @@ void BuildBasicBlocks( std::vector<Frame::CFrame*>& frames )
 	}
 }
 
-std::vector<Assembler::CBaseInstructionList*> GenerateCode( const std::vector<Frame::CFrame*>& frames )
+void GenerateCode( const std::vector<Frame::CFrame*>& frames )
 {
-	std::vector<Assembler::CBaseInstructionList*> instructions;
 	CCodeGeneration generator;
 	for( auto& frame : frames ) {
+		// Склеиваем все стэйтмент в один
+		std::list<const IIRStm*> statements;
 		for( auto& block : frame->blocks ) {
-			instructions.push_back( generator.GenerateCode( block.GetStatements() ) );
+			statements.insert( statements.end(), block.GetStatements().begin(), block.GetStatements().end() );
 		}
+
+		// Генерация кода для функции
+		std::list<const Assembler::CBaseInstruction*> funcInstructionList;
+		generator.GenerateCode( statements, funcInstructionList );
+
+		// Мутки с переменными
+		RegistrarAllocation::CLiveInOutCalculator calculator( funcInstructionList );
+		// Далее используй как calculator.GetBlabla(...) в нужной вершине
 	}
-	return instructions;
 }
 
 int main( int argc, char *argv[] )
@@ -97,7 +106,7 @@ int main( int argc, char *argv[] )
 		std::cout << "Building basic blocks: success" << std::endl;
 
 		// Каждая инструкция - move/label/exp
-		std::vector<Assembler::CBaseInstructionList*> instructions = GenerateCode( irTreeBuilder.GetFrames() );
+		GenerateCode( irTreeBuilder.GetFrames() );
 		std::cout << "Code generating : success" << std::endl;
 
 		fclose( yyin );
