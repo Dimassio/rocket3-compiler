@@ -230,6 +230,9 @@
     <ClCompile Include="LifeTime.cpp">
       <Filter>Source Files\LifeTime Analysis</Filter>
     </ClCompile>
+    <ClCompile Include="BaseInstruction.cpp">
+      <Filter>Source Files\Code Generation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">

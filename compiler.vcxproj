@@ -129,6 +129,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseInstruction.cpp" />
     <ClCompile Include="BasicBlock.cpp" />
     <ClCompile Include="BasicBlocksBuilder.cpp" />
     <ClCompile Include="CClassInfo.cpp" />

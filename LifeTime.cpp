@@ -1,5 +1,6 @@
 #include "LifeTime.h"
 #include <assert.h>
+#include <iterator>
 
 namespace RegistrarAllocation
 {
@@ -210,7 +211,7 @@ namespace RegistrarAllocation
 	void CLiveInOutCalculator::buildCommands( const std::list<const Assembler::CBaseInstruction*>& asmFunction )
 	{
 		commands.clear();
-		std::copy( asmFunction.begin(), asmFunction.end(), commands.begin() );
+		std::copy( asmFunction.begin(), asmFunction.end(), std::back_inserter( commands ) );
 	}
 
 

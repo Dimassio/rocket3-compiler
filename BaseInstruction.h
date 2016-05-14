@@ -16,7 +16,7 @@ namespace Assembler {
 		virtual Temp::CTempList* DefindedVars() const = 0;
 		virtual Temp::CLabelList* JumpTargets() const = 0;
 
-		std::string Format( Temp::CTempList* varsMapping ) const;
+		std::string Format( const std::map<std::string, std::string>& varsMapping ) const;
 
 		std::string GetAssemblerInstruction() const { return assemblerInstruction; }
 		void SetAssemblerInstruction( const std::string& assemblerInstr ) { assemblerInstruction = assemblerInstr; }
@@ -25,8 +25,8 @@ namespace Assembler {
 		std::string assemblerInstruction;
 
 	private:
-		const Temp::CTemp* getNthTemp( Temp::CTempList* list, int i );
-		const Temp::CLabel* getNthLabel( Temp::CLabelList* list, int i );
+		const Temp::CTemp* getNthTemp( Temp::CTempList* list, int i ) const;
+		const Temp::CLabel* getNthLabel( Temp::CLabelList* list, int i ) const;
 	};
 
 	class CBaseInstructionList {
@@ -59,7 +59,7 @@ namespace Assembler {
 
 		Temp::CLabelList* JumpTargets() const override
 		{
-			return nullptr;
+			return new Temp::CLabelList( label, nullptr );
 		}
 
 	private:

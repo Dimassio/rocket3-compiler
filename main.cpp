@@ -52,7 +52,8 @@ void GenerateCode( const std::vector<Frame::CFrame*>& frames )
 		// Склеиваем все стэйтмент в один
 		std::list<const IIRStm*> statements;
 		for( auto& block : frame->blocks ) {
-			statements.insert( statements.end(), block.GetStatements().begin(), block.GetStatements().end() );
+			auto currList = block.GetStatements();
+			statements.insert( statements.end(), currList.begin(), currList.end() );
 		}
 
 		// Генерация кода для функции
@@ -62,6 +63,7 @@ void GenerateCode( const std::vector<Frame::CFrame*>& frames )
 		// Мутки с переменными
 		RegistrarAllocation::CLiveInOutCalculator calculator( funcInstructionList );
 		// Далее используй как calculator.GetBlabla(...) в нужной вершине
+		//CInterferenceGraph in RegisterDistribution cpp/h
 	}
 }
 
