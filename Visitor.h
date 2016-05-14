@@ -1,5 +1,4 @@
-﻿#ifndef VISITOR_H_INCLUDED
-#define VISITOR_H_INCLUDED
+﻿#pragma once
 
 class CProgram;
 class CMainClass;
@@ -37,22 +36,22 @@ public:
 	{
 	}
 
-	virtual void visit( const CProgram* ) = 0; 
+	virtual void visit( const CProgram* ) = 0;
 	virtual void visit( const CMainClass* ) = 0;
 	virtual void visit( const CClassDecl* ) = 0;
 	virtual void visit( const CClassDeclList* ) = 0;
 	virtual void visit( const CExp* ) = 0;
-	virtual void visit( const CExpMethodCall*) = 0;
-	virtual void visit( const CExpNewIntArray*) = 0;
-	virtual void visit( const CExpNewCustomType*) = 0;
-	virtual void visit( const CExpSquareBrackets*) = 0;
-	virtual void visit( const CExpRoundBrackets*) = 0;
-	virtual void visit( const CExpNot*) = 0;
-	virtual void visit( const CExpNumber*) = 0;
-	virtual void visit( const CExpId*) = 0;
-	virtual void visit( const CExpSingle*) = 0;
-	virtual void visit(const CExpBinOperation*) = 0;
-	virtual void visit(const CExpLength*) = 0;
+	virtual void visit( const CExpMethodCall* ) = 0;
+	virtual void visit( const CExpNewIntArray* ) = 0;
+	virtual void visit( const CExpNewCustomType* ) = 0;
+	virtual void visit( const CExpSquareBrackets* ) = 0;
+	virtual void visit( const CExpRoundBrackets* ) = 0;
+	virtual void visit( const CExpNot* ) = 0;
+	virtual void visit( const CExpNumber* ) = 0;
+	virtual void visit( const CExpId* ) = 0;
+	virtual void visit( const CExpSingle* ) = 0;
+	virtual void visit( const CExpBinOperation* ) = 0;
+	virtual void visit( const CExpLength* ) = 0;
 	virtual void visit( const CExpList* ) = 0;
 	virtual void visit( const CFormalList* ) = 0;
 	virtual void visit( const CFormalRest* ) = 0;
@@ -67,5 +66,3 @@ public:
 	virtual void visit( const CExpRest* ) = 0;
 	virtual void visit( const CExpRestList* ) = 0;
 };
-
-#endif

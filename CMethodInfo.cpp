@@ -29,7 +29,7 @@ const CType * CMethodInfo::Type() const
 
 const CVarInfo* CMethodInfo::GetArgument( int number ) const
 {
-	if( number >= arguments.size() ) {
+	if( number >= (int) arguments.size() ) {
 		// very bad
 		return nullptr;
 	} else {

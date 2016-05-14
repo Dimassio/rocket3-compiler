@@ -50,7 +50,7 @@ void CGraph::SetNodeLabel(std::string nodeName, std::string nodeLabel)
 
 void CGraph::decorateName(std::string& stringToDecorate)
 {
-	for (int i = 0; i < stringToDecorate.size(); i++) {
+	for (size_t i = 0; i < stringToDecorate.size(); i++) {
 		if (stringToDecorate[i] == '.' || stringToDecorate[i] == ':' || stringToDecorate[i] == '=') {
 			stringToDecorate[i] = '_';
 		}

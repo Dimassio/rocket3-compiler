@@ -264,7 +264,7 @@ void CIRTreeCanonicalConverter::visit( const CIRMem* node )
 void CIRTreeCanonicalConverter::siftUpEseqs( const CIRCall* node )
 {
 	CIRExpList* expList = const_cast< CIRExpList* >( node->expList );
-	for( int i = 0; i < expList->expList.size(); ++i ) {
+	for( size_t i = 0; i < expList->expList.size(); ++i ) {
 		if( IsInstanceOf<CIRESeq>( const_cast< IIRExp* >( expList->expList[i] ) ) ) {
 			const CIRESeq* eseq = dynamic_cast< const CIRESeq* >( expList->expList[i] );
 			expList->expList[i] = const_cast< IIRExp* >( eseq->exp );

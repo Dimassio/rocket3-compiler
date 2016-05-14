@@ -167,9 +167,6 @@
     <ClCompile Include="CClassInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CPrettyVisitor.h">
-      <Filter>Header Files\Visitors</Filter>
-    </ClCompile>
     <ClCompile Include="IRTreeBuilder.cpp">
       <Filter>Source Files\IR</Filter>
     </ClCompile>
@@ -411,6 +408,9 @@
     </ClInclude>
     <ClInclude Include="LifeTime.h">
       <Filter>Header Files\LifeTime Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="CPrettyVisitor.h">
+      <Filter>Header Files\Visitors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
