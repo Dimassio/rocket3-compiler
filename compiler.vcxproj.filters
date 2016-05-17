@@ -52,6 +52,12 @@
     <Filter Include="Header Files\LifeTime Analysis">
       <UniqueIdentifier>{23c74f81-f672-4622-b8c4-ff4f78ca4f7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\RegistrarDistribution">
+      <UniqueIdentifier>{7808a046-43ee-4487-8c18-34f9cfb1f7d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RegistrarDestribution">
+      <UniqueIdentifier>{fe0e2d2b-52b1-4223-8fca-3805289458a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="miniJava.l">
@@ -232,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="BaseInstruction.cpp">
       <Filter>Source Files\Code Generation</Filter>
+    </ClCompile>
+    <ClCompile Include="RegistrarDestribution.cpp">
+      <Filter>Source Files\RegistrarDestribution</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -414,6 +423,9 @@
     </ClInclude>
     <ClInclude Include="CPrettyVisitor.h">
       <Filter>Header Files\Visitors</Filter>
+    </ClInclude>
+    <ClInclude Include="RegistrarDistribution.h">
+      <Filter>Header Files\RegistrarDistribution</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

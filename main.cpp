@@ -14,6 +14,13 @@
 
 int yyparse( CProgram*& root );
 
+void PrintInstructions( const std::list<const Assembler::CBaseInstruction*>& function )
+{
+	for( auto inst : function ) {
+		std::cout << inst->GetAssemblerInstruction() << std::endl;
+	}
+}
+
 void PrintIRTree( const std::vector<Frame::CFrame*>& frames )
 {
 	for( const auto& frame : frames ) {
@@ -60,6 +67,7 @@ void GenerateCode( const std::vector<Frame::CFrame*>& frames )
 		std::list<const Assembler::CBaseInstruction*> funcInstructionList;
 		generator.GenerateCode( statements, funcInstructionList );
 
+		PrintInstructions( funcInstructionList ); 
 		// Мутки с переменными
 		RegistrarAllocation::CLiveInOutCalculator calculator( funcInstructionList );
 		// Далее используй как calculator.GetBlabla(...) в нужной вершине

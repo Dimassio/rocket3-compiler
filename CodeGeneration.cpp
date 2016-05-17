@@ -62,16 +62,16 @@ void CCodeGeneration::munchStm( const CIRMove* stm )
 						binOpExpr = binOp->left;
 						constantExpr = dynamic_cast< const CIRConst* >( binOp->right );
 					}
-					emit( new Assembler::COper( std::string( "MOV ['d0" ) +
+					emit( new Assembler::COper( std::string( "MOV [d0" ) +
 												( ( binOp->opId == EOperation::PLUS ) ? "+" : "-" ) +
 												std::to_string( constantExpr->value ) +
-												std::string( "], 's0\n" ),
+												std::string( "], s0\n" ),
 												nullptr,
 												new Temp::CTempList( munchExp( binOpExpr ),
 																	 new Temp::CTempList( munchExp( stm->src ), nullptr ) ) ) );
 				} else {
 					// MOVE( MEM( BINOP( PLUS, e1, e2 ) ), e3 )
-					emit( new Assembler::COper( std::string( "MOV ['d0], 's0\n" ),
+					emit( new Assembler::COper( std::string( "MOV [d0], s0\n" ),
 												new Temp::CTempList( munchExp( binOp ), nullptr ),
 												new Temp::CTempList( munchExp( stm->src ), nullptr ) ) );
 				}
@@ -79,27 +79,27 @@ void CCodeGeneration::munchStm( const CIRMove* stm )
 		} else if( IsInstanceOf<CIRConst>( const_cast< IIRExp* >( destMem->exp ) ) ) {
 			// MOVE( MEM( CONST(i) ), e2 )
 			const CIRConst* constantExpr = dynamic_cast< const CIRConst* >( destMem->exp );
-			emit( new Assembler::COper( std::string( "MOV ['d0+" ) +
+			emit( new Assembler::COper( std::string( "MOV [d0+" ) +
 										std::to_string( constantExpr->value ) +
-										std::string( "], 's0\n" ),
+										std::string( "], s0\n" ),
 										nullptr,
 										new Temp::CTempList( munchExp( stm->src ), nullptr ) ) );
 		} else if( IsInstanceOf<CIRTemp>( const_cast< IIRExp* >( destMem->exp ) ) ) {
 			// MOVE( MEM( TEMP ), e2 )
-			emit( new Assembler::COper( std::string( "MOV ['d0], 's0\n" ),
+			emit( new Assembler::COper( std::string( "MOV [d0], s0\n" ),
 										new Temp::CTempList( munchExp( destMem->exp ), nullptr ),
 										new Temp::CTempList( munchExp( stm->src ), nullptr ) ) );
 		} else if( IsInstanceOf<CIRMem>( const_cast< IIRExp* >( destMem->exp ) ) ) {
 			if( IsInstanceOf<CIRMem>( const_cast< IIRExp* >( stm->src ) ) ) {
 				// MOVE( MEM(e1), MEM(e2) )
-				emit( new Assembler::COper( std::string( "MOV ['d0], ['s0]\n" ),
+				emit( new Assembler::COper( std::string( "MOV [d0], [s0]\n" ),
 											nullptr,
 											new Temp::CTempList(
 												munchExp( stm->src ),
 												new Temp::CTempList( munchExp( stm->src ), nullptr ) ) ) );
 			} else {
 				// MOVE( MEM(e1), e2 )
-				emit( new Assembler::COper( std::string( "MOV ['d0], 's0\n" ),
+				emit( new Assembler::COper( std::string( "MOV [d0], s0\n" ),
 											nullptr,
 											new Temp::CTempList( munchExp( stm->src ),
 																 new Temp::CTempList( munchExp( stm->src ), nullptr ) ) ) );
@@ -108,7 +108,7 @@ void CCodeGeneration::munchStm( const CIRMove* stm )
 	} else if( IsInstanceOf<CIRTemp>( const_cast< IIRExp* >( stm->dst ) ) ) {
 		// MOVE(TEMP(i), e2)
 		const CIRTemp* temp = dynamic_cast< const CIRTemp* >( stm->dst );
-		emit( new Assembler::COper( "MOV 'd0, 's0\n",
+		emit( new Assembler::COper( "MOV d0, s0\n",
 									new Temp::CTempList( temp->temp, nullptr ),
 									new Temp::CTempList( munchExp( stm->src ), nullptr ) ) );
 	}
@@ -126,22 +126,24 @@ void CCodeGeneration::munchStm( const CIRExp* stm )
 
 void CCodeGeneration::munchStm( const CIRJump* stm )
 {
-	emit( new Assembler::COper( "JMP 'j0\n", nullptr, nullptr, new Temp::CLabelList( stm->label, nullptr ) ) );
+	emit( new Assembler::COper( "JMP j0\n", nullptr, nullptr, new Temp::CLabelList( stm->label, nullptr ) ) );
 }
 
 void CCodeGeneration::munchStm( const CIRCJump* stm )
 {
-	emit( new Assembler::COper( "CMP 's0, 's1\n", nullptr, new Temp::CTempList( munchExp( stm->left ),
-																				new Temp::CTempList( munchExp( stm->right ), nullptr ) ) ) );
+	emit( new Assembler::COper( "CMP s0, s1\n", nullptr, new Temp::CTempList( munchExp( stm->left ),
+																			  new Temp::CTempList( munchExp( stm->right ), nullptr ) ) ) );
 
 	// TODO считаем, что CCondJump может идти только по < и >= (появляется в TraceSchedule)
 	std::string oper;
 	switch( stm->op ) {
 		case EOperation::LE: oper = "JL"; break;
 		case EOperation::GE: oper = "JGE"; break;
+		case EOperation::NE: oper = "NOT_EQUAL"; break;
+		case EOperation::EQ: oper = "EQUAL"; break;
 	}
 
-	emit( new Assembler::COper( oper + " 'l0\n", nullptr, nullptr, new Temp::CLabelList( stm->iftrue->label, nullptr ) ) );
+	emit( new Assembler::COper( oper + " l0\n", nullptr, nullptr, new Temp::CLabelList( stm->iftrue->label, nullptr ) ) );
 }
 
 void CCodeGeneration::munchStm( const IIRStm* stm )
@@ -163,6 +165,7 @@ void CCodeGeneration::munchStm( const IIRStm* stm )
 
 const Temp::CTemp* CCodeGeneration::munchExp( const  CIRMem* exp )
 {
+	// todo: all temps must be named, like in tree!
 	const Temp::CTemp* temp( new Temp::CTemp );
 	if( IsInstanceOf<CIRBinOp>( const_cast< IIRExp* >( exp->exp ) ) ) {
 		// MEM( BINOP(PLUS,e1,CONST(i)), e2 )
@@ -178,7 +181,7 @@ const Temp::CTemp* CCodeGeneration::munchExp( const  CIRMem* exp )
 				binOpExpr = binOp->left;
 				constantExpr = dynamic_cast< const CIRConst* >( binOp->right );
 			}
-			emit( new Assembler::COper( std::string( "MEM 'd0, ['s0" ) +
+			emit( new Assembler::COper( std::string( "MEM d0, [s0" ) +
 										( ( binOp->opId == EOperation::PLUS ) ? "+" : "-" ) +
 										std::to_string( constantExpr->value ) +
 										std::string( "]\n" ),
@@ -189,14 +192,14 @@ const Temp::CTemp* CCodeGeneration::munchExp( const  CIRMem* exp )
 	}
 	if( IsInstanceOf<CIRConst>( const_cast< IIRExp* >( exp->exp ) ) ) {
 		auto constantExpr = dynamic_cast< const CIRConst* >( exp->exp );
-		emit( new Assembler::COper( std::string( "MEM 'd0, ['s0+" ) +
+		emit( new Assembler::COper( std::string( "MEM d0, [s0+" ) +
 									std::to_string( constantExpr->value ) +
 									std::string( "]\n" ),
 									new Temp::CTempList( temp, nullptr ),
 									nullptr ) );
 		return temp;
 	}
-	emit( new Assembler::COper( "MEM 'd0, ['s0+0]\n",
+	emit( new Assembler::COper( "MEM d0, [s0+0]\n",
 								new Temp::CTempList( temp, nullptr ),
 								new Temp::CTempList( munchExp( exp->exp ), nullptr ) ) );
 	return temp;
@@ -230,13 +233,13 @@ const Temp::CTemp* CCodeGeneration::munchExp( const CIRBinOp* exp )
 				binOpExpr = exp->left;
 				constantExpr = dynamic_cast< const CIRConst* >( exp->right );
 			}
-			emit( new Assembler::COper( std::string( oper + " 'd0, 's0+" ) +
+			emit( new Assembler::COper( std::string( oper + " d0, s0+" ) +
 										std::to_string( constantExpr->value ) +
 										std::string( "\n" ),
 										new Temp::CTempList( temp, nullptr ),
 										new Temp::CTempList( munchExp( binOpExpr ), nullptr ) ) );
 		} else {
-			emit( new Assembler::COper( oper + " 'd0, 's0+'s1\n",
+			emit( new Assembler::COper( oper + " d0, s0+s1\n",
 										new Temp::CTempList( temp, nullptr ),
 										new Temp::CTempList( munchExp( exp->left ),
 															 new Temp::CTempList( munchExp( exp->right ), nullptr ) ) ) );
@@ -251,7 +254,7 @@ const Temp::CTemp* CCodeGeneration::munchExp( const CIRConst* exp )
 {
 	const Temp::CTemp* temp( new Temp::CTemp );
 
-	emit( new Assembler::COper( std::string( "MOV 'd0, " ) +
+	emit( new Assembler::COper( std::string( "MOV d0, " ) +
 								std::to_string( exp->value ) + std::string( "\n" ),
 								nullptr, new Temp::CTempList( temp, nullptr ) ) );
 
@@ -271,7 +274,9 @@ const Temp::CTemp* CCodeGeneration::munchExp( const CIRName* exp )
 const Temp::CTemp* CCodeGeneration::munchExp( const CIRCall* exp )
 {
 	auto temporaries = munchArgs( exp->expList );
-	emit( new Assembler::COper( "CALL 'l0\n", nullptr, nullptr,
+	// todo: only for debug
+	std::string funcName = dynamic_cast< const CIRName* >( exp->exp )->label->Name();
+	emit( new Assembler::COper( "CALL l0 from " + funcName + "\n", nullptr, nullptr,
 								new Temp::CLabelList( dynamic_cast< const CIRName* >( exp->exp )->label, nullptr ) ) );
 
 	return new Temp::CTemp();
@@ -313,7 +318,7 @@ const Temp::CTempList* CCodeGeneration::munchArgs( const CIRExpList* args )
 
 	for( size_t i = 0; i < args->expList.size(); ++i ) {
 		const Temp::CTemp* temp( new Temp::CTemp() );
-		emit( new Assembler::CMove( "MOV 'd0, 's0\n", temp, munchExp( args->expList[i] ) ) );
+		emit( new Assembler::CMove( "MOV d0, s0\n", temp, munchExp( args->expList[i] ) ) );
 
 		temporariesList = new Temp::CTempList( temp, temporariesList );
 	}

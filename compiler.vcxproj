@@ -177,6 +177,7 @@
     <ClCompile Include="miniJava.cpp" />
     <ClCompile Include="miniJava.tab.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="RegistrarDestribution.cpp" />
     <ClCompile Include="Statement.cpp" />
     <ClCompile Include="StatementList.cpp" />
     <ClCompile Include="StaticVariable.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="MethodDeclList.h" />
     <ClInclude Include="miniJava.tab.hpp" />
     <ClInclude Include="Program.h" />
+    <ClInclude Include="RegistrarDistribution.h" />
     <ClInclude Include="Statement.h" />
     <ClInclude Include="StatementList.h" />
     <ClInclude Include="StaticVariables.h" />
