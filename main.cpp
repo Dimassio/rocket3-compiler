@@ -11,26 +11,9 @@
 #include "BaseInstruction.h"
 #include "CodeGeneration.h"
 #include "LifeTime.h"
+#include "PrinterContext.h"
 
 int yyparse( CProgram*& root );
-
-void PrintInstructions( const std::list<const Assembler::CBaseInstruction*>& function )
-{
-	for( auto inst : function ) {
-		std::cout << inst->GetAssemblerInstruction() << std::endl;
-	}
-}
-
-void PrintIRTree( const std::vector<Frame::CFrame*>& frames )
-{
-	for( const auto& frame : frames ) {
-		CIRTreeToGraphConverter irTreeToGraphConverter(
-			std::string( "IRTree_" ) + frame->GetFrameName() + std::string( ".dot" ) );
-
-		frame->canonRoot->Accept( &irTreeToGraphConverter );
-		irTreeToGraphConverter.Flush();
-	}
-}
 
 void CanonizeIRTree( std::vector<Frame::CFrame*>& frames )
 {
@@ -67,7 +50,7 @@ void GenerateCode( const std::vector<Frame::CFrame*>& frames )
 		std::list<const Assembler::CBaseInstruction*> funcInstructionList;
 		generator.GenerateCode( statements, funcInstructionList );
 
-		PrintInstructions( funcInstructionList ); 
+		PrinterContext::PrintInstructions( funcInstructionList );
 		// Мутки с переменными
 		RegistrarAllocation::CLiveInOutCalculator calculator( funcInstructionList );
 		// Далее используй как calculator.GetBlabla(...) в нужной вершине
@@ -109,7 +92,7 @@ int main( int argc, char *argv[] )
 		CanonizeIRTree( irTreeBuilder.GetFrames() );
 		std::cout << "Canonizing IRTree: success" << std::endl;
 
-		PrintIRTree( irTreeBuilder.GetFrames() );
+		PrinterContext::PrintIRTree( irTreeBuilder.GetFrames() );
 		std::cout << "Printing frames: success" << std::endl;
 
 		BuildBasicBlocks( irTreeBuilder.GetFrames() );

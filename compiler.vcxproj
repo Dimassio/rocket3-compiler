@@ -246,6 +246,7 @@
     <ClInclude Include="MethodDecl.h" />
     <ClInclude Include="MethodDeclList.h" />
     <ClInclude Include="miniJava.tab.hpp" />
+    <ClInclude Include="PrinterContext.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="RegistrarDistribution.h" />
     <ClInclude Include="Statement.h" />
