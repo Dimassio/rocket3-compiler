@@ -5,6 +5,7 @@
 #include <list>
 #include <map>
 #include <vector>
+#include "BaseInstruction.h"
 
 namespace Assembler
 {
