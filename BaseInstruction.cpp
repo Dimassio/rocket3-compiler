@@ -8,7 +8,7 @@ std::string Assembler::CBaseInstruction::Format( const std::map<std::string, std
 	Temp::CLabelList* jumps = JumpTargets();
 
 	std::string instr;
-	for( int i = 0; i < assemblerInstruction.length(); ++i ) {
+	for( size_t i = 0; i < assemblerInstruction.length(); ++i ) {
 		if( assemblerInstruction[i] == '\'' ) {
 			bool breakFlag = false;
 			switch( assemblerInstruction[++i] ) {

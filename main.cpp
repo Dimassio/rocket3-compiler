@@ -37,8 +37,10 @@ void BuildBasicBlocks( std::vector<Frame::CFrame*>& frames )
 
 void GenerateCode( const std::vector<Frame::CFrame*>& frames )
 {
-	CCodeGeneration generator;
 	for( auto& frame : frames ) {
+		// todo: Обязательно! 
+		CCodeGeneration generator;
+		generator.SetFrame( frame );
 		// Склеиваем все стэйтмент в один
 		std::list<const IIRStm*> statements;
 		for( auto& block : frame->blocks ) {

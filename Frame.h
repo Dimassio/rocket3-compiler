@@ -58,6 +58,10 @@ namespace Frame
 
 		int GetFieldCount() const;
 
+		const Temp::CTemp* GetEAX() const;
+
+		const Temp::CTemp* GetEDX() const;
+
 		// Размер ячейки
 		static const int wordSize = 4;
 
@@ -76,5 +80,8 @@ namespace Frame
 		int offSet; // Относительно FP
 
 		const Symbols::CSymbol* symbol;
+
+		const Temp::CTemp* eax;
+		const Temp::CTemp* edx;
 	};
 }

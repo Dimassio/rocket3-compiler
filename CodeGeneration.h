@@ -4,6 +4,7 @@
 #include "CStm.h"
 #include "BaseInstruction.h"
 #include "BasicBlock.h"
+#include "Frame.h"
 
 class CCodeGeneration {
 public:
@@ -13,6 +14,8 @@ public:
 	{
 	}
 
+	void SetFrame( const Frame::CFrame* currFrame );
+
 	void GenerateCode( const std::list<const IIRStm*>& statements, Assembler::CBaseInstructionList*& );
 
 	void GenerateCode( const std::list<const IIRStm*>& statements, std::list<const Assembler::CBaseInstruction*>& );
@@ -20,6 +23,7 @@ public:
 private:
 	Assembler::CBaseInstructionList* instructList;
 	Assembler::CBaseInstructionList* last;
+	const Frame::CFrame* frame;
 
 	void emit( Assembler::CBaseInstruction* instruct );
 
@@ -31,7 +35,8 @@ private:
 	void munchStm( const CIRCJump* stm );
 	void munchStm( const IIRStm* stm );
 
-	const Temp::CTemp* munchExp( const  CIRMem* exp );
+	const Temp::CTemp* munchExpJump( const CIRBinOp* binOp );
+	const Temp::CTemp* munchExp( const CIRMem* exp );
 	const Temp::CTemp* munchExp( const CIRBinOp* exp );
 	const Temp::CTemp* munchExp( const CIRConst* exp );
 	const Temp::CTemp* munchExp( const CIRTemp* exp );

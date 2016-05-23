@@ -33,6 +33,8 @@ CInReg::CInReg( Temp::CTemp _temp ) :
 CFrame::CFrame( const std::string& name, int formalCount ) :
 	symbol( symbolStorage.Get(name) )
 {
+	eax = new Temp::CTemp( new Symbols::CSymbol( "eax" ) );
+	edx = new Temp::CTemp( new Symbols::CSymbol( "edx" ) );
 	FP = new Temp::CTemp();
 	for( int i = 0; i < formalCount; ++i, offSet += wordSize ) {
 		formals[symbol] = new CInFrame( offSet );
@@ -42,6 +44,16 @@ CFrame::CFrame( const std::string& name, int formalCount ) :
 CFrame::~CFrame()
 {
 	delete FP;
+}
+
+const Temp::CTemp* CFrame::GetEAX() const
+{
+	return eax;
+}
+
+const Temp::CTemp* CFrame::GetEDX() const
+{
+	return edx;
 }
 
 const std::string& CFrame::GetFrameName() const {
