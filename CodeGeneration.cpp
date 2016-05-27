@@ -11,6 +11,8 @@ bool IsInstanceOf( S* exp )
 void CCodeGeneration::SetFrame( const Frame::CFrame* currFrame )
 {
 	frame = currFrame;
+	eaxTemp = new Temp::CTemp();
+	edxTemp = new Temp::CTemp();
 }
 
 void CCodeGeneration::GenerateCode( const std::list<const IIRStm*>& statements, Assembler::CBaseInstructionList*& list )
@@ -48,76 +50,94 @@ void CCodeGeneration::munchStm( const CIRSeq* stm )
 	munchStm( stm->right );
 }
 
-void CCodeGeneration::munchStm( const CIRMove* stm )
+void CCodeGeneration::munchStm(const CIRMove* stm)
 {
 	// MOVE( MEM(...) )
-	if( IsInstanceOf<CIRMem>( const_cast< IIRExp* >( stm->dst ) ) ) {
-		const CIRMem* destMem = dynamic_cast< const CIRMem* >( stm->dst );
+	if (IsInstanceOf<CIRMem>(const_cast< IIRExp* >(stm->dst))) {
+		const CIRMem* destMem = dynamic_cast< const CIRMem* >(stm->dst);
 
-		if( IsInstanceOf<CIRBinOp>( const_cast< IIRExp* >( destMem->exp ) ) ) {
-			auto binOp = dynamic_cast< const CIRBinOp* >( destMem->exp );
-			if( binOp->opId == EOperation::PLUS || binOp->opId == EOperation::MINUS ) {
+		if (IsInstanceOf<CIRBinOp>(const_cast< IIRExp* >(destMem->exp))) {
+			auto binOp = dynamic_cast< const CIRBinOp* >(destMem->exp);
+			if (binOp->opId == EOperation::PLUS || binOp->opId == EOperation::MINUS) {
 				// MOVE( MEM( BINOP(PLUS, e1, CONST(i)), e2 ) )
-				if( IsInstanceOf<CIRConst>( const_cast< IIRExp* >( binOp->left ) ) || IsInstanceOf<CIRConst>( const_cast< IIRExp* >( binOp->right ) ) ) {
+				if (IsInstanceOf<CIRConst>(const_cast< IIRExp* >(binOp->left)) || IsInstanceOf<CIRConst>(const_cast< IIRExp* >(binOp->right))) {
 					const IIRExp* binOpExpr;
 					const CIRConst* constantExpr;
-					if( IsInstanceOf<CIRConst>( const_cast< IIRExp* >( binOp->left ) ) ) {
+					if (IsInstanceOf<CIRConst>(const_cast< IIRExp* >(binOp->left))) {
 						binOpExpr = binOp->right;
-						constantExpr = dynamic_cast< const CIRConst* >( binOp->left );
-					} else {
-						binOpExpr = binOp->left;
-						constantExpr = dynamic_cast< const CIRConst* >( binOp->right );
+						constantExpr = dynamic_cast< const CIRConst* >(binOp->left);
 					}
-					emit( new Assembler::COper( std::string( "MOV [d0]," ) +
-												( ( binOp->opId == EOperation::PLUS ) ? "+" : "-" ) +
-												std::to_string( constantExpr->value ) +
-												std::string( "], s0\n" ),
-												nullptr,
-												new Temp::CTempList( munchExp( binOpExpr ),
-																	 new Temp::CTempList( munchExp( stm->src ), nullptr ) ) ) );
-				} else {
+					else {
+						binOpExpr = binOp->left;
+						constantExpr = dynamic_cast< const CIRConst* >(binOp->right);
+					}
+					const Temp::CTemp* sTemp = munchExp(stm->src);
+					emit(new Assembler::COper(std::string("MOV [0] ") +
+						((binOp->opId == EOperation::PLUS) ? "+ " : "-") +
+						std::to_string(constantExpr->value) + std::string(", temp") +
+						sTemp->Name() + std::string(" \n"),
+						nullptr,
+						new Temp::CTempList(munchExp(binOpExpr),
+							new Temp::CTempList(sTemp, nullptr))));
+				}
+				else {
 					// MOVE( MEM( BINOP( PLUS, e1, e2 ) ), e3 )
-					emit( new Assembler::COper( std::string( "MOV [d0], s0\n" ),
-												new Temp::CTempList( munchExp( binOp ), nullptr ),
-												new Temp::CTempList( munchExp( stm->src ), nullptr ) ) );
+					const Temp::CTemp* destTemp = munchExp(binOp);
+					const Temp::CTemp* srcTemp = munchExp(stm->src);
+					emit(new Assembler::COper(std::string("MOV [temp") + destTemp->Name() + std::string("], temp") +
+						srcTemp->Name() + std::string("\n"),
+						new Temp::CTempList(destTemp, nullptr),
+						new Temp::CTempList(srcTemp, nullptr)));
 				}
 			}
-		} else if( IsInstanceOf<CIRConst>( const_cast< IIRExp* >( destMem->exp ) ) ) {
+		}
+		else if (IsInstanceOf<CIRConst>(const_cast< IIRExp* >(destMem->exp))) {
 			// MOVE( MEM( CONST(i) ), e2 )
-			const CIRConst* constantExpr = dynamic_cast< const CIRConst* >( destMem->exp );
-			Temp::CTempList* srcTmpList = new Temp::CTempList( munchExp( stm->src ), nullptr );
-			emit( new Assembler::COper( std::string( "MOV [" ) +
-										std::to_string( constantExpr->value ) +
-										std::string( "], " + srcTmpList->Head()->Name() + "\n" ),
-										nullptr,
-										srcTmpList ) );
-		} else if( IsInstanceOf<CIRTemp>( const_cast< IIRExp* >( destMem->exp ) ) ) {
+			const CIRConst* constantExpr = dynamic_cast< const CIRConst* >(destMem->exp);
+			Temp::CTempList* srcTmpList = new Temp::CTempList(munchExp(stm->src), nullptr);
+			emit(new Assembler::COper(std::string("MOV [") +
+				std::to_string(constantExpr->value) +
+				std::string("], temp" + srcTmpList->Head()->Name() + "\n"),
+				nullptr,
+				srcTmpList));
+		}
+		else if (IsInstanceOf<CIRTemp>(const_cast< IIRExp* >(destMem->exp))) {
 			// MOVE( MEM( TEMP ), e2 )
-			emit( new Assembler::COper( std::string( "MOV [d0], s0\n" ),
-										new Temp::CTempList( munchExp( destMem->exp ), nullptr ),
-										new Temp::CTempList( munchExp( stm->src ), nullptr ) ) );
-		} else if( IsInstanceOf<CIRMem>( const_cast< IIRExp* >( destMem->exp ) ) ) {
-			if( IsInstanceOf<CIRMem>( const_cast< IIRExp* >( stm->src ) ) ) {
+			const Temp::CTemp* destTemp = munchExp(destMem->exp);
+			const Temp::CTemp* srcTemp = munchExp(stm->src);
+			emit(new Assembler::COper(std::string("MOV [temp") + destTemp->Name() + std::string("], temp") +
+				srcTemp->Name() + std::string("\n"),
+				new Temp::CTempList(destTemp, nullptr),
+				new Temp::CTempList(srcTemp, nullptr)));
+		}
+		else if (IsInstanceOf<CIRMem>(const_cast< IIRExp* >(destMem->exp))) {
+			if (IsInstanceOf<CIRMem>(const_cast< IIRExp* >(stm->src))) {
 				// MOVE( MEM(e1), MEM(e2) )
-				emit( new Assembler::COper( std::string( "MOV [d0], [s0]\n" ),
-											nullptr,
-											new Temp::CTempList(
-												munchExp( stm->src ),
-												new Temp::CTempList( munchExp( stm->src ), nullptr ) ) ) );
-			} else {
+				const Temp::CTemp* destTemp = munchExp(stm->dst);
+				const Temp::CTemp* srcTemp = munchExp(stm->src);
+				emit(new Assembler::COper(std::string("MOV [temp") + destTemp->Name() + std::string("], [temp") +
+					srcTemp->Name() + std::string("] \n"),
+					new Temp::CTempList(destTemp, nullptr),
+					new Temp::CTempList(srcTemp, nullptr)));
+			}
+			else {
 				// MOVE( MEM(e1), e2 )
-				emit( new Assembler::COper( std::string( "MOV [d0], s0\n" ),
-											nullptr,
-											new Temp::CTempList( munchExp( stm->src ),
-																 new Temp::CTempList( munchExp( stm->src ), nullptr ) ) ) );
+				const Temp::CTemp* destTemp = munchExp(stm->dst);
+				const Temp::CTemp* srcTemp = munchExp(stm->src);
+				emit(new Assembler::COper(std::string("MOV [temp") + destTemp->Name() + std::string("], temp") +
+					srcTemp->Name() + std::string(" \n"),
+					new Temp::CTempList(destTemp, nullptr),
+					new Temp::CTempList(srcTemp, nullptr)));
 			}
 		}
-	} else if( IsInstanceOf<CIRTemp>( const_cast< IIRExp* >( stm->dst ) ) ) {
+	}
+	else if (IsInstanceOf<CIRTemp>(const_cast< IIRExp* >(stm->dst))) {
 		// MOVE(TEMP(i), e2)
-		const CIRTemp* temp = dynamic_cast< const CIRTemp* >( stm->dst );
-		emit( new Assembler::COper( "MOV d0, s0\n",
-									new Temp::CTempList( temp->temp, nullptr ),
-									new Temp::CTempList( munchExp( stm->src ), nullptr ) ) );
+		const Temp::CTemp* destTemp = dynamic_cast< const CIRTemp* >(stm->dst)->temp;
+		const Temp::CTemp* srcTemp = munchExp(stm->src);
+		emit(new Assembler::COper("MOV temp" + destTemp->Name() + ", " + srcTemp->Name() + "\n",
+			new Temp::CTempList(destTemp, nullptr),
+			new Temp::CTempList(srcTemp, nullptr)));
 	}
 }
 
@@ -140,7 +160,7 @@ void CCodeGeneration::munchStm( const CIRCJump* stm )
 {
 	auto leftTemp = munchExp( stm->left );
 	auto rightTemp = munchExp( stm->right );
-	emit( new Assembler::COper( "CMP s" + leftTemp->Name() + ", s" + rightTemp->Name() 
+	emit( new Assembler::COper( "CMP temp" + leftTemp->Name() + ", temp" + rightTemp->Name() 
 		+ "\n", nullptr, new Temp::CTempList( leftTemp, new Temp::CTempList( rightTemp, nullptr ) ) ) );
 
 	// TODO считаем, что CCondJump может идти только по < и >= (появляется в TraceSchedule)
@@ -148,8 +168,8 @@ void CCodeGeneration::munchStm( const CIRCJump* stm )
 	switch( stm->op ) {
 		case EOperation::LE: oper = "JL"; break;
 		case EOperation::GE: oper = "JGE"; break;
-		case EOperation::NE: oper = "NOT_EQUAL"; break;
-		case EOperation::EQ: oper = "EQUAL"; break;
+		case EOperation::NE: oper = "NE"; break;
+		case EOperation::EQ: oper = "EQ"; break;
 	}
 
 	emit( new Assembler::COper( oper + " l" + stm->iftrue->label->Name() + "\n", nullptr, nullptr, new Temp::CLabelList( stm->iftrue->label, nullptr ) ) );
@@ -176,7 +196,7 @@ const Temp::CTemp* CCodeGeneration::munchExp( const CIRMem* expr )
 {
 	auto temp = new Temp::CTemp();
 	auto munchedTemp = munchExp(expr->exp);
-	emit( new Assembler::CMove( "MOV d" + temp->Name() + ", [s" + munchedTemp->Name() + "]\n", temp, munchedTemp ) );
+	emit( new Assembler::CMove( "MOV temp" + temp->Name() + ", [temp" + munchedTemp->Name() + "]\n", temp, munchedTemp ) );
 	return temp;
 }
 
@@ -188,23 +208,23 @@ static bool isArithmeticOperation( int op )
 const Temp::CTemp* CCodeGeneration::munchExpJump( const CIRBinOp* binOp )
 {
 	auto temp = new Temp::CTemp();
-	emit( new Assembler::COper( "MOV d" + temp->Name() + ", 0\n", new Temp::CTempList( temp, nullptr ), nullptr ) );
+	emit( new Assembler::COper( "MOV temp" + temp->Name() + ", 0\n", new Temp::CTempList( temp, nullptr ), nullptr ) );
 
 	auto left = new Temp::CTemp();
 	auto right = new Temp::CTemp();
 	auto munchedLeft = munchExp(binOp->left);
 	auto munchedRight = munchExp(binOp->right);
-	emit( new Assembler::CMove( "MOV d" + left->Name() + ", s" + munchedLeft->Name() + "\n", left, munchedLeft ) );
-	emit( new Assembler::CMove( "MOV d" + right->Name() + ", s" + munchedRight->Name() + "\n", right, munchedRight ) );
+	emit( new Assembler::CMove( "MOV temp" + left->Name() + ", temp" + munchedLeft->Name() + "\n", left, munchedLeft ) );
+	emit( new Assembler::CMove( "MOV temp" + right->Name() + ", temp" + munchedRight->Name() + "\n", right, munchedRight ) );
 
 	auto source = new Temp::CTempList( left, new Temp::CTempList( right, nullptr ) );
 
-	emit( new Assembler::COper( "CMP 0, s" + source->Head()->Name() + "\n", nullptr, source ) );
+	emit( new Assembler::COper( "CMP 0, temp" + source->Head()->Name() + "\n", nullptr, source ) );
 
 	auto label = new Temp::CLabel();
 
 	emit( new Assembler::COper( "JNL l" + label->Name() + "\n", nullptr, nullptr, new Temp::CLabelList( label, nullptr ) ) );
-	emit( new Assembler::COper( "MOV d" + temp->Name() + ", 1\n", new Temp::CTempList( temp, nullptr ), nullptr ) );
+	emit( new Assembler::COper( "MOV temp" + temp->Name() + ", 1\n", new Temp::CTempList( temp, nullptr ), nullptr ) );
 	emit( new Assembler::CLabel( label->Name() + ":\n", label ) );
 
 	return temp;
@@ -215,30 +235,30 @@ const Temp::CTemp* CCodeGeneration::munchExp( const CIRBinOp* binOp )
 	if( binOp->opId == EOperation::LT || binOp->opId == EOperation::GE ) {
 		return munchExpJump( binOp );
 	}
-
+	
 	if( IsInstanceOf<CIRConst>( const_cast< IIRExp* >( binOp->left ) ) && IsInstanceOf<CIRConst>( const_cast<IIRExp*>( binOp->right ) ) ) {
 		// const-const
 		int leftVal = dynamic_cast< const CIRConst* >( binOp->left )->value;
 		int rightVal = dynamic_cast< const CIRConst* >( binOp->right )->value;
 		auto temp = new Temp::CTemp();
-		emit( new Assembler::CMove( "MOV d" + frame->GetEAX()->Name() + ", " + std::to_string( leftVal ) + "\n", frame->GetEAX(), nullptr ) );
+		emit( new Assembler::CMove( "MOV temp" + eaxTemp->Name() + ", " + std::to_string( leftVal ) + "\n", eaxTemp, nullptr ) );
 		if( binOp->opId == EOperation::MUL ) {
-			emit( new Assembler::CMove( "MOV d" + frame->GetEDX()->Name() + ", 0\n", frame->GetEDX(), nullptr ) );
+			emit( new Assembler::CMove( "MOV temp" + edxTemp->Name() + ", 0\n", edxTemp, nullptr ) );
 		}
 		if( binOp->opId == EOperation::PLUS ) {
-			emit( new Assembler::COper( "ADD d" + frame->GetEAX()->Name() + ", " + std::to_string( rightVal ) + "\n",
-										new Temp::CTempList( frame->GetEAX(), nullptr ),
+			emit( new Assembler::COper( "ADD temp" + eaxTemp->Name() + ", " + std::to_string( rightVal ) + "\n",
+										new Temp::CTempList(eaxTemp, nullptr ),
 										nullptr ) );
 		} else if( binOp->opId == EOperation::MINUS ) {
-			emit( new Assembler::COper( "SUB d" + frame->GetEAX()->Name() + ", " + std::to_string( rightVal ) + "\n",
-										new Temp::CTempList( frame->GetEAX(), nullptr ),
+			emit( new Assembler::COper( "SUB temp" + eaxTemp->Name() + ", " + std::to_string( rightVal ) + "\n",
+										new Temp::CTempList(eaxTemp, nullptr ),
 										nullptr ) );
 		} else if( binOp->opId == EOperation::MUL ) {
-			emit( new Assembler::COper( "MUL d" + frame->GetEDX()->Name() + ", " + std::to_string( rightVal ) + "\n",
-										new Temp::CTempList( frame->GetEAX(), new Temp::CTempList( frame->GetEDX(), nullptr ) ),
+			emit( new Assembler::COper( "MUL temp" + edxTemp->Name() + ", " + std::to_string( rightVal ) + "\n",
+										new Temp::CTempList(eaxTemp, new Temp::CTempList( edxTemp, nullptr ) ),
 										nullptr ) );
 		}
-		emit( new Assembler::CMove( "MOV d" + temp->Name() + ", s" + frame->GetEAX()->Name() + "\n\n", temp, frame->GetEAX() ) );
+		emit( new Assembler::CMove( "MOV temp" + temp->Name() + ", temp" + eaxTemp->Name() + "\n\n", temp, eaxTemp) );
 		return temp;
 	}
 	if( IsInstanceOf<CIRConst>( const_cast<IIRExp*>( binOp->left ) ) ) {
@@ -246,27 +266,27 @@ const Temp::CTemp* CCodeGeneration::munchExp( const CIRBinOp* binOp )
 		int leftVal = dynamic_cast< const CIRConst* >( binOp->left )->value;
 		auto temp = new Temp::CTemp();
 		auto rightTemp = munchExp( binOp->right );
-		emit( new Assembler::CMove( "MOV d" + frame->GetEAX()->Name() + ", " + std::to_string( leftVal ) + "\n", frame->GetEAX(), nullptr ) );
-		emit( new Assembler::CMove( "MOV d" + temp->Name() + ", s" + rightTemp->Name() + "\n", temp, rightTemp ) );
+		emit( new Assembler::CMove( "MOV temp" + eaxTemp->Name() + ", " + std::to_string( leftVal ) + "\n", eaxTemp, nullptr ) );
+		emit( new Assembler::CMove( "MOV temp" + temp->Name() + ", temp" + rightTemp->Name() + "\n", temp, rightTemp ) );
 		if( binOp->opId == EOperation::MUL ) {
-			emit( new Assembler::CMove( "MOV d" + frame->GetEDX()->Name() + ", 0\n", frame->GetEDX(), nullptr ) );
+			emit( new Assembler::CMove( "MOV temp" + edxTemp->Name() + ", 0\n", edxTemp, nullptr ) );
 		}
 		Temp::CTempList* usedRegisters = nullptr;
 		if( binOp->opId == EOperation::PLUS ) {
-			usedRegisters = new Temp::CTempList( frame->GetEAX(), nullptr );
-			emit( new Assembler::COper( "ADD d" + usedRegisters->Head()->Name() + ", s" + temp->Name() + "\n", usedRegisters,
+			usedRegisters = new Temp::CTempList( eaxTemp, nullptr );
+			emit( new Assembler::COper( "ADD temp" + usedRegisters->Head()->Name() + ", temp" + temp->Name() + "\n", usedRegisters,
 										new Temp::CTempList( temp, nullptr ) ) );
 		} else if( binOp->opId == EOperation::MINUS ) {
-			usedRegisters = new Temp::CTempList( frame->GetEAX(), nullptr );
-			emit( new Assembler::COper( "SUB d" + usedRegisters->Head()->Name() + ", s" + temp-> Name() + "\n", usedRegisters,
+			usedRegisters = new Temp::CTempList(eaxTemp, nullptr );
+			emit( new Assembler::COper( "SUB temp" + usedRegisters->Head()->Name() + ", temp" + temp-> Name() + "\n", usedRegisters,
 										new Temp::CTempList( temp, nullptr ) ) );
 		} else if( binOp->opId == EOperation::MUL ) {
-			usedRegisters = new Temp::CTempList( frame->GetEAX(), new Temp::CTempList( frame->GetEDX(), nullptr ) );
-			emit( new Assembler::COper( "MUL d" + usedRegisters->Head()->Name() + ", s" + temp->Name() + "\n", usedRegisters,
+			usedRegisters = new Temp::CTempList(eaxTemp, new Temp::CTempList(edxTemp, nullptr ) );
+			emit( new Assembler::COper( "MUL temp" + usedRegisters->Head()->Name() + ", temp" + temp->Name() + "\n", usedRegisters,
 										new Temp::CTempList( temp, nullptr ) ) );
 		}
 		auto temp2 = new Temp::CTemp();
-		emit( new Assembler::CMove( "MOV d" + temp2->Name() + ", s" + usedRegisters->Head()->Name() + "\n\n", temp2, usedRegisters->Head() ) );
+		emit( new Assembler::CMove( "MOV temp" + temp2->Name() + ", temp" + usedRegisters->Head()->Name() + "\n\n", temp2, usedRegisters->Head() ) );
 		return temp2;
 	}
 	if( IsInstanceOf<CIRConst>( const_cast<IIRExp*>( binOp->right )) ) {
@@ -274,25 +294,25 @@ const Temp::CTemp* CCodeGeneration::munchExp( const CIRBinOp* binOp )
 		int rightVal = dynamic_cast< const CIRConst* >( binOp->right )->value;
 		auto leftTemp = munchExp( binOp->left );
 		auto temp = new Temp::CTemp();
-		emit( new Assembler::CMove( "MOV d" + frame->GetEAX()->Name() + ", s" + leftTemp->Name() + "\n", frame->GetEAX(), leftTemp ) );
+		emit( new Assembler::CMove( "MOV temp" + eaxTemp->Name() + ", temp" + leftTemp->Name() + "\n", eaxTemp, leftTemp ) );
 		if( binOp->opId == EOperation::MUL ) {
-			emit( new Assembler::CMove( "MOV d" + frame->GetEDX()->Name() + ", 0\n", frame->GetEDX(), nullptr ) );
+			emit( new Assembler::CMove( "MOV temp" + edxTemp->Name() + ", 0\n", edxTemp, nullptr ) );
 		}
 		Temp::CTempList* usedRegisters = nullptr;
 		if( binOp->opId == EOperation::PLUS ) {
-			usedRegisters = new Temp::CTempList( frame->GetEAX(), nullptr );
-			emit( new Assembler::COper( "ADD d" + usedRegisters->Head()->Name() + ", " + std::to_string( rightVal ) + "\n", usedRegisters,
+			usedRegisters = new Temp::CTempList(eaxTemp, nullptr );
+			emit( new Assembler::COper( "ADD temp" + usedRegisters->Head()->Name() + ", " + std::to_string( rightVal ) + "\n", usedRegisters,
 										nullptr ) );
 		} else if( binOp->opId == EOperation::MINUS ) {
-			usedRegisters = new Temp::CTempList( frame->GetEAX(), nullptr );
-			emit( new Assembler::COper( "SUB d" + usedRegisters->Head()->Name()+ ", " + std::to_string( rightVal ) + "\n", usedRegisters,
+			usedRegisters = new Temp::CTempList(eaxTemp, nullptr );
+			emit( new Assembler::COper( "SUB temp" + usedRegisters->Head()->Name()+ ", " + std::to_string( rightVal ) + "\n", usedRegisters,
 										nullptr ) );
 		} else if( binOp->opId == EOperation::MUL ) {
-			usedRegisters = new Temp::CTempList( frame->GetEAX(), new Temp::CTempList( frame->GetEDX(), nullptr ) );
-			emit( new Assembler::COper( "MUL d" + usedRegisters->Head()->Name() + ", " + std::to_string( rightVal ) + "\n", usedRegisters,
+			usedRegisters = new Temp::CTempList(eaxTemp, new Temp::CTempList(edxTemp, nullptr ) );
+			emit( new Assembler::COper( "MUL temp" + usedRegisters->Head()->Name() + ", " + std::to_string( rightVal ) + "\n", usedRegisters,
 										nullptr ) );
 		}
-		emit( new Assembler::CMove( "MOV d" + temp->Name() + ", s" + usedRegisters->Head()->Name + "\n\n", temp, usedRegisters->Head() ) );
+		emit( new Assembler::CMove( "MOV temp" + temp->Name() + ", temp" + usedRegisters->Head()->Name() + "\n\n", temp, usedRegisters->Head() ) );
 		return temp;
 	}
 	// expr-expr
@@ -300,26 +320,26 @@ const Temp::CTemp* CCodeGeneration::munchExp( const CIRBinOp* binOp )
 	auto temp2 = new Temp::CTemp();
 	auto leftTemp = munchExp( binOp->left );
 	auto rightTemp = munchExp( binOp->right );
-	emit( new Assembler::CMove( "MOV d" + frame->GetEAX()->Name() + ", s" + leftTemp->Name() + "\n", frame->GetEAX(), leftTemp ) );
-	emit( new Assembler::CMove( "MOV d" + temp2->Name() + ", s" + rightTemp->Name() + "\n", temp2, rightTemp ) );
+	emit( new Assembler::CMove( "MOV temp" + eaxTemp->Name() + ", temp" + leftTemp->Name() + "\n", eaxTemp, leftTemp ) );
+	emit( new Assembler::CMove( "MOV temp" + temp2->Name() + ", temp" + rightTemp->Name() + "\n", temp2, rightTemp ) );
 	if( binOp->opId == EOperation::MUL ) {
-		emit( new Assembler::CMove( "MOV d" + frame->GetEDX()->Name() + ", 0\n", frame->GetEDX(), nullptr ) );
+		emit( new Assembler::CMove( "MOV temp" + edxTemp->Name() + ", 0\n", edxTemp, nullptr ) );
 	}
 	Temp::CTempList* usedRegisters = nullptr;
 	if( binOp->opId == EOperation::PLUS ) {
-		usedRegisters = new Temp::CTempList( frame->GetEAX(), nullptr );
-		emit( new Assembler::COper( "ADD d" + usedRegisters->Head()->Name() + ", s" + temp2->Name() + "\n", usedRegisters,
+		usedRegisters = new Temp::CTempList(eaxTemp, nullptr );
+		emit( new Assembler::COper( "ADD temp" + usedRegisters->Head()->Name() + ", temp" + temp2->Name() + "\n", usedRegisters,
 									new Temp::CTempList( temp2, nullptr ) ) );
 	} else if( binOp->opId == EOperation::MINUS ) {
-		usedRegisters = new Temp::CTempList( frame->GetEAX(), nullptr );
-		emit( new Assembler::COper( "SUB d" + usedRegisters->Head()->Name() + ", s" + temp2->Name() + "\n", usedRegisters,
+		usedRegisters = new Temp::CTempList(eaxTemp, nullptr );
+		emit( new Assembler::COper( "SUB temp" + usedRegisters->Head()->Name() + ", temp" + temp2->Name() + "\n", usedRegisters,
 									new Temp::CTempList( temp2, nullptr ) ) );
 	} else if( binOp->opId == EOperation::MUL ) {
-		usedRegisters = new Temp::CTempList( frame->GetEAX(), new Temp::CTempList( frame->GetEDX(), nullptr ) );
-		emit( new Assembler::COper( "MUL d" + usedRegisters->Head()->Name() + ", s" + temp2->Name() + "\n", usedRegisters,
+		usedRegisters = new Temp::CTempList(eaxTemp, new Temp::CTempList(edxTemp, nullptr ) );
+		emit( new Assembler::COper( "MUL temp" + usedRegisters->Head()->Name() + ", temp" + temp2->Name() + "\n", usedRegisters,
 									new Temp::CTempList( temp2, nullptr ) ) );
 	}
-	emit( new Assembler::CMove( "MOV d" + temp1->Name() + ", s" + usedRegisters->Head()->Name() + "\n\n", temp1, usedRegisters->Head() ) );
+	emit( new Assembler::CMove( "MOV temp" + temp1->Name() + ", temp" + usedRegisters->Head()->Name() + "\n\n", temp1, usedRegisters->Head() ) );
 	return temp1;
 }
 
@@ -327,7 +347,7 @@ const Temp::CTemp* CCodeGeneration::munchExp( const CIRConst* exp )
 {
 	const Temp::CTemp* temp( new Temp::CTemp );
 
-	emit( new Assembler::COper( std::string( "MOV d" + temp->Name() + ", " ) +
+	emit( new Assembler::COper( std::string( "MOV temp" + temp->Name() + ", " ) +
 								std::to_string( exp->value ) + std::string( "\n" ),
 								nullptr, new Temp::CTempList( temp, nullptr ) ) );
 
@@ -392,7 +412,7 @@ const Temp::CTempList* CCodeGeneration::munchArgs( const CIRExpList* args )
 	for( size_t i = 0; i < args->expList.size(); ++i ) {
 		const Temp::CTemp* temp( new Temp::CTemp() );
 		auto munchedTemp = munchExp(args->expList[i]);
-		emit( new Assembler::CMove( "put_in_args d" + temp->Name() + ", s" + munchedTemp->Name() + "\n", temp, munchedTemp ) );
+		emit( new Assembler::CMove( "put_in_args temp" + temp->Name() + ", temp" + munchedTemp->Name() + "\n", temp, munchedTemp ) );
 
 		temporariesList = new Temp::CTempList( temp, temporariesList );
 	}

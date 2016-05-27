@@ -45,4 +45,8 @@ private:
 	const Temp::CTemp* munchExp( const IIRExp* exp );
 
 	const Temp::CTempList* munchArgs( const CIRExpList* args );
+
+
+	const Temp::CTemp* eaxTemp;
+	const Temp::CTemp* edxTemp;
 };
